@@ -10,7 +10,7 @@ export default defineConfig({
   ],
   server: {
     host: '0.0.0.0', // or '0.0.0.0' or your local IP
-    port: 5173, // default, change if needed
+    port: 5174, // default, change if needed
     strictPort: true, // exit if the port is already in use
   }
 })
