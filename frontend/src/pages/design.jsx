@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const Occassions = ({setPage}) => {
+const Design = ({setPage}) => {
 
     useEffect(() => {
         //ensures page is set to occassions when navigation is through other channels apart from button clicking such as navigating back 
@@ -8,8 +8,8 @@ const Occassions = ({setPage}) => {
     }, [])
 
     return (
-        <div>Occassions</div>
+        <div>Design</div>
     )
 }
 
-export default Occassions
+export default Design

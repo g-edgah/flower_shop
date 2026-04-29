@@ -6,7 +6,7 @@ import Footer from '../common/footer.jsx';
 import Home from '../../pages/home.jsx';
 import Bouquets from '../../pages/bouquets.jsx';
 import Flowers from '../../pages/flowers.jsx';
-import Occassions from '../../pages/occassions.jsx';
+import Design from '../../pages/design.jsx';
 import Colors from '../../pages/colors.jsx';
 import Popular from '../../pages/popular.jsx';
 
@@ -28,8 +28,7 @@ const UserLayout = () => {
                     <Route index element={<Home setPage={setPage}/>}/>
                     <Route path='bouquets' element={<Bouquets setPage={setPage} />}/>
                     <Route path='flowers' element={<Flowers setPage={setPage} />}/>
-                    <Route path='occassions' element={<Occassions setPage={setPage} />}/>
-                    <Route path='colors' element={<Colors setPage={setPage} />}/>
+                    <Route path='design' element={<Design setPage={setPage} />}/>
                     <Route path='popular' element={<Popular setPage={setPage} />}/>
 
                 </Routes>

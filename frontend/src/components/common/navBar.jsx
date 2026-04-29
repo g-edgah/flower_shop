@@ -116,12 +116,13 @@ const NavBar = ({page, setPage }) => {
                             setPage('bouquets')}} to='/bouquets' className={`text-700 hover:text-navHover ${page == 'bouquets' ? 'text-navHover':'text-navText'}`} >bouquets</Link>
                         <Link onClick={()=>{
                             setPage('flowers')}} to='/flowers' className={`text-700 hover:text-navHover ${page == 'flowers' ? 'text-navHover':'text-navText'}`} >flowers</Link>
+                       
                         {/* <Link onClick={()=>{
-                            setPage('occassions')}} to='/occassions' className={`text-700 hover:text-navHover ${page == 'occassions' ? 'text-navHover':'text-navText'}`} >occassions</Link>
-                        <Link onClick={()=>{
                             setPage('colors')}} to='/colors' className={`text-700 hover:text-navHover ${page == 'colors' ? 'text-navHover':'text-navText'}`} >colors</Link> */}
                         <Link onClick={()=>{
                             setPage('popular')}} to='/popular' className={`text-700 hover:text-navHover ${page == 'popular' ? 'text-navHover':'text-navText'}`} >popular</Link>
+                         <Link onClick={()=>{
+                            setPage('design')}} to='/design' className={`text-700 hover:text-navHover ${page == 'design' ? 'text-navHover':'text-navText'}`} >design</Link>
                     </div>
             </div>
         
