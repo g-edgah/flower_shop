@@ -13,7 +13,7 @@ const Filter = ({ handleSort, toggleSort, sortOpen, sortBy, page, setPage }) => 
                     <span className="item cursor-pointer" onClick={() => handleSort('price low to high')}>Price: Low to High</span>
                     <span className="item cursor-pointer" onClick={() => handleSort('price high to low')}>Price: High to Low</span>
                     <span className="item cursor-pointer" onClick={() => handleSort('newest')}>Newest Arrivals</span>
-                    <span className="item cursor-pointer" onClick={() => handleSort('popular')}>Popular</span>
+                    <span className="item cursor-pointer" onClick={() => handleSort('popularity')}>Popularity</span>
                 </div>
             </div>
 

@@ -26,7 +26,7 @@ const SideBar = () => {
 
     }
     return (
-        <div className="w-60 flex flex-col gap-5 h-screen  bg-pink-200">
+        <div className="w-60 flex flex-col gap-5  pt-5">
             <div className="occassions w-full">
                 <div className="w-full pl-3 title cursor-pointer font-bold text-lg" onClick={() => isOpen('occassion')}>
                     {
@@ -35,14 +35,14 @@ const SideBar = () => {
                     <span>Occassions</span>
                 </div>
                 <div className={`flex pl-7 flex-col list ${occasionsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${occasion === 'all' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
-                    <span className={`item cursor-pointer ${occasion === 'birthday' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('birthday')}>Birthday</span>
-                    <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal</span>
-                    <span className={`item cursor-pointer ${occasion === 'wedding' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('wedding')}>Wedding</span>
-                    <span className={`item cursor-pointer ${occasion === 'anniversary' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('anniversary')}>Anniversary</span>
-                    <span className={`item cursor-pointer ${occasion === 'baby-shower' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('baby-shower')}>Baby Shower</span>
-                    <span className={`item cursor-pointer ${occasion === 'apology' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('apology')}>Apology</span>
-                    <span className={`item cursor-pointer ${occasion === 'funeral' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('funeral')}>Funeral</span>
+                    <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
+                    <span className={`item cursor-pointer ${occasion === 'birthday' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('birthday')}>Birthday</span>
+                    <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal</span>
+                    <span className={`item cursor-pointer ${occasion === 'wedding' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('wedding')}>Wedding</span>
+                    <span className={`item cursor-pointer ${occasion === 'anniversary' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('anniversary')}>Anniversary</span>
+                    <span className={`item cursor-pointer ${occasion === 'baby-shower' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('baby-shower')}>Baby Shower</span>
+                    <span className={`item cursor-pointer ${occasion === 'apology' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('apology')}>Apology</span>
+                    <span className={`item cursor-pointer ${occasion === 'funeral' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('funeral')}>Funeral</span>
 
                 </div>
             </div>
@@ -55,14 +55,14 @@ const SideBar = () => {
                     <span>Colors</span>
                 </div>
                 <div className={`list pl-7 flex flex-col ${colorsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${occasion === 'all' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
-                    <span className={`item cursor-pointer ${color === 'red' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('red')}>Red</span>
-                    <span className={`item cursor-pointer ${color === 'Pink' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('Pink')}>Pink</span>
-                    <span className={`item cursor-pointer ${color === 'blue' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('blue')}>Blue</span>
-                    <span className={`item cursor-pointer ${color === 'white' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('white')}>White</span>
-                    <span className={`item cursor-pointer ${color === 'purple' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('purple')}>Purple</span>
-                    <span className={`item cursor-pointer ${color === 'yellow' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('yellow')}>Yellow</span>
-                    <span className={`item cursor-pointer ${color === 'black' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setColor('black')}>Black</span>
+                    <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
+                    <span className={`item cursor-pointer ${color === 'red' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('red')}>Red</span>
+                    <span className={`item cursor-pointer ${color === 'Pink' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('Pink')}>Pink</span>
+                    <span className={`item cursor-pointer ${color === 'blue' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('blue')}>Blue</span>
+                    <span className={`item cursor-pointer ${color === 'white' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('white')}>White</span>
+                    <span className={`item cursor-pointer ${color === 'purple' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('purple')}>Purple</span>
+                    <span className={`item cursor-pointer ${color === 'yellow' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('yellow')}>Yellow</span>
+                    <span className={`item cursor-pointer ${color === 'black' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('black')}>Black</span>
                 </div>
             </div>
 
@@ -74,9 +74,9 @@ const SideBar = () => {
                     <span>Price Range</span>
                 </div>
                 <div className={`list pl-7 cursor-pointer flex flex-col ${pricerangeOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${pricerange === '$0 - $25' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$0 - $25')}>$0 - $25</span>
-                    <span className={`item cursor-pointer ${pricerange === '$25 - $50' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$25 - $50')}>$25 - $50</span>
-                    <span className={`item cursor-pointer ${pricerange === '$50+' ? 'font-bold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$50+')}>$50+</span>
+                    <span className={`item cursor-pointer ${pricerange === '$0 - $25' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$0 - $25')}>$0 - $25</span>
+                    <span className={`item cursor-pointer ${pricerange === '$25 - $50' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$25 - $50')}>$25 - $50</span>
+                    <span className={`item cursor-pointer ${pricerange === '$50+' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$50+')}>$50+</span>
                 </div>
             </div>
 
