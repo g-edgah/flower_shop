@@ -32,11 +32,12 @@ const SideBar = () => {
                     {
                         occasionsOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
                     }
-                    <span>Occassions</span>
+                    <span>Occasions</span>
                 </div>
                 <div className={`flex pl-7 flex-col list ${occasionsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
                     <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
                     <span className={`item cursor-pointer ${occasion === 'birthday' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('birthday')}>Birthday</span>
+                    <span className={`item cursor-pointer ${occasion === 'none' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('none')}>No Occasion</span>
                     <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal</span>
                     <span className={`item cursor-pointer ${occasion === 'wedding' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('wedding')}>Wedding</span>
                     <span className={`item cursor-pointer ${occasion === 'anniversary' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('anniversary')}>Anniversary</span>
@@ -55,7 +56,7 @@ const SideBar = () => {
                     <span>Colors</span>
                 </div>
                 <div className={`list pl-7 flex flex-col ${colorsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
+                    <span className={`item cursor-pointer ${color === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('all')}>All</span>
                     <span className={`item cursor-pointer ${color === 'red' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('red')}>Red</span>
                     <span className={`item cursor-pointer ${color === 'Pink' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('Pink')}>Pink</span>
                     <span className={`item cursor-pointer ${color === 'blue' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('blue')}>Blue</span>

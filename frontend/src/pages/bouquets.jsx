@@ -38,6 +38,8 @@ const Bouquets = ({setPage}) => {
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     
                 </div>
                 <div className="pages flex gap-1">

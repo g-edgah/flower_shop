@@ -24,14 +24,14 @@ const UserLayout = () => {
     return (
         <>
             <Header page={page} setPage={setPage} />
-                <Routes>
-                    <Route index element={<Home setPage={setPage}/>}/>
-                    <Route path='bouquets' element={<Bouquets setPage={setPage} />}/>
-                    <Route path='flowers' element={<Flowers setPage={setPage} />}/>
-                    <Route path='design' element={<Design setPage={setPage} />}/>
-                    <Route path='popular' element={<Popular setPage={setPage} />}/>
+            <Routes>
+                <Route index element={<Home setPage={setPage}/>}/>
+                <Route path='bouquets' element={<Bouquets setPage={setPage} />}/>
+                <Route path='flowers' element={<Flowers setPage={setPage} />}/>
+                <Route path='design' element={<Design setPage={setPage} />}/>
+                <Route path='popular' element={<Popular setPage={setPage} />}/>
 
-                </Routes>
+            </Routes>
             
             <Footer />
         </>

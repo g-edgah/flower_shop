@@ -39,8 +39,7 @@ const Footer = () => {
                     <span className='cursor-pointer hover:text-one text-sm'>popular</span>
                     <span className='cursor-pointer hover:text-one text-sm'>bouquets</span>
                     <span className='cursor-pointer hover:text-one text-sm'>flowers</span>
-                    <span className='cursor-pointer hover:text-one text-sm'>occassions</span>
-                    <span className='cursor-pointer hover:text-one text-sm'>colors</span>
+                    <span className='cursor-pointer hover:text-one text-sm'>design</span>
                 </div>
 
                 <div className="support space-y-2 flex flex-col">

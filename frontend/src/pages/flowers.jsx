@@ -22,7 +22,7 @@ const Flowers = ({setPage}) => {
 
     useEffect(() => {
         //ensures page is set to bouquets when navigation is through other channels apart from button clicking such as navigating back 
-        setPage("bouquets")
+        setPage("flowers")
     }, [])
     
     return (
@@ -32,6 +32,8 @@ const Flowers = ({setPage}) => {
                 <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
                 <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>

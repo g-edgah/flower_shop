@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import CartHeader from '../components/cart/cartHeader.jsx';
 import CartCard from '../components/cart/cartCard.jsx';
+import Footer from '../components/common/footer.jsx';
 
 const CartPage = () => {
     const Navigate = useNavigate();
@@ -108,7 +109,7 @@ const CartPage = () => {
 
 
     return (
-        <div className="h-full w-full flex flex-col space-y-3 md:space-y-5 items-center">
+    <div className="h-full w-full flex flex-col space-y-3 md:space-y-5 items-center">
             <CartHeader />
             {sampleCartItems.length === 0 ? (
                 <div className="emptyCart w-full h-[50vh] flex flex-col items-center space-y-10 justify-center mt-20">
@@ -120,8 +121,8 @@ const CartPage = () => {
                     <button className="bg-gray-400 w-50 h-10 rounded-lg hover:bg-gray-500 hover:shadow-md hover:shadow-black transition" onClick={()=> Navigate('/')}>start shopping</button>
                 </div>
             ) : (
-                <div className='h-full w-full flex flex-col space-y-3 md:space-y-5 items-center'>
-                    <div className="productContainer flex flex-row flex-wrap gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto max-h-[45vh] min-h-[45vh] overflow-y-auto w-[95vw] rounded-md">
+                <div className='w-full max-w-234 flex flex-col space-y-3 md:space-y-5 items-center'>
+                    <div className="productContainer flex flex-col gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto w-full rounded-md">
                         
                             
                                 {sampleCartItems.map(
@@ -171,13 +172,14 @@ const CartPage = () => {
 
                     </div>
 
-                    <div className="cartActions mx-auto justify-center flex flex-row space-x-5 md:space-x-16 text-checkoutButtonsText pr-1">
+                    <div className="cartActions mx-auto justify-center flex flex-row space-x-5 md:space-x-16 text-checkoutButtonsText pr-1 pb-15">
                         <button className="bg-checkoutButtons hover:bg-checkoutButtonsHover hover:bg-gray-450 w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 transition" onClick={()=> Navigate('/')}>continue shopping</button>
-                        <button className="bg-checkoutButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-checkoutButtonsHover transition">checkout</button>
+                        <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition">checkout</button>
                         
                     </div>
                 </div>
             )}
+            <Footer />
         </div> 
     )
 }
