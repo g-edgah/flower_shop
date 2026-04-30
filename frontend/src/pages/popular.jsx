@@ -14,9 +14,13 @@ const Popular = ({ setPage }) => {
 
     return (
         <div className='flex justify-center'>
-            <div className="boquets flex flex-col space-y-5 items-center max-w-250 pb-5">
+            <div className="boquets flex flex-col space-y-5 items-center max-w-250 pb-10">
                 <div className="flower-row py-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>

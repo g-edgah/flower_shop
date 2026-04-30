@@ -11,9 +11,19 @@ const SideBar = () => {
     const [colorsOpen, setColorsOpen] = useState(false);
     const [pricerangeOpen, setPricerangeOpen] = useState(false);
 
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(99999);
+    const [inputMin, setInputMin] = useState(0);
+    const [inputMax, setInputMax] = useState(99999);
+
     const [occasion, setOccasions] = useState('all');
     const [color, setColor] = useState('all');
     const [pricerange, setPricerange] = useState('all');
+
+    const handleApply = () => {
+        setMinPrice(inputMin);
+        setMaxPrice(inputMax);
+    };
 
     const isOpen = (filter) => {
         if (filter === 'occassion') {
@@ -55,30 +65,147 @@ const SideBar = () => {
                     }
                     <span>Colors</span>
                 </div>
-                <div className={`list pl-7 flex flex-col ${colorsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${color === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('all')}>All</span>
-                    <span className={`item cursor-pointer ${color === 'red' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('red')}>Red</span>
-                    <span className={`item cursor-pointer ${color === 'Pink' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('Pink')}>Pink</span>
-                    <span className={`item cursor-pointer ${color === 'blue' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('blue')}>Blue</span>
-                    <span className={`item cursor-pointer ${color === 'white' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('white')}>White</span>
-                    <span className={`item cursor-pointer ${color === 'purple' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('purple')}>Purple</span>
-                    <span className={`item cursor-pointer ${color === 'yellow' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('yellow')}>Yellow</span>
-                    <span className={`item cursor-pointer ${color === 'black' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setColor('black')}>Black</span>
+
+                <div className={`list pl-7 flex flex-wrap ${colorsOpen ? 'block' : 'hidden'} gap-2 max-w-55 pt-4`}>
+
+                   <div  className={`color rounded-full size-12 flex items-center justify-center ${color === 'all' ? 'border' : ''}`} onClick={() => setColor('all')}>
+                    <div className="color size-10 rounded-full" style={{
+                        background: "conic-gradient(red, yellow, green, cyan, blue, magenta, red)"
+                        }}>
+                    </div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'red' ? 'border' : ''}`} onClick={() => setColor('red')}>
+                        <div className="color size-10 rounded-full bg-red-600"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'Pink' ? 'border' : ''}`} onClick={() => setColor('Pink')}>
+                        <div className="color size-10 rounded-full bg-pink-500"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'blue' ? 'border' : ''}`} onClick={() => setColor('blue')}>
+                        <div className="color size-10 rounded-full bg-blue-500"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'white' ? 'border' : ''}`} onClick={() => setColor('white')}>
+                        <div className="color size-10 rounded-full bg-white border"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'purple' ? 'border' : ''}`} onClick={() => setColor('purple')}>
+                        <div className="color size-10 rounded-full bg-purple-500"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'yellow' ? 'border' : ''}`} onClick={() => setColor('yellow')}>
+                        <div className="color size-10 rounded-full bg-yellow-500"></div>
+                    </div>
+                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'black' ? 'border' : ''}`} onClick={() => setColor('black')}>
+                        <div className="color size-10 rounded-full bg-black"></div>
+                    </div>
                 </div>
             </div>
 
-            <div className={`list`}> 
-                <div className={`w-full pl-3 title cursor-pointer font-bold text-lg`} onClick={() => isOpen('pricerange')}>
-                    {
-                        pricerangeOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
-                    }
-                    <span>Price Range</span>
+
+
+            <div className="p-6">
+
+            
+            <div>
+            
+            <div className={`w-full title cursor-pointer font-bold text-md`} onClick={() => isOpen('pricerange')}>
+                {
+                    pricerangeOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
+                }
+                <span>Price Range(KSh)</span>
+            </div>
+            
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+                
+
+                <button 
+                onClick={handleApply}
+                className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-700 transition"
+                >
+                Apply
+                </button>
+            </div>
+
+            {/* Double Slider */}
+            <div className="relative pt-2">
+                <input
+                type="range"
+                min={0}
+                max={99999}
+                value={inputMin}
+                onChange={(e) => setInputMin(Math.min(Number(e.target.value), inputMax - 1000))}
+                className="absolute w-full h-1 bg-active rounded-lg appearance-none cursor-pointer"
+                />
+                <input
+                type="range"
+                min={0}
+                max={99999}
+                value={inputMax}
+                onChange={(e) => setInputMax(Math.max(Number(e.target.value), inputMin + 1000))}
+                className="absolute w-full h-1 bg-active rounded-lg appearance-none cursor-pointer"
+                />
+                
+                {/* Progress bar between min and max */}
+                <div className="relative h-1 bg-cartCard rounded-full">
+                <div 
+                    className="absolute h-1 bg-active rounded-full"
+                    style={{
+                    left: `${(inputMin / 99999) * 100}%`,
+                    right: `${100 - (inputMax / 99999) * 100}%`
+                    }}
+                ></div>
                 </div>
-                <div className={`list pl-7 cursor-pointer flex flex-col ${pricerangeOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
-                    <span className={`item cursor-pointer ${pricerange === '$0 - $25' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$0 - $25')}>$0 - $25</span>
-                    <span className={`item cursor-pointer ${pricerange === '$25 - $50' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$25 - $50')}>$25 - $50</span>
-                    <span className={`item cursor-pointer ${pricerange === '$50+' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setPricerange('$50+')}>$50+</span>
+            </div>
+
+            {/* Range Labels */}
+            <div className="flex justify-between text-xs text-gray-400 mt-4">
+                <span>0</span>
+                <span>25k</span>
+                <span>50k</span>
+                <span>75k</span>
+                <span>100k</span>
+            </div>
+
+            {/* Price Range Values */}
+            <div className="flex items-center justify-between gap-1 mb-6 mt-6">
+                {/* Min Price */}
+                <div className="flex-1">
+                <label className="text-sm text-gray-500 mb-1 block">Min</label>
+                <input
+                    type="number"
+                    value={inputMin}
+                    onChange={(e) => {
+                        const value = Number(e.target.value);
+                        if (value >= 0 && value < inputMax) {
+                            setInputMin(value);
+                        }
+                    }}
+                    className="text-sm border rounded-md px-2 py-1 w-21"
+                />
+                
                 </div>
+
+                {/* Separator */}
+                <div className="text-gray-400 text-sm pt-5">—</div>
+
+                {/* Max Price */}
+                <div className="flex-1">
+                <label className="text-sm text-gray-500 mb-1 block w-full text-end">Max</label>
+                <input
+                    type="number"
+                    value={inputMax}
+                    onChange={(e) => {
+                        const value = Number(e.target.value);
+                        if (value < 100000 && value > inputMin) {
+                            setInputMax(value);
+                        }
+                    }}
+                    className="text-sm border rounded-md px-2 py-1 w-21"
+                />
+                
+                </div>
+            </div>
+
+            
+            </div>
             </div>
 
         </div>

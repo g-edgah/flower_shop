@@ -9,7 +9,7 @@ import Filter from '../components/common/filter.jsx'
 const Flowers = ({setPage}) => {
     const [pageNo, setPageNo] = useState(1)
     const [sortOpen, setSortOpen] = useState(false)
-    const [sortBy, setSortBy] = useState('newest')
+    const [sortBy, setSortBy] = useState('popularity')
 
     const toggleSort = () => {
         setSortOpen(!sortOpen)
@@ -32,6 +32,10 @@ const Flowers = ({setPage}) => {
                 <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
                 <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
                     <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
