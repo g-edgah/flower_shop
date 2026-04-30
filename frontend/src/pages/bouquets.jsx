@@ -43,11 +43,11 @@ const Bouquets = ({setPage}) => {
                     
                 </div>
                 <div className="pages flex gap-1">
-                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-footer hover:text-white hover:border-0" onClick={() => setPageNo(1)}><MdOutlineKeyboardDoubleArrowLeft /></div>
-                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-footer hover:text-white hover:border-0" onClick={() => pageNo > 1 && setPageNo(pageNo - 1)}><MdKeyboardArrowLeft /></div>
-                    <div className="size-9 flex justify-center items-center rounded-sm text-white font-bold bg-footer">{pageNo}</div>
-                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-footer hover:text-white hover:border-0" onClick={() => setPageNo(pageNo + 1)}><MdKeyboardArrowRight /></div>
-                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-footer hover:text-white hover:border-0" onClick={() => pageNo < totalPages && setPageNo(totalPages)}><MdOutlineKeyboardDoubleArrowRight /></div>
+                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => setPageNo(1)}><MdOutlineKeyboardDoubleArrowLeft /></div>
+                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => pageNo > 1 && setPageNo(pageNo - 1)}><MdKeyboardArrowLeft /></div>
+                    <div className="size-9 flex justify-center items-center rounded-sm text-white font-bold bg-active">{pageNo}</div>
+                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => setPageNo(pageNo + 1)}><MdKeyboardArrowRight /></div>
+                    <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => pageNo < totalPages && setPageNo(totalPages)}><MdOutlineKeyboardDoubleArrowRight /></div>
                 </div>
             </div>
             

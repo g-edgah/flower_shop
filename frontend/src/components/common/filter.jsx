@@ -9,7 +9,7 @@ const Filter = ({ handleSort, toggleSort, sortOpen, sortBy, page, setPage }) => 
                     <MdKeyboardArrowDown />
 
                 </div>
-                <div className={`options absolute z-50 flex flex-col ${sortOpen ? 'block' : 'hidden'} w-60 p-3 bg-gray-200 rounded-b-md shadow-xl/70 gap-2`}>
+                <div className={`options absolute z-50 flex flex-col ${sortOpen ? 'block' : 'hidden'} w-60 p-3 bg-cartCard rounded-b-md shadow-xl/70 gap-2`}>
                     <span className="item cursor-pointer" onClick={() => handleSort('price low to high')}>Price: Low to High</span>
                     <span className="item cursor-pointer" onClick={() => handleSort('price high to low')}>Price: High to Low</span>
                     <span className="item cursor-pointer" onClick={() => handleSort('newest')}>Newest Arrivals</span>
