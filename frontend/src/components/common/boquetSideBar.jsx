@@ -7,9 +7,9 @@ import FlowerCard from '../home/flowerCard.jsx'
 
 
 const SideBar = () => {
-    const [occasionsOpen, setOccasionsOpen] = useState(true);
-    const [colorsOpen, setColorsOpen] = useState(false);
-    const [pricerangeOpen, setPricerangeOpen] = useState(false);
+    // const [occasionsOpen, setOccasionsOpen] = useState(true);
+    // const [colorsOpen, setColorsOpen] = useState(false);
+    // const [pricerangeOpen, setPricerangeOpen] = useState(false);
 
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(99999);
@@ -25,30 +25,34 @@ const SideBar = () => {
         setMaxPrice(inputMax);
     };
 
-    const isOpen = (filter) => {
-        if (filter === 'occassion') {
-            setOccasionsOpen(!occasionsOpen)
-        } else if (filter === 'colors') { 
-            setColorsOpen(!colorsOpen)
-        } else if (filter === 'pricerange') {
-            setPricerangeOpen(!pricerangeOpen)
-        }
+    // const isOpen = (filter) => {
+    //     if (filter === 'occassion') {
+    //         setOccasionsOpen(!occasionsOpen)
+    //     } else if (filter === 'colors') { 
+    //         setColorsOpen(!colorsOpen)
+    //     } else if (filter === 'pricerange') {
+    //         setPricerangeOpen(!pricerangeOpen)
+    //     }
 
-    }
+    // }
     return (
-        <div className="w-60 flex flex-col gap-5  pt-5">
+        <div className="w-60 flex flex-col gap-3  pt-5">
+             <div className="w-full pl-3 title font-bold text-lg" >
+                <span>Filters</span>
+            </div>
+
             <div className="occassions w-full">
-                <div className="w-full pl-3 title cursor-pointer font-bold text-lg" onClick={() => isOpen('occassion')}>
-                    {
+                <div className="w-full pl-3 title font-bold text-md" >
+                    {/* {
                         occasionsOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
-                    }
-                    <span>Occasions</span>
+                    } */}
+                    <span>Occasion</span>
                 </div>
-                <div className={`flex pl-7 flex-col list ${occasionsOpen ? 'block' : 'hidden'} text-[14px] gap-1`}>
+                <div className={`flex pl-7 flex-col list text-[14px] gap-1`}>
                     <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
                     <span className={`item cursor-pointer ${occasion === 'birthday' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('birthday')}>Birthday</span>
                     <span className={`item cursor-pointer ${occasion === 'none' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('none')}>No Occasion</span>
-                    <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal</span>
+                    <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal Shower</span>
                     <span className={`item cursor-pointer ${occasion === 'wedding' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('wedding')}>Wedding</span>
                     <span className={`item cursor-pointer ${occasion === 'anniversary' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('anniversary')}>Anniversary</span>
                     <span className={`item cursor-pointer ${occasion === 'baby-shower' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('baby-shower')}>Baby Shower</span>
@@ -58,71 +62,71 @@ const SideBar = () => {
                 </div>
             </div>
 
-            <div className={`list cursor-pointer`}>
-                <div className={`w-full pl-3 title cursor-pointer font-bold text-lg`} onClick={() => isOpen('colors')}>
-                    {
+            <div className={`list cursor-pointer pt-5`}>
+                <div className={`w-full pl-3 title cursor-pointer font-bold text-mm"d`} >
+                    {/* {
                         colorsOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
-                    }
+                    } */}
                     <span>Colors</span>
                 </div>
 
-                <div className={`list pl-7 flex flex-wrap ${colorsOpen ? 'block' : 'hidden'} gap-2 max-w-55 pt-4`}>
+                <div className={`list pl-7 flex flex-wrap gap-2 max-w-55 pt-4`}>
 
-                   <div  className={`color rounded-full size-12 flex items-center justify-center ${color === 'all' ? 'border' : ''}`} onClick={() => setColor('all')}>
-                    <div className="color size-10 rounded-full" style={{
+                   <div  className={`color rounded-full size-11 flex items-center justify-center ${color === 'all' ? 'border-[2px]' : ''}`} onClick={() => setColor('all')}>
+                    <div className="color size-9 rounded-full" style={{
                         background: "conic-gradient(red, yellow, green, cyan, blue, magenta, red)"
                         }}>
                     </div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'red' ? 'border' : ''}`} onClick={() => setColor('red')}>
-                        <div className="color size-10 rounded-full bg-red-600"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'red' ? 'border-[2px]' : ''}`} onClick={() => setColor('red')}>
+                        <div className="color size-9 rounded-full bg-red-600"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'Pink' ? 'border' : ''}`} onClick={() => setColor('Pink')}>
-                        <div className="color size-10 rounded-full bg-pink-500"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'Pink' ? 'border-[2px]' : ''}`} onClick={() => setColor('Pink')}>
+                        <div className="color size-9 rounded-full bg-pink-500"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'blue' ? 'border' : ''}`} onClick={() => setColor('blue')}>
-                        <div className="color size-10 rounded-full bg-blue-500"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'blue' ? 'border-[2px]' : ''}`} onClick={() => setColor('blue')}>
+                        <div className="color size-9 rounded-full bg-blue-500"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'white' ? 'border' : ''}`} onClick={() => setColor('white')}>
-                        <div className="color size-10 rounded-full bg-white border"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'white' ? 'border-[2px]' : ''}`} onClick={() => setColor('white')}>
+                        <div className="color size-9 rounded-full bg-white border"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'purple' ? 'border' : ''}`} onClick={() => setColor('purple')}>
-                        <div className="color size-10 rounded-full bg-purple-500"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'purple' ? 'border-[2px]' : ''}`} onClick={() => setColor('purple')}>
+                        <div className="color size-9 rounded-full bg-purple-500"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'yellow' ? 'border' : ''}`} onClick={() => setColor('yellow')}>
-                        <div className="color size-10 rounded-full bg-yellow-500"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'yellow' ? 'border-[2px]' : ''}`} onClick={() => setColor('yellow')}>
+                        <div className="color size-9 rounded-full bg-yellow-500"></div>
                     </div>
-                    <div className={`color rounded-full size-12 flex items-center justify-center ${color === 'black' ? 'border' : ''}`} onClick={() => setColor('black')}>
-                        <div className="color size-10 rounded-full bg-black"></div>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'black' ? 'border-[2px]' : ''}`} onClick={() => setColor('black')}>
+                        <div className="color size-9 rounded-full bg-black"></div>
                     </div>
                 </div>
             </div>
 
 
 
-            <div className="p-6">
+            <div className="pl-4 w-52 pt-5">
 
             
-            <div>
             
-            <div className={`w-full title cursor-pointer font-bold text-md`} onClick={() => isOpen('pricerange')}>
-                {
-                    pricerangeOpen ? <MdArrowDropDown className='inline'/> : <MdArrowRight className='inline'/>
-                }
-                <span>Price Range(KSh)</span>
-            </div>
-            
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center h-10 pt-5 pb-10">
+
+                <div className={`w-full title cursor-pointer font-bold text-md`} >
+                    <span>Price(KSh)</span>
+                </div>
                 
+                {/* Header */}
+                <div className="flex justify-end items-center">
+                    
 
-                <button 
-                onClick={handleApply}
-                className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-700 transition"
-                >
-                Apply
-                </button>
+                    <button 
+                    onClick={handleApply}
+                    className="bg-active text-white px-4 py-1.5 rounded-md text-sm hover:bg-footer transition"
+                    >
+                    Apply
+                    </button>
+                </div>
             </div>
+            
 
             {/* Double Slider */}
             <div className="relative pt-2">
@@ -132,7 +136,7 @@ const SideBar = () => {
                 max={99999}
                 value={inputMin}
                 onChange={(e) => setInputMin(Math.min(Number(e.target.value), inputMax - 1000))}
-                className="absolute w-full h-1 bg-active rounded-lg appearance-none cursor-pointer"
+                className="absolute w-full h-1 text-black bg-active rounded-lg cursor-pointer"
                 />
                 <input
                 type="range"
@@ -140,11 +144,11 @@ const SideBar = () => {
                 max={99999}
                 value={inputMax}
                 onChange={(e) => setInputMax(Math.max(Number(e.target.value), inputMin + 1000))}
-                className="absolute w-full h-1 bg-active rounded-lg appearance-none cursor-pointer"
+                className="absolute w-full h-1 [&::-moz-range-thumb]:z-20 [&::-moz-range-thumb]:bg-active bg-active rounded-lg appearance-none cursor-pointer"
                 />
                 
                 {/* Progress bar between min and max */}
-                <div className="relative h-1 bg-cartCard rounded-full">
+                <div className="relative h-1 z-2 bg-cartCard rounded-full">
                 <div 
                     className="absolute h-1 bg-active rounded-full"
                     style={{
@@ -202,10 +206,10 @@ const SideBar = () => {
                 />
                 
                 </div>
+                
             </div>
 
             
-            </div>
             </div>
 
         </div>
