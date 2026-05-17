@@ -19,7 +19,6 @@ function App() {
           
         </Route>
         <Route path='/admin' element={<AdminLayout/>}/>
-        <Route path='/cart' element={<CartPage/>}/>
         <Route path='/profile' element={<ProfilePage/>}/>
       </Routes>
     </BrowserRouter>

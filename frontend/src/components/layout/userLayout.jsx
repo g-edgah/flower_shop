@@ -9,6 +9,7 @@ import Flowers from '../../pages/flowers.jsx';
 import Design from '../../pages/design.jsx';
 import Colors from '../../pages/colors.jsx';
 import Popular from '../../pages/popular.jsx';
+import CartPage from '../../pages/cart.jsx';
 
 const UserLayout = () => {
     const [page, setPage] = useState("home")
@@ -30,6 +31,7 @@ const UserLayout = () => {
                 <Route path='flowers' element={<Flowers setPage={setPage} />}/>
                 <Route path='design' element={<Design setPage={setPage} />}/>
                 <Route path='popular' element={<Popular setPage={setPage} />}/>
+                <Route path='/cart' element={<CartPage setPage={setPage} />}/>
 
             </Routes>
             

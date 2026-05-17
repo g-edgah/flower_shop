@@ -1,35 +1,31 @@
+import { useRef, useState, useEffect } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+
 import FlowerCard from '../components/home/flowerCard.jsx'
 import OccassionCard from '../components/home/occassionCard.jsx'
 import DiscountCard from '../components/home/discountCard.jsx'
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-import { useRef, useState, useEffect } from 'react';
+
+
 
 const HomePage = ({setPage}) => {
     const sliderRef = useRef(null);
-    const [showLeftArrow, setShowLeftArrow] = useState(false);
-    const [showRightArrow, setShowRightArrow] = useState(true);
     const [showFirst, setShowFirst] = useState(true);
 
-    const checkScroll = () => {
-        if (!sliderRef.current) return;
-        
-        const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-        setShowLeftArrow(scrollLeft > 0);
-        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
-    };
+    const [content, setContent] = useState([
+        {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
+        {title: "weddings", text: "that special day", image: 'bg-[url(/src/assets/wedding/wed-3.jpeg)]'}, 
+        {title: "birthdays", text: "the day that's all about you", image: 'bg-[url(/src/assets/birthday/birth-17.jpeg)]'}, 
+        {title: "gifts", text: "when you want to make her/him feel special", image: 'bg-[url(/src/assets/romantic/rom-4.png)]'}
+    ]); 
 
-    const scroll = (direction) => {
-        if (!sliderRef.current) return;
-        
-        const scrollAmount = sliderRef.current.clientWidth;
-        sliderRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-        });
-        
-        // Check arrows after scroll
-        setTimeout(checkScroll, 300);
-    };
+
 
     useEffect(() => {
         //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
@@ -91,52 +87,38 @@ const HomePage = ({setPage}) => {
 
             <div className="relative flex flex-col spacing-y-4 items-center justify-around w-full px-5 md;px-15 space-y-5">
                 <span className='font-bold text-lg md:text-xl'>flowers for every occassion</span>
-                <div className="flex flex-row min-w-full justify-around items-center px-3">
-                    <button onClick={() => scroll('left')} className='
-                    z-10 
-                    absolute
-                    left-3
-                    md:relative
-                    md:left-0
-                    bg-gray-300 backdrop-blur-sm
-                    w-10 h-10
-                    rounded-full
-                    shadow-lg
-                    flex items-center justify-center
-                    transition-all duration-200
-                    hover:bg-white hover:shadow-xl
-                    hover:scale-110
-                    active:scale-95
-                    border border-gray-200'>
-                        <FaAngleLeft className='h-7'/>
-                    </button>
+                
                     
-                    <div onScroll={checkScroll} ref={sliderRef} className="occassions  flex px-0 space-x-0 w-[85vw] max-w-234 rounded-lg justify-around items-center overflow-x-auto scroll-smooth scrollbar-hide snap-x snap-mandatory">
-                        <OccassionCard className=" snap-center" text="those unforgateable milestones" title="graduation" image='bg-[url(/src/assets/graduation/grad-7.jpeg)]'/>
-                        <OccassionCard className="snap-center" title="weddings" text="that special day" image='bg-[url(/src/assets/wedding/wed-3.jpeg)]'/>
-                        <OccassionCard className="snap-center" title="birthdays" text="the day that's all about you" image='bg-[url(/src/assets/birthday/birth-17.jpeg)]'/>
-                        <OccassionCard className="snap-center" title="gifts" text="when you want to make her/him feel special" image='bg-[url(/src/assets/romantic/rom-4.png)]'/>
-                    </div>
+                <div className="occassions flex px-0 space-x-0 max-w-234 justify-center items-center h-73 md:h-150 w-[95vw] min-w-[95vw] md:w-234 md:min-w-234">
+      <Swiper
+        modules={[Autoplay, Navigation, Pagination]}
+        loop={true}                    // infinite: true
+        speed={500}                    // speed: 500
+        slidesPerView={'auto'}         // variableWidth + centerMode
+        centeredSlides={true}          // centerMode: true
+        spaceBetween={0}               // space-x-0 from your div
+        autoplay={{
+          delay: 5000,                 // autoplaySpeed: 5000
+          disableOnInteraction: false,
+        }}
+        navigation={false}              // adds prev/next arrows
+        pagination={{ clickable: true }} // adds dots navigation
+        touchRatio={1}                 // touchMove: true
+        grabCursor={false}              // better UX for touch
+        className="w-full h-full"
+      >
+        {content.map(({ title, text, image }, index) => (
+          <SwiperSlide key={index} className="!w-auto"> {/* !w-auto for variable width */}
+            <OccassionCard 
+              title={title}
+              text={text}
+              image={image}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
 
-                    <button onClick={() => scroll('right')} className="
-                    z-10 
-                    absolute
-                    right-3
-                    md:relative
-                    md:right-0
-                    rounded-full
-                    bg-gray-300 backdrop-blur-sm
-                    w-10 h-10
-                    shadow-lg
-                    flex items-center justify-center
-                    transition-all duration-200
-                    hover:bg-white hover:shadow-xl
-                    hover:scale-110
-                    active:scale-95
-                    border border-gray-200">
-                        <FaAngleRight className=' h-7'/>
-                    </button>
-                </div>
                 
                 
             </div>

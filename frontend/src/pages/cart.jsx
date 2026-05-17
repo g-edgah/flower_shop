@@ -5,7 +5,7 @@ import CartHeader from '../components/cart/cartHeader.jsx';
 import CartCard from '../components/cart/cartCard.jsx';
 import Footer from '../components/common/footer.jsx';
 
-const CartPage = () => {
+const CartPage = ({setPage}) => {
     const Navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
     const [couponCode, setCouponCode] = useState('');
@@ -13,6 +13,11 @@ const CartPage = () => {
     const [totalPayable, setTotalPayable] = useState(0);
     const [shippingLocation, setShippingLocation] = useState('');
     const [shippingCost, setShippingCost] = useState(0);
+
+    useEffect(() => {
+        //ensures page is set to popular when navigation is through other channels apart from button clicking such as navigating back 
+        setPage("cart")
+    }, [])
 
     //mock cart items for use in frontend design
     const sampleCartItems = [
@@ -109,8 +114,7 @@ const CartPage = () => {
 
 
     return (
-    <div className="h-full w-full flex flex-col space-y-3 md:space-y-5 items-center">
-            <CartHeader />
+    <div className="min-h-full pt-10 w-full flex flex-col space-y-3 md:space-y-5 items-center">
             {sampleCartItems.length === 0 ? (
                 <div className="emptyCart w-full h-[50vh] flex flex-col items-center space-y-10 justify-center mt-20">
                     <div className="text-center space-y-4">
@@ -179,7 +183,6 @@ const CartPage = () => {
                     </div>
                 </div>
             )}
-            <Footer />
         </div> 
     )
 }

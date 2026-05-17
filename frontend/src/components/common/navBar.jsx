@@ -95,10 +95,11 @@ const NavBar = ({page, setPage }) => {
                         <Link to='/profile' className="text-navText hover:text-navHover">
                             <HiUser className="h-6 w-6"/>
                         </Link>
-                        <button onClick={() => navigate('/cart')} className="relative cursor-pointer text-navText hover:text-navHover">
-                            <IoIosBasket className="h-6 w-6"/>
-                            <span className="absolute -top-1 bg-topbar text-white text-xs rounded-full px-2 py-0.5">0</span>
-                            
+                        <button onClick={() => navigate('/cart')} className={`group relative cursor-pointer text-navText hover:text-navHover ${page == 'cart' ? 'text-navHover':'text-navText'}`}>
+                            <IoIosBasket className={`h-6 w-6 ${page == 'cart' ? 'text-navHover':'text-navText group-hover:text-navHover'}`}   />
+                            <span className={`absolute -top-1  text-white text-xs rounded-full px-2 py-0.5 ${page == 'cart' ? 'bg-navHover':'bg-navText group-hover:bg-navHover'}`}>
+                                0
+                            </span>
                         </button >
                         
                     </div>  
