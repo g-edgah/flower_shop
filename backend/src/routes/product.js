@@ -2,10 +2,10 @@ import express from 'express'
 
 const productRoutes = express.Router();
 
-import { popular, boquets, flowers} from '../controller/product.js'
+import { popular, bouquets, flowers, floristPicks, newProducts} from '../controller/product.js'
 
 productRoutes.get('/popular', popular)
-productRoutes.get('/boquets', boquets)
+productRoutes.get('/bouquets', bouquets)
 productRoutes.get('/flowers', flowers)
 productRoutes.get('/floristPicks', floristPicks)
 productRoutes.get('/new', newProducts)

@@ -17,7 +17,7 @@ export const getUser = async (req, res) => {
     }
 }
 
-export const getUserCart = async (req. res) => {
+export const getUserCart = async (req, res) => {
     try {
         const { id } = req.params
 
