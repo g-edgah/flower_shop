@@ -1,9 +1,12 @@
 import express from 'express'
 
+import { getUser, getUserCart  } from '../controller/user.js'
+import { verifyToken } from '../middleware/auth.js'
+
+
 const userRoutes = express.Router();
 
-import { getUser } from '../controller/user.js'
-
-userRoutes.get('/:id', getUser)
+userRoutes.get('/:id', verifyToken, getUser)
+userRoutes.get('/:id/cart', verifyToken, getUserCart)
 
 export default userRoutes

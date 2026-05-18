@@ -4,26 +4,30 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
-        min: 2,
-        max: 30,
+        trim: true,
+        minLength: 2,
+        maxLength: 30,
     },
     lastName: {
         type: String,
         required: true,
-        min: 2,
-        max: 30,
+        trim: true,
+        minLength: 2,
+        maxLength: 30,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        max: 30,
+        trim: true,
+        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "invalid email format"],
+        maxLength: 30,
     },
     password: {
         type: String,
         required: true,
-        min: 8,
-        max: 128,
+        minLength: 8,
+        maxLength: 128,
     },
     picturePath: {
         type: String,
@@ -31,17 +35,41 @@ const userSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        max: 128,
+        maxLength: 128,
     },
     cart: {
         type: Array,
         default: [],
-    }
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+    },
 }, { 
     timestamps: true,
     collection: 'users',
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
  })
+
+ //password hashing middleware
+ userSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        return next()
+    }
+    try {
+        const salt = await bcrypt.genSalt(10)
+        this.password = await bcrypt.hash(this.password, salt)
+        next()
+    } catch (error) {
+        next(error)
+    }
+ })
+
+ //matching password to hashed pashword
+ userSchema.methods.matchPassword = async function(enteredPassword) {
+        return await bcrypt.compare(enteredPassword, this.password)
+    }
 
  const User = mongoose.model('User', userSchema)
  

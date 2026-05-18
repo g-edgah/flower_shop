@@ -3,7 +3,9 @@ import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cookieparser from 'cookie-parser'
 import { fileURLToPath } from 'url';
+
 
 
 import connectDB from './db/db.js';
@@ -24,6 +26,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieparser())
 
 
 app.get('/', (req, res) => {
@@ -33,9 +36,9 @@ app.get('/', (req, res) => {
 app.use('/assets', express.static(path.join(__dirname, 'assets/')))
 
 //routes
-app.use('/auth', authRoutes)
-app.use('/users', userRoutes)
-app.use('/products', productRoutes)
+app.use('api/auth', authRoutes)
+app.use('api/users', userRoutes)
+app.use('api/products', productRoutes)
 
 //mongoose
 const PORT = process.env.PORT

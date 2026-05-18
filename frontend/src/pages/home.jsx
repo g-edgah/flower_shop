@@ -92,23 +92,30 @@ const HomePage = ({setPage}) => {
                 <div className="occassions flex px-0 space-x-0 max-w-234 justify-center items-center h-73 md:h-150 w-[95vw] min-w-[95vw] md:w-234 md:min-w-234">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
-        loop={true}                    // infinite: true
-        speed={500}                    // speed: 500
-        slidesPerView={'auto'}         // variableWidth + centerMode
-        centeredSlides={true}          // centerMode: true
-        spaceBetween={0}               // space-x-0 from your div
+        loop={true}                  
+        speed={500}                    
+        slidesPerView={'auto'}        
+        centeredSlides={true}          
+        spaceBetween={0}             
         autoplay={{
-          delay: 5000,                 // autoplaySpeed: 5000
+          delay: 5000,                 
           disableOnInteraction: false,
         }}
         navigation={false}              // adds prev/next arrows
         pagination={{ clickable: true }} // adds dots navigation
-        touchRatio={1}                 // touchMove: true
-        grabCursor={false}              // better UX for touch
+        style={{
+            "--swiper-pagination-color": "#0F172B",        // Active dot color
+            "--swiper-pagination-bullet-inactive-color": "#999999",  // Inactive dots color
+            "--swiper-pagination-bullet-size": "8px",      // Dot size
+            "--swiper-pagination-bullet-horizontal-gap": "8px",  // Space between dots
+            "--swiper-pagination-bottom": "3px",        // Distance from bottom
+        }}
+  touchRatio={1}                 // touchMove: true
+        grabCursor={false}              
         className="w-full h-full"
       >
         {content.map(({ title, text, image }, index) => (
-          <SwiperSlide key={index} className="!w-auto"> {/* !w-auto for variable width */}
+          <SwiperSlide key={index}> 
             <OccassionCard 
               title={title}
               text={text}
@@ -158,7 +165,7 @@ const HomePage = ({setPage}) => {
             
             <div className="bulk w-full flex justify-around">
                 <div className="relative w-[95vw] max-w-234 bg-light-purple h-70 md:h-140 mb-10 rounded-lg flex justify-around items-center bg-[url(/src/assets/bulk/image.png)] bg-cover bg-center bg-no-repeat">
-                    <div className='flex flex-col pl-3 md:pl-5 w-4/5 text-slate-900 md:w-3/5 space-y-4 backdrop-blur-md bg-purple-200/70 border border-white/20 shadow-lg rounded-lg p-2'>
+                    <div className='flex flex-col pl-3 md:pl-5 w-4/5 text-slate-900 md:w-3/5 space-y-4 backdrop-blur-md bg-cartCard border border-white/20 shadow-lg rounded-lg p-2'>
                         <span className='text-md md:text-2xl font-bold'>place a bulk order</span>
                         <span className='text-sm md:text-lg font-semibold'>do you have a large event or party coming up or you just want a lot of flowers? Reach out and we'll make it happen</span>
                         <span className="font-bold">learn more</span>

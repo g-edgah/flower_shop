@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         });
 
         const savedUser = await newUser.save()
-        res.status(201).json(savedUser); 
+        res.status(201).json({message: "registration successful"}); 
 
     } catch (error) {
         res.status(500).json({message: 'error creating new user'})
@@ -62,12 +62,20 @@ export const login = async (req, res) => {
         const passwdMatch = await bcrypt.compare(password, user.password);
         if (!passwdMatch) return res.status(400).json({ message: 'wrong email or password' });
 
-        const token = jwt.sign({ id : user._id}, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            { id : user._id}, 
+            process.env.JWT_SECRET,
+            { expiresIn: '7 days' }
+        );
         
-        //to avoid sending back the password
-        const userObject = user.toObject();  // or user.toJSON()
-        delete userObject.password;
-        res.status(200).json({ token, user: userObject });
+        //set cookie in response
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set secure flag in production
+            sameSite: 'strict', // prevent CSRF
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiry
+        });
+
         
     } catch (error) {
         console.log("error logging in: "+error);
