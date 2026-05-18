@@ -8,33 +8,31 @@ import User from '../models/user.js';
 export const register = async (req, res) => {
     //console.log('recieved'+req)
     try {
+        console.log('recieved: '+req.body.firstName)
         const {
             firstName, 
             lastName,
             email,
             password,
             picturePath,
-            friends,
             location,
-            occcupation 
-
         } = req.body
 
-        const salt = await bcrypt.genSalt();
-        const passwordHash = await bcrypt.hash(password, salt);
+        // const salt = await bcrypt.genSalt();
+        // const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
             firstName, 
             lastName,
             email,
-            password: passwordHash,
+            password,//: passwordHash,
             picturePath,
-            friends,
             location
         });
 
         const savedUser = await newUser.save()
         res.status(201).json({message: "registration successful"}); 
+        console.log("new user created: "+savedUser)
 
     } catch (error) {
         res.status(500).json({message: 'error creating new user'})

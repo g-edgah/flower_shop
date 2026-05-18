@@ -13,6 +13,7 @@ import connectDB from './db/db.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js'
 import productRoutes from './routes/product.js'
+import adminRoutes from './routes/admin.js'
 
 import { verifyToken } from './middleware/auth.js'
 
@@ -28,17 +29,19 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieparser())
 
-
-app.get('/', (req, res) => {
-    res.send("niaje kastoma")
-})
-
+//assests
 app.use('/assets', express.static(path.join(__dirname, 'assets/')))
 
 //routes
-app.use('api/auth', authRoutes)
-app.use('api/users', userRoutes)
-app.use('api/products', productRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/products', productRoutes)
+app.use('/api/admin', adminRoutes)
+
+//404
+app.get('/w', (req, res) => {
+    res.status(404).json({message: "page not found"})
+})
 
 //mongoose
 const PORT = process.env.PORT
