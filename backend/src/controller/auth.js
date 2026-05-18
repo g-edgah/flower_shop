@@ -45,6 +45,8 @@ export const register = async (req, res) => {
 //login
 export const login = async (req, res) => {
     try {
+
+        //console.log('login request recieved: '+req.body.email)
         const {
             email,
             password,
@@ -59,12 +61,17 @@ export const login = async (req, res) => {
 
         const passwdMatch = await bcrypt.compare(password, user.password);
         if (!passwdMatch) return res.status(400).json({ message: 'wrong email or password' });
+        // if (passwdMatch) {
+        //     console.log("user logged in: "+user.firstName)
+        // }
 
         const token = jwt.sign(
-            { id : user._id}, 
+            { id : user._id, role: user.role }, 
             process.env.JWT_SECRET,
             { expiresIn: '7 days' }
         );
+
+        //console.log("generated token: "+token)
         
         //set cookie in response
         res.cookie('token', token, {
@@ -72,6 +79,12 @@ export const login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production', // set secure flag in production
             sameSite: 'strict', // prevent CSRF
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiry
+        })
+
+        // Send response to client
+        res.status(200).json({ 
+            message: "Login successful",
+            userId: user._id 
         });
 
         

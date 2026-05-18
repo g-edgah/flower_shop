@@ -1,9 +1,10 @@
-import user from "../models/user.js";
+import User from "../models/user.js";
 import Product from "../models/product.js";
 
 export const getUser = async (req, res) => {
     try {
-        const { id } = req.params;
+        //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
+        const { id } = req.user;
 
         const user = await User.findById(id);
         const { _id, firstName, lastName, location, picturePath } = user;
@@ -19,7 +20,8 @@ export const getUser = async (req, res) => {
 
 export const getUserCart = async (req, res) => {
     try {
-        const { id } = req.params
+        //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
+        const { id } = req.user
 
         const user = await User.findById(id);
 

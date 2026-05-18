@@ -13,6 +13,8 @@ export const verifyToken = async (req, res, next) => {
              
         req.user = verified;
 
+        console.log("verified token for user id: "+req.user.id)
+
         next();
 
     } catch (error) {
