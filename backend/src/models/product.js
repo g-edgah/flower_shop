@@ -48,7 +48,11 @@ const productSchema = new mongoose.Schema({
     floristPick: {
         type: Boolean,
         default: false,
-    }
+    },
+    inStock: {
+        type: Boolean,
+        default: true,
+    },
 
 }, { 
     timestamps: true,

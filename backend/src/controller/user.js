@@ -6,6 +6,14 @@ export const getUser = async (req, res) => {
         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
         const { id } = req.user;
 
+        //also get id from params(to mess with those burpsuite warriors)
+        const paramID = req.params.id
+
+        //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
+        if (paramID !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
         const user = await User.findById(id);
         const { _id, firstName, lastName, location, picturePath } = user;
         const formattedUser = { _id, firstName, lastName, location, picturePath };
@@ -23,11 +31,23 @@ export const getUserCart = async (req, res) => {
         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
         const { id } = req.user
 
+         //also get id from params(to mess with those burpsuite warriors)
+        const paramID = req.params.id
+
+        //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
+        if (paramID !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
         const user = await User.findById(id);
 
-        const cart = await Promise.all(
-            user.cart.map((id) => Product.findById(id))
-        )
+        //option 1
+        const cart = await Product.find({
+            _id: { $in: user.cart }
+        });
+
+        //option 2
+        //const user = await User.findById(userId).populate('cart');
 
         const formattedCart = cart.map( ({ _id, name, price, description, picturePath }) => {
             return { _id, name, price, description, picturePath }

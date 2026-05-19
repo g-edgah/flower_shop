@@ -13,7 +13,7 @@ export const verifyToken = async (req, res, next) => {
              
         req.user = verified;
 
-        console.log("verified token for user id: "+req.user.id)
+        //console.log("verified token for user id: "+req.user.id)
 
         next();
 
@@ -27,5 +27,3 @@ export const verifyToken = async (req, res, next) => {
         return res.status(500).json({ message: "Server error" });
     }
 }
-
-//this confirms if token exists from poll of tokens stored server side. this makes it vulnerable to attacks where an attacker has a valid token but uses it to access other accounts that arent their's

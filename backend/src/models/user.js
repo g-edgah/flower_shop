@@ -39,10 +39,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxLength: 128,
     },
-    cart: {
-        type: Array,
-        default: [],
-    },
+    cart: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'  
+    }],
+    orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'   
+    }],
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
     role: {
         type: String,
         enum: ['user', 'admin'],
