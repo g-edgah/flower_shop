@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
+import cartItemSchema from './cartItemSchema.js'
+
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -39,10 +41,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxLength: 128,
     },
-    cart: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'  
-    }],
+    cart: [cartItemSchema],
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'   
@@ -87,4 +86,5 @@ const userSchema = new mongoose.Schema({
 
  const User = mongoose.model('User', userSchema)
  
+
  export default User

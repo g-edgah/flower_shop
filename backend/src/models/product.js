@@ -60,7 +60,6 @@ const productSchema = new mongoose.Schema({
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
 })
 
-
 const Product = mongoose.model('Product', productSchema)
  
 

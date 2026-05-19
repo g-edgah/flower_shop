@@ -14,9 +14,15 @@ export const getUser = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const user = await User.findById(id);
-        const { _id, firstName, lastName, location, picturePath } = user;
-        const formattedUser = { _id, firstName, lastName, location, picturePath };
+        // const user = await User.findById(id);
+        // const { _id, firstName, lastName, location, picturePath } = user;
+
+        //option 2
+        const user = await User.findById(userId).populate('cart')
+
+        const formattedUser = { _id, firstName, lastName, location, picturePath, cart: user.cart.map( ({ _id, name, price, description, picturePath }) => { 
+            return { _id, name, price, description, picturePath }
+        })};
 
         res.status(200).json({ formattedUser });
 
@@ -46,8 +52,6 @@ export const getUserCart = async (req, res) => {
             _id: { $in: user.cart }
         });
 
-        //option 2
-        //const user = await User.findById(userId).populate('cart');
 
         const formattedCart = cart.map( ({ _id, name, price, description, picturePath }) => {
             return { _id, name, price, description, picturePath }
