@@ -4,9 +4,10 @@ import { getUser } from '../controller/user.js'
 import { verifyToken } from '../middleware/auth.js'
 
 
-const userRoutes = express.Router();
+const userRouter = express.Router();
+userRouter.use(verifyToken);
 
-userRoutes.get('/:id', verifyToken, getUser)
+userRouter.get('/:id', getUser)
 
 
-export default userRoutes
+export default userRouter

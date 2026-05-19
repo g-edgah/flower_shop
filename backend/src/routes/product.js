@@ -1,13 +1,13 @@
 import express from 'express'
 
-const productRoutes = express.Router();
+const productRouter = express.Router();
 
 import { popular, bouquets, flowers, floristPicks, newProducts} from '../controller/product.js'
 
-productRoutes.get('/popular', popular)
-productRoutes.get('/bouquets', bouquets)
-productRoutes.get('/flowers', flowers)
-productRoutes.get('/floristPicks', floristPicks)
-productRoutes.get('/new', newProducts)
+productRouter.get('/popular', popular)
+productRouter.get('/bouquets', bouquets)
+productRouter.get('/flowers', flowers)
+productRouter.get('/floristPicks', floristPicks)
+productRouter.get('/new', newProducts)
 
-export default productRoutes
+export default productRouter

@@ -3,15 +3,15 @@ import { verifyToken, verifyAdmin } from '../middleware/auth.js';
 
 import { createOrder, getUserOrders, getOrderById, updateOrderStatus } from '../controllers/orders.js';
 
-const router = express.Router();
+const orderRouter = express.Router();
 
-// User routes (protected)
-router.post('/create', verifyToken, createOrder);
-router.get('/my-orders', verifyToken, getUserOrders);
-router.get('/:orderId', verifyToken, getOrderById);
+// user routes (protected)
+orderRouter.post('/create', verifyToken, createOrder);
+orderRouter.get('/my-orders', verifyToken, getUserOrders);
+orderRouter.get('/:orderId', verifyToken, getOrderById);
 
-// Admin routes (with additional admin middleware)
-router.put('/:orderId/status', verifyAdmin, updateOrderStatus);
+// admin routes (with additional admin middleware)
+orderRouter.put('/:orderId/status', verifyAdmin, updateOrderStatus);
 
 
-export default router;
+export default orderRouter;

@@ -10,10 +10,10 @@ import { fileURLToPath } from 'url';
 
 import connectDB from './db/db.js';
 
-import authRoutes from './routes/auth.js';
-import userRoutes from './routes/user.js'
-import productRoutes from './routes/product.js'
-import adminRoutes from './routes/admin.js'
+import authRouter from './routes/auth.js';
+import userRouter from './routes/user.js'
+import productRouter from './routes/product.js'
+import adminRouter from './routes/admin.js'
 
 import { verifyToken } from './middleware/auth.js'
 
@@ -33,10 +33,10 @@ app.use(cookieparser())
 app.use('/assets', express.static(path.join(__dirname, 'assets/')))
 
 //routes
-app.use('/api/auth', authRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/products', productRoutes)
-app.use('/api/admin', adminRoutes)
+app.use('/api/auth', authRouter)
+app.use('/api/users', userRouter)
+app.use('/api/products', productRouter)
+app.use('/api/admin', adminRouter)
 
 //404
 app.get('/w', (req, res) => {

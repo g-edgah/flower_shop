@@ -1,12 +1,38 @@
 import express from 'express'
 
-import { addProduct, removeProduct } from '../controller/admin.js'
 import { verifyToken, verifyAdmin } from '../middleware/auth.js'
+import {
+    createProduct,
+    deleteProduct,
+    updateProduct,
+    bulkCreateProducts,
+    bulkDeleteProducts,
+    updateProductStock,
+    updateProductDiscount,
+    toggleFloristPick,
+    toggleNewProduct,
+    getAllProductsAdmin
+} from '../controller/admin.js';
 
 
-const userRoutes = express.Router();
+const adminRouter = express.Router();
+adminRouter.use(verifyAdmin);
 
-userRoutes.post('/:id/addProduct', verifyAdmin, addProduct)
-userRoutes.delete('/:id/removeProduct', verifyAdmin, removeProduct)
+// product management
+adminRouter.post('/products', createProduct);
+adminRouter.get('/products', getAllProductsAdmin);
+adminRouter.put('/products/:productId', updateProduct);
+adminRouter.delete('/products/:productId', deleteProduct);
 
-export default userRoutes
+// bulk operations
+adminRouter.post('/products/bulk', bulkCreateProducts);
+adminRouter.delete('/products/bulk', bulkDeleteProducts);
+
+// product updates
+adminRouter.patch('/products/:productId/stock', updateProductStock);
+adminRouter.patch('/products/:productId/discount', updateProductDiscount);
+adminRouter.patch('/products/:productId/florist-pick', toggleFloristPick);
+adminRouter.patch('/products/:productId/new', toggleNewProduct);
+
+
+export default adminRouter

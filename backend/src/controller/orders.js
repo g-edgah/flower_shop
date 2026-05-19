@@ -157,3 +157,107 @@ export const updateOrderStatus = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// delete order
+export const deleteOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
+        // find the order
+        const order = await Order.findById(orderId);
+        
+        if (!order) {
+            return res.status(404).json({ 
+                success: false,
+                message: "Order not found" 
+            });
+        }
+
+        // check if user is authorized to delete this order
+        const isOwner = order.user.toString() === userId;
+        const isAdmin = userRole === 'admin';
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ 
+                success: false,
+                message: "You are not authorized to delete this order" 
+            });
+        }
+
+        // check if order can be deleted (only pending orders or admins)
+        if (!isAdmin && order.status !== 'pending') {
+            return res.status(400).json({ 
+                success: false,
+                message: "Can only delete pending orders. Contact support for assistance." 
+            });
+        }
+
+        // remove order reference from user
+        await User.findByIdAndUpdate(order.user, {
+            $pull: { orders: orderId }
+        });
+
+        // delete the order
+        await Order.findByIdAndDelete(orderId);
+
+        res.status(200).json({
+            success: true,
+            message: "Order deleted successfully",
+            deletedOrderId: orderId
+        });
+
+    } catch (error) {
+        console.error("Error deleting order:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to delete order", 
+            error: error.message 
+        });
+    }
+};
+
+// cancel order
+export const cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const userId = req.user.id;
+
+        const order = await Order.findOne({ _id: orderId, user: userId });
+        
+        if (!order) {
+            return res.status(404).json({ 
+                success: false,
+                message: "Order not found" 
+            });
+        }
+
+        // check if order can be cancelled
+        if (order.status !== 'pending' && order.status !== 'processing') {
+            return res.status(400).json({ 
+                success: false,
+                message: `Cannot cancel order with status: ${order.status}` 
+            });
+        }
+
+        // update order status instead of deleting
+        order.status = 'cancelled';
+        order.cancelledAt = new Date();
+        await order.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Order cancelled successfully",
+            order: order
+        });
+
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to cancel order", 
+            error: error.message 
+        });
+    }
+};
