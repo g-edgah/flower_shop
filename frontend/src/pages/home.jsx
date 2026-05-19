@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 import FlowerCard from '../components/home/flowerCard.jsx'
 import OccassionCard from '../components/home/occassionCard.jsx'
 import DiscountCard from '../components/home/discountCard.jsx'
+import DiscountSlider from '../components/home/discount.jsx'
 
 import { useHome } from '../hooks/products.js';
 
@@ -20,8 +21,6 @@ import { useHome } from '../hooks/products.js';
 
 
 const HomePage = ({setPage}) => {
-    const sliderRef = useRef(null);
-    const [showFirst, setShowFirst] = useState(true);
 
     const [content, setContent] = useState([
         {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
@@ -30,21 +29,25 @@ const HomePage = ({setPage}) => {
         {title: "gifts", text: "when you want to make her/him feel special", image: 'bg-[url(/src/assets/romantic/rom-4.png)]'}
     ]); 
 
+    //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
+        
 
     useEffect(() => {
-        //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
+
         setPage("home")
 
-        const interval = setInterval(() => {
-            setShowFirst(prev => !prev);
-        }, 5000);
-        return () => clearInterval(interval);
     }, []);
 
     const { data, isLoading, error, isFetching, refetch } = useHome();
+    // Log only when data actually changes
+
 
     if (isLoading) return <div>Loading first time...</div>;
     if (error) return <div>Error: {error.message}</div>;
+
+    const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data.data;
+
+    console.log(data.data)
 
     return (
         <div className="flex flex-col space-y-10 md:space-y-15">
@@ -62,34 +65,20 @@ const HomePage = ({setPage}) => {
             <div className="relative flex flex-col spacing-y-4 items-center jsutify-around space-y-5">
                 <span className='font-bold text-lg md:text-xl'>featured discounts</span>
                
-                <div className=" discounts aspect-2/1 md:aspect-4/1 w-[90vw] flex md:space-x-5 md:px-4 relative md:w-full md:max-w-244 justify-center items-center">
-                    
-                    <div className={`h-full w-full md:w-[calc(50%-0.75rem)] bg-[url(/src/assets/discount/discount-7.jpeg)] bg-center bg-cover bg-no-repeat rounded-xl flex justify-center flex-col space-y-1 pl-10 z-20 absolute left-0 md:relative card1 transition-all duration-1500 ${showFirst ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}>
-                        <span className="w-50 text-lg">get <span className="font-bold">20% OFF</span> on your first bouquet</span>
-                    </div>
-
-                   <div className={`h-full md:h-60 w-full md:w-[calc(50%-0.75rem)] bg-[url(/src/assets/discount/discount-1.jpeg)] bg-center bg-cover bg-no-repeat rounded-xl flex justify-center flex-col space-y-1 pl-10 z-19 absolute md:relative left-0 card2 transition-all  duration-1500 ${!showFirst ? 'opacity-100' : 'opacity-0 md:opacity-100'}`}>
-                        <span className="w-50 text-lg">save <span className="font-bold">ksh 5</span> per turlip</span>
-                        <span className="">was 
-                            <span className="line-through decoration-2 font-bold"> ksh 30</span>
-                        </span>
-                        <span className="">
-                            now
-                            <span className="font-bold"> ksh 25</span>
-                        </span>
-                
-                    </div>
-          
-                </div>
+                <DiscountSlider />
             </div>
 
             <div className="new flex flex-col items-center w-full space-y-5 justify-center">
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
-                    <FlowerCard name="yellow yellow" space-y-5 price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    {newProducts.map(({ name, price, picturePath }, index) => (
+                        <FlowerCard
+                        key={index} 
+                        name={name}
+                        price={price}
+                        image={picturePath}
+                        />
+                    ))}
                 </div>
                 
             </div>
@@ -119,7 +108,7 @@ const HomePage = ({setPage}) => {
             "--swiper-pagination-bullet-horizontal-gap": "8px",  // Space between dots
             "--swiper-pagination-bottom": "3px",        // Distance from bottom
         }}
-  touchRatio={1}                 // touchMove: true
+        touchRatio={1}                 // touchMove: true
         grabCursor={false}              
         className="w-full h-full"
       >
@@ -143,15 +132,16 @@ const HomePage = ({setPage}) => {
             <div className="popular flex flex-col space-y-5 items-center">
                 <span className='font-bold text-lg md:text-xl'>flying off the shelves</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
-                
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+
+                    {popularProducts.map(({ name, price, picturePath }, index) => (
+                        <FlowerCard 
+                        key={index}
+                        name={name}
+                        price={price}
+                        image={picturePath}
+                        />
+                    ))}
+                    
                     
                 </div>
             </div>
@@ -160,14 +150,14 @@ const HomePage = ({setPage}) => {
                 <span className='font-bold text-lg md:text-xl'>florists' pick</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    {floristPicks.map(({ name, price, picturePath }, index) => (
+                        <FlowerCard 
+                        key={index}
+                        name={name}
+                        price={price}
+                        image={picturePath}
+                        />
+                    ))}
                     
                 </div>
             </div>

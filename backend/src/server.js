@@ -14,6 +14,7 @@ import authRouter from './routes/auth.js';
 import userRouter from './routes/user.js'
 import productRouter from './routes/product.js'
 import adminRouter from './routes/admin.js'
+import homeRouter from './routes/home.js'
 
 import { verifyToken } from './middleware/auth.js'
 
@@ -25,7 +26,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5174', 
+    credentials: true,               
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Cookie'],
+    exposedHeaders: ['Set-Cookie']
+}));
 app.use(express.json());
 app.use(cookieparser())
 

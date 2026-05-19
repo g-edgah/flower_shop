@@ -19,8 +19,8 @@ const adminRouter = express.Router();
 adminRouter.use(verifyAdmin);
 
 // product management
-adminRouter.post('/products', createProduct);
-adminRouter.get('/products', getAllProductsAdmin);
+adminRouter.post('/products/create', createProduct);
+adminRouter.get('/products/all', getAllProductsAdmin);
 adminRouter.put('/products/:productId', updateProduct);
 adminRouter.delete('/products/:productId', deleteProduct);
 

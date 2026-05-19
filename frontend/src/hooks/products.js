@@ -5,7 +5,14 @@ import api from '../setup/axios';
 export const useHome = () => {
     return useQuery({
         queryKey: ['home'],
-        queryFn: () => api.get('/home').then(res => res.data)
+        queryFn: () => api.get('/home/').then(res => res.data),
+        staleTime: 5 * 60 * 1000, 
+        gcTime: 10 * 60 * 1000,    // keep in cache for 10 minutes 
+        refetchOnMount: false,     // don't refetch when component mounts
+        refetchOnWindowFocus: false, // don't refetch when window regains focus
+        refetchOnReconnect: false,   // don't refetch on network reconnection
+        retry: 1,                    // dnly retry failed requests once
+        retryDelay: 1000,
     });
 };
 
