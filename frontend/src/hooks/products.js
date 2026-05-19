@@ -17,18 +17,18 @@ export const useHome = () => {
 };
 
 // hook for bouquets
-export const useBouquets = () => {
+export const useBouquets = (filters) => {
     return useQuery({
-        queryKey: ['bouquets'],
-        queryFn: () => api.get('/products/bouquets').then(res => res.data)
+        queryKey: ['bouquets', filters],
+        queryFn: () => api.post('/products/bouquets', filters).then(res => res.data)
     });
 };
 
 // hook for flowers
-export const useFlowers = () => {
+export const useFlowers = (filters) => {
     return useQuery({
-        queryKey: ['flowers'],
-        queryFn: () => api.get('/products/flowers').then(res => res.data)
+        queryKey: ['flowers', filters],
+        queryFn: () => api.post('/products/flowers', filters).then(res => res.data)
     });
 };
 

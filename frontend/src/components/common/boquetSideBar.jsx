@@ -6,24 +6,11 @@ import { MdArrowDropDown } from "react-icons/md";
 import FlowerCard from '../home/flowerCard.jsx'
 
 
-const SideBar = () => {
+const SideBar = ({ colors, toggleColors, occasion, setOccasions, pricerange, setPricerange, inputMin, inputMax, setInputMax, setInputMin, handlePriceRange }) => {
     // const [occasionsOpen, setOccasionsOpen] = useState(true);
     // const [colorsOpen, setColorsOpen] = useState(false);
     // const [pricerangeOpen, setPricerangeOpen] = useState(false);
 
-    const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(99999);
-    const [inputMin, setInputMin] = useState(0);
-    const [inputMax, setInputMax] = useState(99999);
-
-    const [occasion, setOccasions] = useState('all');
-    const [color, setColor] = useState('all');
-    const [pricerange, setPricerange] = useState('all');
-
-    const handleApply = () => {
-        setMinPrice(inputMin);
-        setMaxPrice(inputMax);
-    };
 
     // const isOpen = (filter) => {
     //     if (filter === 'occassion') {
@@ -72,31 +59,31 @@ const SideBar = () => {
 
                 <div className={`list pl-7 flex flex-wrap gap-2 max-w-55 pt-4`}>
 
-                   <div  className={`color rounded-full size-11 flex items-center justify-center ${color === 'all' ? 'border-[2px]' : ''}`} onClick={() => setColor('all')}>
+                   <div  className={`color rounded-full size-11 flex items-center justify-center ${colors.includes("all") ? 'border-[2px]' : ''}`} onClick={() => toggleColors('all')}>
                     <div className="color size-9 rounded-full" style={{
                         background: "conic-gradient(red, yellow, green, cyan, blue, magenta, red)"
                         }}>
                     </div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'red' ? 'border-[2px]' : ''}`} onClick={() => setColor('red')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('red') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('red')}>
                         <div className="color size-9 rounded-full bg-red-600"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'Pink' ? 'border-[2px]' : ''}`} onClick={() => setColor('Pink')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('Pink') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('Pink')}>
                         <div className="color size-9 rounded-full bg-pink-500"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'blue' ? 'border-[2px]' : ''}`} onClick={() => setColor('blue')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('blue') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('blue')}>
                         <div className="color size-9 rounded-full bg-blue-500"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'white' ? 'border-[2px]' : ''}`} onClick={() => setColor('white')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('white') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('white')}>
                         <div className="color size-9 rounded-full bg-white border"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'purple' ? 'border-[2px]' : ''}`} onClick={() => setColor('purple')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('purple') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('purple')}>
                         <div className="color size-9 rounded-full bg-purple-500"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'yellow' ? 'border-[2px]' : ''}`} onClick={() => setColor('yellow')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('yellow') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('yellow')}>
                         <div className="color size-9 rounded-full bg-yellow-500"></div>
                     </div>
-                    <div className={`color rounded-full size-11 flex items-center justify-center ${color === 'black' ? 'border-[2px]' : ''}`} onClick={() => setColor('black')}>
+                    <div className={`color rounded-full size-11 flex items-center justify-center ${colors.includes('black') ? 'border-[2px]' : ''}`} onClick={() => toggleColors('black')}>
                         <div className="color size-9 rounded-full bg-black"></div>
                     </div>
                 </div>
@@ -119,7 +106,7 @@ const SideBar = () => {
                     
 
                     <button 
-                    onClick={handleApply}
+                    onClick={handlePriceRange}
                     className="bg-active text-white px-4 py-1.5 rounded-md text-sm hover:bg-footer transition"
                     >
                     Apply

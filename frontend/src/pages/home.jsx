@@ -39,7 +39,6 @@ const HomePage = ({setPage}) => {
     }, []);
 
     const { data, isLoading, error, isFetching, refetch } = useHome();
-    // Log only when data actually changes
 
 
     if (isLoading) return <div>Loading first time...</div>;

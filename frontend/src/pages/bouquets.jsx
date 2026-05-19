@@ -6,10 +6,19 @@ import SideBar from '../components/common/boquetSideBar.jsx'
 import FlowerCard from '../components/home/flowerCard.jsx'
 import Filter from '../components/common/filter.jsx'
 
+import { useBouquets } from '../hooks/products.js';
+
 const Bouquets = ({setPage}) => {
-    const [pageNo, setPageNo] = useState(1)
-    const [sortOpen, setSortOpen] = useState(false)
+    const [pageNo, setPageNo] = useState(1);
+    const [sortOpen, setSortOpen] = useState(false);
     const [sortBy, setSortBy] = useState('popularity')
+
+    const [colors, setColors] = useState(['all']);  
+    const [occasion, setOccasions] = useState('all');
+    const [pricerange, setPricerange] = useState('all');
+    const [inputMin, setInputMin] = useState(0);
+    const [inputMax, setInputMax] = useState(99999);
+
 
     const toggleSort = () => {
         setSortOpen(!sortOpen)
@@ -20,15 +29,58 @@ const Bouquets = ({setPage}) => {
         setSortOpen(false)
     }
 
+    const toggleColor = (newColor) => {
+        if(newColor === 'all'){
+            setColors(['all'])
+            return
+        }
+
+
+
+        if(colors.includes(newColor) && colors.length > 1){
+            setColors(colors.filter(c => c !== newColor))
+
+        } else if(!colors.includes(newColor) && colors.length === 6) {
+            setColors(['all'])
+
+        }else if(!colors.includes(newColor)){
+            setColors([...colors, newColor])
+            if(colors.includes('all')){
+                setColors([newColor])
+
+            }
+        }
+
+        console.log(colors)
+    }   
+
+    const handlePriceRange = () => {
+        // fetch products
+    }
+
     useEffect(() => {
         //ensures page is set to bouquets when navigation is through other channels apart from button clicking such as navigating back 
         setPage("bouquets")
     }, [])
+
+    const { data, isLoading, error, isFetching, refetch } = useBouquets();
+        // Log only when data actually changes
+    
+    
+    if (isLoading) return <div>Loading first time...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    if (data) {const { 
+        banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
+        console.log(data)
+    }
+
+   
     
     return (
         <div className="flex justify-center">
-            <SideBar />
-            <div className="boquets flex flex-col space-y-5 items-center max-w-250 pb-10">
+            <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} pricerange={pricerange} setPricerange={setPricerange} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} />
+            <div className="bo uquets flex flex-col space-y-5 items-center max-w-250 pb-10">
                 <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
                 <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
