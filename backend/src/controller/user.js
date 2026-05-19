@@ -19,7 +19,11 @@ export const getUser = async (req, res) => {
         // const { _id, firstName, lastName, location, picturePath } = user;
 
         //option 2
-        const user = await User.findById(userId).populate('cart.product')
+        const user = await User.findById(userId)
+            .populate('cart.product')
+            .populate('orders')
+            .populate('favorites')
+            .select('-password'); 
 
         const formattedUser = { 
             _id, 
