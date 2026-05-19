@@ -24,7 +24,10 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true  // price * quantity
     }
-});
+}, { 
+    timestamps: true,
+    strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
+ });
 
 
 export default orderItemSchema;

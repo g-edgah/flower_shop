@@ -17,7 +17,10 @@ const cartItemSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
+}, { 
+    timestamps: true,
+    strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
+ });
 
 
 // export the schema (not a model, since it's a subdocument)

@@ -78,18 +78,25 @@ const orderSchema = new mongoose.Schema({
     deliveredAt: {
         type: Date
     }
-}, {
-    timestamps: true  // adds createdAt and updatedAt
-});
+}, { 
+    timestamps: true,
+    collection: 'users',
+    strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
+ });
 
-//calculate order totals
+// indexes for better query performance
+orderSchema.index({ user: 1, orderDate: -1 });
+orderSchema.index({ status: 1 });
+orderSchema.index({ paymentStatus: 1 });
+
+// calculate order totals
 orderSchema.methods.calculateTotals = function() {
     this.subtotal = this.items.reduce((sum, item) => sum + item.totalPrice, 0);
     this.total = this.subtotal + this.tax + this.shippingCost - this.discount;
     return this.total;
 };
 
-//static method to get user's order history
+// static method to get user's order history
 orderSchema.statics.getUserOrders = function(userId, limit = 10) {
     return this.find({ user: userId })
         .sort({ orderDate: -1 })

@@ -3,7 +3,7 @@ import Product from "../models/product.js";
 
 export const addProduct = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         const user = await User.findById(id);
         const { _id, firstName, lastName, location, picturePath } = user;

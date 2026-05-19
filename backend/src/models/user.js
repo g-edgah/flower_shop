@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
  })
 
- //password hashing middleware
+ // password hashing middleware
  userSchema.pre('save', async function(next) {
     
     if (!this.isModified('password')) {
@@ -79,10 +79,23 @@ const userSchema = new mongoose.Schema({
     }
  })
 
- //matching password to hashed pashword
+ // matching password to hashed pashword
  userSchema.methods.matchPassword = async function(enteredPassword) {
         return await bcrypt.compare(enteredPassword, this.password)
     }
+
+ // method to get user's complete order history
+ userSchema.methods.getOrderHistory = async function() {
+    await this.populate({
+        path: 'orders',
+        options: { sort: { orderDate: -1 } },
+        populate: {
+            path: 'items.product',
+            select: 'name images'
+        }
+    });
+    return this.orders;
+ };
 
  const User = mongoose.model('User', userSchema)
  
