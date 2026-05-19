@@ -33,6 +33,7 @@ app.use(cookieparser())
 app.use('/assets', express.static(path.join(__dirname, 'assets/')))
 
 //routes
+app.use('/api/home', homeRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/products', productRouter)

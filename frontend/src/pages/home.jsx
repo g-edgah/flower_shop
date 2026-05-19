@@ -1,16 +1,21 @@
 import { useRef, useState, useEffect } from 'react';
+import { use } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import axios from 'axios';
+
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-
 import FlowerCard from '../components/home/flowerCard.jsx'
 import OccassionCard from '../components/home/occassionCard.jsx'
 import DiscountCard from '../components/home/discountCard.jsx'
+
+import { useHome } from '../hooks/products.js';
+
 
 
 
@@ -26,7 +31,6 @@ const HomePage = ({setPage}) => {
     ]); 
 
 
-
     useEffect(() => {
         //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
         setPage("home")
@@ -36,6 +40,11 @@ const HomePage = ({setPage}) => {
         }, 5000);
         return () => clearInterval(interval);
     }, []);
+
+    const { data, isLoading, error, isFetching, refetch } = useHome();
+
+    if (isLoading) return <div>Loading first time...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <div className="flex flex-col space-y-10 md:space-y-15">
