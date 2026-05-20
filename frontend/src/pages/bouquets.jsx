@@ -7,6 +7,7 @@ import FlowerCard from '../components/home/flowerCard.jsx'
 import Filter from '../components/common/filter.jsx'
 
 import { useBouquets } from '../hooks/products.js';
+import { use } from "react";
 
 const Bouquets = ({setPage}) => {
     const [pageNo, setPageNo] = useState(1);
@@ -15,9 +16,27 @@ const Bouquets = ({setPage}) => {
 
     const [colors, setColors] = useState(['all']);  
     const [occasion, setOccasions] = useState('all');
-    const [pricerange, setPricerange] = useState('all');
     const [inputMin, setInputMin] = useState(0);
     const [inputMax, setInputMax] = useState(99999);
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 99999 });
+
+    const [filters, setFilters] = useState({
+        occasion: 'all',
+        colors: ['all'],
+        priceRange: { min: 0, max: 99999 },
+        sortBy: 'popularity',
+        pageNo: 1
+    });
+
+    useEffect(() => {
+        setFilters({
+            occasion,
+            colors,
+            priceRange,
+            sortBy,
+            pageNo
+        })
+    }, [occasion, colors, priceRange, sortBy, pageNo])
 
 
     const toggleSort = () => {
@@ -55,7 +74,7 @@ const Bouquets = ({setPage}) => {
     }   
 
     const handlePriceRange = () => {
-        // fetch products
+        setPriceRange({ min: inputMin, max: inputMax });
     }
 
     useEffect(() => {
@@ -63,41 +82,44 @@ const Bouquets = ({setPage}) => {
         setPage("bouquets")
     }, [])
 
-    const { data, isLoading, error, isFetching, refetch } = useBouquets();
-        // Log only when data actually changes
     
+    const { data, isLoading, error, isFetching, refetch } = useBouquets(filters);
+
+    //const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
+
+    //console.log(data.products)
     
-    if (isLoading) return <div>Loading first time...</div>;
-    if (error) return <div>Error: {error.message}</div>;
-
-    if (data) {const { 
-        banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
-        console.log(data)
-    }
-
    
     
     return (
         <div className="flex justify-center">
-            <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} pricerange={pricerange} setPricerange={setPricerange} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} />
+            <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} handlePriceRange={handlePriceRange}/>
             <div className="bo uquets flex flex-col space-y-5 items-center max-w-250 pb-10">
                 <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
+                
+                {isLoading && (
+                    <div>Loading first time...</div>
+                )}
+
+                { error && (
+                    <div>Error: {error.message}</div>
+                )}
+
+
+                {data && (
                 <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
-                    <FlowerCard name="yellow yellow" price="4200" image="bouquets/image.png"/>
+                    {data.products.map(({ name, price, picturePath }, index) => (
+                        <FlowerCard
+                        key={index} 
+                        name={name}
+                        price={price}
+                        image={picturePath}
+                        />
+                    ))}
                     
                 </div>
+                )}
                 <div className="pages flex gap-1">
                     <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => setPageNo(1)}><MdOutlineKeyboardDoubleArrowLeft /></div>
                     <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => pageNo > 1 && setPageNo(pageNo - 1)}><MdKeyboardArrowLeft /></div>

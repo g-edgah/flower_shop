@@ -18,17 +18,22 @@ export const useHome = () => {
 
 // hook for bouquets
 export const useBouquets = (filters) => {
-    return useQuery({
+    //console.log(`filters: ${JSON.stringify(filters)}`) 
+
+    return useQuery({ 
         queryKey: ['bouquets', filters],
-        queryFn: () => api.post('/products/bouquets', filters).then(res => res.data)
+        queryFn: () => api.post('/products/bouquets', { ...filters }).then(res => res.data)
     });
+    
 };
 
 // hook for flowers
 export const useFlowers = (filters) => {
+    //console.log(`filters: ${JSON.stringify(filters)}`)
+
     return useQuery({
         queryKey: ['flowers', filters],
-        queryFn: () => api.post('/products/flowers', filters).then(res => res.data)
+        queryFn: () => api.post('/products/flowers', { ...filters }).then(res => res.data)
     });
 };
 

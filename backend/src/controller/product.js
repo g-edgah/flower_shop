@@ -3,18 +3,47 @@ import Product from "../models/product.js";
 // get bouquets
 export const bouquets = async (req, res) => {
     try {
-        const { page = 1, limit = 20, sort = 'popularity' } = req.query;
-        const skip = (page - 1) * limit;
 
+        const { 
+            occasion,
+            colors,
+            priceRange,
+            sortBy,
+            pageNo
+        } = req.body;
+
+        console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
+
+        let limit = 20; // default items per page
+        // pagination
+        const skip = (pageNo - 1) * limit;
+
+        // sorting
         let sortOption = {};
-        if (sort === 'price_asc') sortOption = { price: 1 };
-        else if (sort === 'price_desc') sortOption = { price: -1 };
-        else if (sort === 'newest') sortOption = { _id: -1 };
-        else if (sort === 'popularity') sortOption = { popularity: -1 };
+        if (sortBy === 'price_asc') sortOption = { price: 1 };
+        else if (sortBy === 'price_desc') sortOption = { price: -1 };
+        else if (sortBy === 'newest') sortOption = { _id: -1 };
+        else if (sortBy === 'popularity') sortOption = { popularity: -1 };
 
+        let newColors = colors
+        if (newColors && newColors.includes('all')) {
+            newColors = ['red', 'pink', 'blue', 'white', 'yellow', 'purple', 'black'];
+            console.log("new: "+newColors, "old: "+colors);
+        }
+
+        let newOccasion = occasion;
+        if (newOccasion && newOccasion.includes('all')) {
+            newOccasion = ['wedding', 'birthday', 'anniversary', 'valentine'];
+            console.log(newOccasion);
+        }
+
+        //fetch boquets
         const bouquets = await Product.find({ 
             type: 'bouquet',
-            inStock: true 
+            inStock: true,
+            price: { $gte: priceRange.min, $lte: priceRange.max },
+            ...(newColors.length > 0 ? { colors: { $in: newColors } } : {}),
+            ...(newOccasion.length > 0 ? { category: { $in: newOccasion } } : {})
         })
         .sort(sortOption)
         .skip(skip)
@@ -29,7 +58,7 @@ export const bouquets = async (req, res) => {
             success: true,
             products: bouquets,
             pagination: {
-                currentPage: parseInt(page),
+                currentPage: parseInt(pageNo),
                 totalPages: Math.ceil(total / limit),
                 totalProducts: total,
                 productsPerPage: parseInt(limit)
@@ -49,36 +78,61 @@ export const bouquets = async (req, res) => {
 // get flowers
 export const flowers = async (req, res) => {
     try {
-        const { page = 1, limit = 20, sort = 'popularity', category } = req.query;
-        const skip = (page - 1) * limit;
+        const { 
+            occasion,
+            colors,
+            priceRange,
+            sortBy,
+            pageNo
+        } = req.body;
 
-        let query = { 
-            type: 'flower',
-            inStock: true 
-        };
-        
-        if (category) {
-            query.category = category;
+        console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
+
+        let limit = 20; // default items per page
+        // pagination
+        const skip = (pageNo - 1) * limit;
+
+        // sorting
+        let sortOption = {};
+        if (sortBy === 'price_asc') sortOption = { price: 1 };
+        else if (sortBy === 'price_desc') sortOption = { price: -1 };
+        else if (sortBy === 'newest') sortOption = { _id: -1 };
+        else if (sortBy === 'popularity') sortOption = { popularity: -1 };
+
+        let newColors = colors
+        if (newColors && newColors.includes('all')) {
+            newColors = ['red', 'pink', 'blue', 'white', 'yellow', 'purple', 'black'];
+            //console.log("new: "+newColors, "old: "+colors);
         }
 
-        let sortOption = {};
-        if (sort === 'price_asc') sortOption = { price: 1 };
-        else if (sort === 'price_desc') sortOption = { price: -1 };
-        else if (sort === 'newest') sortOption = { _id: -1 };
-        else if (sort === 'popularity') sortOption = { popularity: -1 };
+        let newOccasion = occasion;
+        if (newOccasion && newOccasion.includes('all')) {
+            newOccasion = ['wedding', 'birthday', 'anniversary', 'valentine'];
+            console.log(newOccasion);
+        }
 
-        const flowers = await Product.find(query)
-            .sort(sortOption)
-            .skip(skip)
-            .limit(parseInt(limit));
+        //fetch flowers
+        const flowers = await Product.find({ 
+            type: 'flower',
+            inStock: true,
+            price: { $gte: priceRange.min, $lte: priceRange.max },
+            ...(newColors.length > 0 ? { colors: { $in: newColors } } : {}),
+            ...(newOccasion.length > 0 ? { category: { $in: newOccasion } } : {})
+        })
+        .sort(sortOption)
+        .skip(skip)
+        .limit(parseInt(limit));
 
-        const total = await Product.countDocuments(query);
+        const total = await Product.countDocuments({ 
+            type: 'bouquet',
+            inStock: true 
+        });
 
         res.status(200).json({
             success: true,
             products: flowers,
             pagination: {
-                currentPage: parseInt(page),
+                currentPage: parseInt(pageNo),
                 totalPages: Math.ceil(total / limit),
                 totalProducts: total,
                 productsPerPage: parseInt(limit)

@@ -6,7 +6,7 @@ import { MdArrowDropDown } from "react-icons/md";
 import FlowerCard from '../home/flowerCard.jsx'
 
 
-const SideBar = ({ colors, toggleColors, occasion, setOccasions, pricerange, setPricerange, inputMin, inputMax, setInputMax, setInputMin, handlePriceRange }) => {
+const SideBar = ({ colors, toggleColors, occasion, setOccasions, inputMin, inputMax, setInputMax, setInputMin, handlePriceRange }) => {
     // const [occasionsOpen, setOccasionsOpen] = useState(true);
     // const [colorsOpen, setColorsOpen] = useState(false);
     // const [pricerangeOpen, setPricerangeOpen] = useState(false);
