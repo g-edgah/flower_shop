@@ -1,4 +1,6 @@
 import Product from '../models/product.js';
+import Bouquet from '../models/bouquet.js';
+import Flower from '../models/flower.js';
 
 export const getHomeData = async (req, res) => {
     try {
@@ -12,7 +14,7 @@ export const getHomeData = async (req, res) => {
             flowersResult
         ] = await Promise.all([
             // Florist Picks
-            Product.find({ 
+            Bouquet.find({ 
                 floristPick: true,
                 inStock: true 
             })
@@ -20,14 +22,14 @@ export const getHomeData = async (req, res) => {
             .limit(8),
             
             // Popular Products
-            Product.find({ 
+            Bouquet.find({ 
                 inStock: true 
             })
             .sort({ popularity: -1 })
             .limit(8),
             
             // New Products
-            Product.find({ 
+            Bouquet.find({ 
                 new: true,
                 inStock: true 
             })
@@ -35,7 +37,7 @@ export const getHomeData = async (req, res) => {
             .limit(4),
             
             // Featured Bouquets
-            Product.find({ 
+            Bouquet.find({ 
                 type: 'bouquet',
                 inStock: true 
             })
@@ -43,7 +45,7 @@ export const getHomeData = async (req, res) => {
             .limit(8),
             
             // Featured Flowers
-            Product.find({ 
+            Flower.find({ 
                 type: 'flower',
                 inStock: true 
             })

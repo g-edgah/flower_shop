@@ -10,6 +10,8 @@ import Design from '../../pages/design.jsx';
 import Colors from '../../pages/colors.jsx';
 import Popular from '../../pages/popular.jsx';
 import CartPage from '../../pages/cart.jsx';
+import TopBar from '../common/topBar.jsx'
+import NavBar from '../common/navBar.jsx';
 
 const UserLayout = () => {
     const [page, setPage] = useState("home")
@@ -23,8 +25,9 @@ const UserLayout = () => {
     }
 
     return (
-        <>
-            <Header page={page} setPage={setPage} />
+        <div className='flex flex-col justify-center items-center'>
+            <TopBar />
+            <NavBar page={page} setPage={setPage} />
             <Routes>
                 <Route index element={<Home setPage={setPage}/>}/>
                 <Route path='bouquets' element={<Bouquets setPage={setPage} />}/>
@@ -36,7 +39,7 @@ const UserLayout = () => {
             </Routes>
             
             <Footer />
-        </>
+        </div>
     )
 }
 

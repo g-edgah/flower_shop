@@ -92,10 +92,17 @@ const Bouquets = ({setPage}) => {
    
     
     return (
-        <div className="flex justify-center">
-            <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} handlePriceRange={handlePriceRange}/>
-            <div className="bo uquets flex flex-col space-y-5 items-center max-w-250 pb-10">
-                <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
+        <div className="relative flex flex-row justify-center items-start  min-h-screen w-full">
+            <div className="sticky min-w-60 top-23 flex" >
+                <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} handlePriceRange={handlePriceRange}/>
+            </div>
+            
+            <div className="bouquets relative flex flex-col space-y-5 items-center w-full min-h-screen max-w-250 pb-10">
+
+                <div className=" z-10 w-full items-start">
+                    <Filter handleSort={handleSort} toggleSort={toggleSort} sortOpen={sortOpen} sortBy={sortBy} />
+                </div>
+                
                 
                 {isLoading && (
                     <div>Loading first time...</div>
@@ -107,7 +114,7 @@ const Bouquets = ({setPage}) => {
 
 
                 {data && (
-                <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
+                <div className="flower-row pb-10 flex gap-5 w-full flex-wrap justify-start pl-3 items-center max-w-300">
                 
                     {data.products.map(({ name, price, picturePath }, index) => (
                         <FlowerCard
@@ -120,7 +127,7 @@ const Bouquets = ({setPage}) => {
                     
                 </div>
                 )}
-                <div className="pages flex gap-1">
+                <div className="absolute bottom-5 pages flex gap-1">
                     <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => setPageNo(1)}><MdOutlineKeyboardDoubleArrowLeft /></div>
                     <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => pageNo > 1 && setPageNo(pageNo - 1)}><MdKeyboardArrowLeft /></div>
                     <div className="size-9 flex justify-center items-center rounded-sm text-white font-bold bg-active">{pageNo}</div>
@@ -128,6 +135,7 @@ const Bouquets = ({setPage}) => {
                     <div className="size-9 border-1 flex justify-center items-center rounded-sm hover:bg-active hover:text-white hover:border-0" onClick={() => pageNo < totalPages && setPageNo(totalPages)}><MdOutlineKeyboardDoubleArrowRight /></div>
                 </div>
             </div>
+            
             
         </div>
     )

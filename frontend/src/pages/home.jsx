@@ -49,9 +49,9 @@ const HomePage = ({setPage}) => {
     console.log(data.data)
 
     return (
-        <div className="flex flex-col space-y-10 md:space-y-15">
+        <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
 
-            <div className="bg-[url(/src/assets/bouquets/image_copy_5.png)] bg-cover bg-center bg-no-repeat w-full h-80 md:h-170 flex items-center">
+            <div className="bg-[url(/bouquets/image_copy_5.png)] bg-cover bg-center bg-no-repeat w-full h-80 md:h-170 flex items-center relative">
                 <div className="absolute left-5 md:left-10 flex flex-col space-y-3 md:space-y-5 w-70 md:w-130">
                     <span className='font-bold text-lg md:text-4xl'>design your own bouquet!</span>
                     <span className='text-sm'>customize everything from the flower types and colors to even wrapper for your bunch</span>
@@ -61,7 +61,7 @@ const HomePage = ({setPage}) => {
                 
             </div>
 
-            <div className="relative flex flex-col spacing-y-4 items-center jsutify-around space-y-5">
+            <div className="flex flex-col spacing-y-4 items-center jsutify-around space-y-5">
                 <span className='font-bold text-lg md:text-xl'>featured discounts</span>
                
                 <DiscountSlider />

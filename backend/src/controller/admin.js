@@ -1,4 +1,7 @@
+import Bouquet from '../models/bouquet.js';
+import Flower from '../models/flower.js';
 import Product from '../models/product.js';
+
 import Order from '../models/order.js';
 
 // create product
@@ -42,41 +45,86 @@ export const createProduct = async (req, res) => {
             });
         }
 
-        // check if product with same name already exists
-        const existingProduct = await Product.findOne({ 
-            name: { $regex: new RegExp(`^${name}$`, 'i') } 
-        });
         
-        if (existingProduct) {
-            return res.status(400).json({
-                success: false,
-                message: "Product with this name already exists"
-            });
-        }
 
         // create new product
-        const product = new Product({
-            name,
-            description,
-            price,
-            picturePath: picturePath || '',
-            type,
-            colors: colors || [],
-            category,
-            discount: discount || 0,
-            new: isNew || false,
-            floristPick: floristPick || false,
-            inStock: inStock !== undefined ? inStock : true,
-            popularity: 0
-        });
+        if (type === 'bouquet') {
 
-        await product.save();
+            // check if product with same name already exists
+            const existingProduct = await Bouquet.findOne({ 
+                name: { $regex: new RegExp(`^${name}$`, 'i') } 
+            });
 
-        res.status(201).json({
+        
+            if (existingProduct) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Bouquet with this name already exists"
+                });
+            }
+
+            const bouquet = new Bouquet({
+                name,
+                description,
+                price,
+                picturePath: picturePath || '',
+                type,
+                colors: colors || [],
+                category,
+                discount: discount || 0,
+                new: isNew || false,
+                floristPick: floristPick || false,
+                inStock: inStock !== undefined ? inStock : true,
+                popularity: 0
+            });
+
+            await bouquet.save();
+
+            res.status(201).json({
             success: true,
-            message: "Product created successfully",
-            product: product
+            message: "Bouquet created successfully",
+            bouquet: bouquet
         });
+
+        } else if (type === 'flower') {
+
+            // check if product with same name already exists
+            const existingProduct = await Flower.findOne({ 
+                name: { $regex: new RegExp(`^${name}$`, 'i') } 
+            });
+
+
+            if (existingProduct) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Flower with this name already exists"
+                });
+            }
+
+            const flower = new Flower({
+                name,
+                description,
+                price,
+                picturePath: picturePath || '',
+                type,
+                colors: colors || [],
+                category,
+                discount: discount || 0,
+                new: isNew || false,
+                floristPick: floristPick || false,
+                inStock: inStock !== undefined ? inStock : true,
+                popularity: 0
+            });
+
+            await flower.save();
+
+            res.status(201).json({
+            success: true,
+            message: "Flower created successfully",
+            flower: flower
+        });
+        }
+
 
     } catch (error) {
         console.error("Error creating product:", error);

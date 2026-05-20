@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const productSchema = new mongoose.Schema({
+const flowerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -56,12 +56,11 @@ const productSchema = new mongoose.Schema({
 
 }, { 
     timestamps: true,
-    collection: 'products',
+    collection: 'flowers',
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
 })
 
-
- const Product = mongoose.model('Product', productSchema)
+const Flower = mongoose.model('Flower', flowerSchema)
 
  
- export default Product
+export default Flower

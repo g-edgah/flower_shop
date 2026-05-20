@@ -38,10 +38,10 @@ export const useFlowers = (filters) => {
 };
 
 // hook for popular products
-export const usePopular = () => {
+export const usePopular = (pageNo) => {
     return useQuery({
-        queryKey: ['popular'],
-        queryFn: () => api.get('/products/popular').then(res => res.data)
+        queryKey: ['popular', pageNo],
+        queryFn: () => api.post('/products/popular', { pageNo }).then(res => res.data)
     });
 };
 

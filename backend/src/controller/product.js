@@ -1,4 +1,7 @@
-import Product from "../models/product.js";
+import Bouquet from '../models/bouquet.js';
+import Flower from '../models/flower.js';
+import Product from '../models/product.js';
+
 
 // get bouquets
 export const bouquets = async (req, res) => {
@@ -20,8 +23,8 @@ export const bouquets = async (req, res) => {
 
         // sorting
         let sortOption = {};
-        if (sortBy === 'price_asc') sortOption = { price: 1 };
-        else if (sortBy === 'price_desc') sortOption = { price: -1 };
+        if (sortBy === 'price low to high') sortOption = { price: 1 };
+        else if (sortBy === 'price high to low') sortOption = { price: -1 };
         else if (sortBy === 'newest') sortOption = { _id: -1 };
         else if (sortBy === 'popularity') sortOption = { popularity: -1 };
 
@@ -33,12 +36,12 @@ export const bouquets = async (req, res) => {
 
         let newOccasion = occasion;
         if (newOccasion && newOccasion.includes('all')) {
-            newOccasion = ['wedding', 'birthday', 'anniversary', 'valentine'];
+            newOccasion = ['birthday', 'no occasion', 'bridal shower', 'wedding', 'anniversary', 'baby shower', 'apology', 'funeral'];
             console.log(newOccasion);
         }
 
         //fetch boquets
-        const bouquets = await Product.find({ 
+        const bouquets = await Bouquet.find({ 
             type: 'bouquet',
             inStock: true,
             price: { $gte: priceRange.min, $lte: priceRange.max },
@@ -49,7 +52,7 @@ export const bouquets = async (req, res) => {
         .skip(skip)
         .limit(parseInt(limit));
 
-        const total = await Product.countDocuments({ 
+        const total = await Bouquet.countDocuments({ 
             type: 'bouquet',
             inStock: true 
         });
@@ -94,8 +97,8 @@ export const flowers = async (req, res) => {
 
         // sorting
         let sortOption = {};
-        if (sortBy === 'price_asc') sortOption = { price: 1 };
-        else if (sortBy === 'price_desc') sortOption = { price: -1 };
+        if (sortBy === 'price low to high') sortOption = { price: 1 };
+        else if (sortBy === 'price high to low') sortOption = { price: -1 };
         else if (sortBy === 'newest') sortOption = { _id: -1 };
         else if (sortBy === 'popularity') sortOption = { popularity: -1 };
 
@@ -107,12 +110,12 @@ export const flowers = async (req, res) => {
 
         let newOccasion = occasion;
         if (newOccasion && newOccasion.includes('all')) {
-            newOccasion = ['wedding', 'birthday', 'anniversary', 'valentine'];
+            newOccasion = ['birthday', 'no occasion', 'bridal shower', 'wedding', 'anniversary', 'baby shower', 'apology', 'funeral'];
             console.log(newOccasion);
         }
 
         //fetch flowers
-        const flowers = await Product.find({ 
+        const flowers = await Flower.find({ 
             type: 'flower',
             inStock: true,
             price: { $gte: priceRange.min, $lte: priceRange.max },
@@ -123,8 +126,8 @@ export const flowers = async (req, res) => {
         .skip(skip)
         .limit(parseInt(limit));
 
-        const total = await Product.countDocuments({ 
-            type: 'bouquet',
+        const total = await Flower.countDocuments({ 
+            type: 'flower',
             inStock: true 
         });
 
@@ -149,23 +152,45 @@ export const flowers = async (req, res) => {
     }
 }
 
-// get popular products
+// get popular products (only fetches from bouquets for now)
 export const popular = async (req, res) => {
         try {
-        const { limit = 10 } = req.query;
+        const { 
+            pageNo
+        } = req.body;
 
-        const popularProducts = await Product.find({ 
+        console.log("Received filters:", { pageNo });
+
+        let limit = 20; // default items per page
+        // pagination
+        const skip = (pageNo - 1) * limit;
+
+
+        //fetch boquets
+        const bouquets = await Bouquet.find({ 
+            type: 'bouquet',
             inStock: true,
-            popularity: { $gt: 0 }  // Only products with some popularity
         })
-        .sort({ popularity: -1 })  // Highest popularity first
+        .sort({ popularity: -1 })
+        .skip(skip)
         .limit(parseInt(limit));
+
+        const total = await Bouquet.countDocuments({ 
+            type: 'bouquet',
+            inStock: true 
+        });
 
         res.status(200).json({
             success: true,
-            products: popularProducts,
-            count: popularProducts.length
+            products: bouquets,
+            pagination: {
+                currentPage: parseInt(pageNo),
+                totalPages: Math.ceil(total / limit),
+                totalProducts: total,
+                productsPerPage: parseInt(limit)
+            }
         });
+
 
     } catch (error) {
         console.error("Error fetching popular products:", error);

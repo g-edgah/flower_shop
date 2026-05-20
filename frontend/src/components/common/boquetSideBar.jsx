@@ -23,7 +23,7 @@ const SideBar = ({ colors, toggleColors, occasion, setOccasions, inputMin, input
 
     // }
     return (
-        <div className="w-60 flex flex-col gap-3  pt-5">
+        <div className="w-full flex flex-col gap-3 pt-5">
              <div className="w-full pl-3 title font-bold text-lg" >
                 <span>Filters</span>
             </div>
@@ -38,11 +38,11 @@ const SideBar = ({ colors, toggleColors, occasion, setOccasions, inputMin, input
                 <div className={`flex pl-7 flex-col list text-[14px] gap-1`}>
                     <span className={`item cursor-pointer ${occasion === 'all' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('all')}>All</span>
                     <span className={`item cursor-pointer ${occasion === 'birthday' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('birthday')}>Birthday</span>
-                    <span className={`item cursor-pointer ${occasion === 'none' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('none')}>No Occasion</span>
-                    <span className={`item cursor-pointer ${occasion === 'bridal' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal')}>Bridal Shower</span>
+                    <span className={`item cursor-pointer ${occasion === 'no occasion' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('no occasion')}>No Occasion</span>
+                    <span className={`item cursor-pointer ${occasion === 'bridal shower' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('bridal shower')}>Bridal Shower</span>
                     <span className={`item cursor-pointer ${occasion === 'wedding' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('wedding')}>Wedding</span>
                     <span className={`item cursor-pointer ${occasion === 'anniversary' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('anniversary')}>Anniversary</span>
-                    <span className={`item cursor-pointer ${occasion === 'baby-shower' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('baby-shower')}>Baby Shower</span>
+                    <span className={`item cursor-pointer ${occasion === 'baby shower' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('baby shower')}>Baby Shower</span>
                     <span className={`item cursor-pointer ${occasion === 'apology' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('apology')}>Apology</span>
                     <span className={`item cursor-pointer ${occasion === 'funeral' ? 'font-semibold' : 'font-light text-gray-700'}`} onClick={() => setOccasions('funeral')}>Funeral</span>
 
