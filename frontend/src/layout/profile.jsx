@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Profile from '../../pages/profile.jsx';
-import Footer from '../common/footer.jsx';
-import Login from '../profile/login.jsx';
-import Register from '../profile/register.jsx';
+import Profile from '../pages/profile.jsx';
+import Footer from '../components/common/footer.jsx';
+import Login from '../components/profile/login.jsx';
+import Register from '../components/profile/register.jsx';
 
 const ProfileLayout = () => {
     const [page, setPage] = useState("profile")

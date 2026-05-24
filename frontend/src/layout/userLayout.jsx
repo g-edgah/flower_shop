@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Header from '../common/header.jsx';
-import Footer from '../common/footer.jsx';
-import Home from '../../pages/home.jsx';
-import Bouquets from '../../pages/bouquets.jsx';
-import Flowers from '../../pages/flowers.jsx';
-import Design from '../../pages/design.jsx';
-import Colors from '../../pages/colors.jsx';
-import Popular from '../../pages/popular.jsx';
-import CartPage from '../../pages/cart.jsx';
-import TopBar from '../common/topBar.jsx'
-import NavBar from '../common/navBar.jsx';
+import Header from '../components/common/header.jsx';
+import Footer from '../components/common/footer.jsx';
+import Home from '../pages/home.jsx';
+import Bouquets from '../pages/bouquets.jsx';
+import Flowers from '../pages/flowers.jsx';
+import Design from '../pages/design.jsx';
+import Colors from '../pages/colors.jsx';
+import Popular from '../pages/popular.jsx';
+import CartPage from '../pages/cart.jsx';
+import TopBar from '../components/common/topBar.jsx'
+import NavBar from '../components/common/navBar.jsx';
 
 const UserLayout = () => {
     const [page, setPage] = useState("home")

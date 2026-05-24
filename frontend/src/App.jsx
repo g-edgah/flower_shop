@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/home.jsx';
 import CartPage from './pages/cart.jsx';
 
-import UserLayout from './components/layout/userLayout.jsx'
-import AdminLayout from './components/layout/adminLayout.jsx'
-import ProfileLayout from './components/layout/profile.jsx'
+import UserLayout from './layout/userLayout.jsx'
+import AdminLayout from './layout/adminLayout.jsx'
+import ProfileLayout from './layout/profile.jsx'
 
 
 
