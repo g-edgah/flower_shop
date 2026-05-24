@@ -1,0 +1,34 @@
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+import Profile from '../../pages/profile.jsx';
+import Footer from '../common/footer.jsx';
+import Login from '../profile/login.jsx';
+import Register from '../profile/register.jsx';
+
+const ProfileLayout = () => {
+    const [page, setPage] = useState("profile")
+
+    const handlePage = (page) => {
+        e.preventDefault()
+        if (page) {
+            setPage(page)
+            console.log(page)
+        }
+    }
+
+    return (
+        <div className='flex flex-col justify-center items-center'>
+            <Routes>
+                <Route index element={<Profile setPage={setPage}/>}/>
+                <Route path='login' element={<Login setPage={setPage} />}/>
+                <Route path='register' element={<Register setPage={setPage} />}/>
+
+            </Routes>
+            
+            
+        </div>
+    )
+}
+
+export default ProfileLayout

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
-import SideBar from '../components/common/boquetSideBar.jsx'
+import SideBar from '../components/bouquets/boquetSideBar.jsx'
 import FlowerCard from '../components/home/flowerCard.jsx'
 import Filter from '../components/common/filter.jsx'
 
@@ -93,7 +93,7 @@ const Bouquets = ({setPage}) => {
     
     return (
         <div className="relative flex flex-row justify-center items-start  min-h-screen w-full">
-            <div className="sticky min-w-60 top-23 flex" >
+            <div className="sticky min-w-60 top-28 flex" >
                 <SideBar colors={colors} toggleColors={toggleColor} occasion={occasion} setOccasions={setOccasions} inputMin={inputMin} inputMax={inputMax} setInputMax={setInputMax} setInputMin={setInputMin} handlePriceRange={handlePriceRange}/>
             </div>
             

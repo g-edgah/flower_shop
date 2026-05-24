@@ -146,7 +146,7 @@ const HomePage = ({setPage}) => {
             </div>
 
             <div className="popular flex flex-col space-y-5 items-center">
-                <span className='font-bold text-lg md:text-xl'>florists' pick</span>
+                <span className='font-bold text-lg md:text-xl'>florists' picks</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
                     {floristPicks.map(({ name, price, picturePath }, index) => (
