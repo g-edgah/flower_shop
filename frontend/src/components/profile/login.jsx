@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { useLogin } from '../../hooks/auth.js';
 
-const Login = (page = 'home') => {
+const Login = ({page = ''}) => {
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
@@ -75,13 +75,24 @@ const Login = (page = 'home') => {
             onSuccess: (data) => {
                 console.log('Login successful:', data);
                 
-                // Store token (if using JWT)
+                // store jwt
                 if (data.token) {
+                    console.log("token: ", data.token)
                     localStorage.setItem('token', data.token);
                     if (formData.rememberMe) {
                         localStorage.setItem('rememberMe', 'true');
                     }
                 }
+
+                // store userId
+                if (data.userId) {
+                    console.log("userId: ", data.userId)
+                    localStorage.setItem('userId', data.userId);
+                    if (formData.rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                    }
+                }
+
                 
                 // redirect
                 navigate(`/${page}`);

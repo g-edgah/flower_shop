@@ -7,10 +7,12 @@ export const getUser = async (req, res) => {
         const { id } = req.user;
 
         //also get id from params(to mess with those burpsuite warriors)
-        const paramID = req.params.id
+        const paramId = req.params.id
+
+        // console.log("req.user: "+id+" paramId: "+paramId)
 
         //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
-        if (paramID !== id) {
+        if (paramId !== id) {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
@@ -19,19 +21,22 @@ export const getUser = async (req, res) => {
         // const { _id, firstName, lastName, location, picturePath } = user;
 
         //option 2
-        const user = await User.findById(userId)
-            .populate('cart.product')
-            .populate('orders')
-            .populate('favorites')
+        const user = await User.findById(id)
+            //.populate('cart.product')
+            //.populate('orders')
+            //.populate('favorites')
             .select('-password'); 
+        
+        //console.log("user: "+user)
 
         const formattedUser = { 
-            _id, 
-            firstName, 
-            lastName, 
-            location, 
-            picturePath, 
-            cart: user.cart
+            _id: user._id, 
+            firstName: user.firstName, 
+            lastName: user.lastName, 
+            userName: user.userName, 
+            location: user.location, 
+            picturePath: user.picturePath 
+            //cart: user.cart
         };
 
         res.status(200).json({ formattedUser });
@@ -43,34 +48,40 @@ export const getUser = async (req, res) => {
 }
 
 //if you go for option 1
-// export const getUserCart = async (req, res) => {
-//     try {
-//         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
-//         const { id } = req.user
+export const getUserCart = async (req, res) => {
+    try {
+        //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
+        const { id } = req.user
 
-//          //also get id from params(to mess with those burpsuite warriors)
-//         const paramID = req.params.id
+         //also get id from params(to mess with those burpsuite warriors)
+        const paramId = req.params.id
 
-//         //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
-//         if (paramID !== id) {
-//             return res.status(403).json({ error: "psyche!!! hahaa!!" });
-//         }
+        //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
 
-//         const user = await User.findById(id);
+        const user = await User.findById(id);
 
-//         //option 1
-//         const cart = await Product.find({
-//             _id: { $in: user.cart }
-//         });
+        //option 1
+        const cart = await Product.find({
+            _id: { $in: user.cart }
+        });
 
 
-//         const formattedCart = cart.map( ({ _id, name, price, description, picturePath }) => {
-//             return { _id, name, price, description, picturePath }
-//         })
+        const formattedCart = cart.map( ({ 
+            _id, 
+            name, 
+            price, 
+            description, 
+            picturePath 
+        }) => {
+            return { _id, name, price, description, picturePath }
+        })
 
-//         res.status(200).json({ formattedCart })
-//     } catch (error) {
-//         res.status(404).json({ error: "error while fetching user cart" });
-//         console.log(`error while fetching user cart: ${error}`)
-//     }
-// }
+        res.status(200).json({ formattedCart })
+    } catch (error) {
+        res.status(404).json({ error: "error while fetching user cart" });
+        console.log(`error while fetching user cart: ${error}`)
+    }
+}
