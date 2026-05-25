@@ -7,14 +7,14 @@ import cartItemSchema from './cartItemSchema.js'
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         minLength: 2,
         maxLength: 30,
     },
     lastName: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         minLength: 2,
         maxLength: 30,

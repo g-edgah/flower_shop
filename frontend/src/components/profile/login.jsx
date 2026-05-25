@@ -1,30 +1,40 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
-const Login = () => {
+import { useLogin } from '../../hooks/auth.js';
+
+const Login = (page = 'home') => {
+    const navigate = useNavigate()
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+        rememberMe: false
     });
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
+    // hook
+    const { mutate: login, isLoading, error: apiError } = useLogin();
 
     // validate form
     const validateForm = () => {
         const newErrors = {};
         
-        if (!formData.email) {
-        newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Email is invalid';
-        }
         
         if (!formData.password) {
         newErrors.password = 'Password is required';
         } else if (formData.password.length < 6) {
         newErrors.password = 'Password must be at least 6 characters';
+        }
+
+        if (!formData.email) {
+        newErrors.email = 'Email is required';
+        newErrors.password = ''
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Email is invalid';
+        newErrors.password = ''
         }
         
         return newErrors;
@@ -54,25 +64,39 @@ const Login = () => {
         
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        return;
+            setErrors(validationErrors);
+            return;
         }
         
-        setIsLoading(true);
-    
+        
         // api call
-        try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log('Login successful:', formData);
-        alert('Login successful!');
-
-        // redirect or update auth state
-        } catch (error) {
-        console.error('Login failed:', error);
-        alert('Login failed. Please try again.');
-        } finally {
-        setIsLoading(false);
-        }
+        // login mutation
+        login(formData, {
+            onSuccess: (data) => {
+                console.log('Login successful:', data);
+                
+                // Store token (if using JWT)
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    if (formData.rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                    }
+                }
+                
+                // redirect
+                navigate(`/${page}`);
+                // Or window.location.href = '/dashboard';
+            },
+            onError: (error) => {
+                console.error('Login failed:', error);
+                // Handle specific error messages from API
+                if (error.response?.status === 401) {
+                    setErrors({ general: 'Invalid email or password' });
+                } else {
+                    setErrors({ general: 'Login failed. Please try again.' });
+                }
+            }
+        });
     };
 
     return (

@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'
+
+import { useRegister } from '../../hooks/auth.js';
 
 const Register = () => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -10,7 +14,6 @@ const Register = () => {
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
 
     // validate form
@@ -74,31 +77,33 @@ const Register = () => {
         }
     };
 
+    // api call
+    const { mutate: register, isLoading, error, data } = useRegister();
+
     //form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log("submitting")
         
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        return;
+            setErrors(validationErrors);
+            return;
         }
         
-        setIsLoading(true);
-    
-        // api call
-        try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log('Login successful:', formData);
-        alert('Login successful!');
+       register(formData, {
+            onSuccess: (data) => {
+                console.log('Registration successfull!', data)
 
-        // redirect or update auth state
-        } catch (error) {
-        console.error('Login failed:', error);
-        alert('Login failed. Please try again.');
-        } finally {
-        setIsLoading(false);
-        }
+                // Redirect or update auth state
+                navigate('/login');
+            },
+            onError: (error) => {
+                console.error('Registration failed: ', error)
+                alert('Registration failed. Please try again.')
+            }
+       })
     };
 
     return (
