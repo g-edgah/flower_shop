@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 import cartItemSchema from './cartItemSchema.js'
+import addressSchema from './addressSchema.js'
 
 
 const userSchema = new mongoose.Schema({
@@ -44,16 +45,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    location: {
-        type: String,
-        maxLength: 128,
-    },
     cart: [cartItemSchema],
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'   
     }],
-    favorites: [{
+    wishlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     }],
@@ -62,11 +59,14 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
+    address: addressSchema,
 }, { 
     timestamps: true,
     collection: 'users',
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
  })
+
+
 
  // password hashing middleware
  userSchema.pre('save', async function(next) {
@@ -85,6 +85,8 @@ const userSchema = new mongoose.Schema({
         console.log(`spassword hashing error: ${error}`)
     }
  })
+
+
 
  // matching password to hashed pashword
  userSchema.methods.matchPassword = async function(enteredPassword) {

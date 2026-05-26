@@ -11,7 +11,7 @@ const SideBar = ({ profilePage, setProfilePage }) => {
 
 
     return (
-        <div className="flex flex-col gap-1 w-60  mt-8 rounded-lg">
+        <div className="flex flex-col gap-1 w-57  mt-8 rounded-lg">
             
             <div className="w-full bg-gray-200 flex flex-col rounded-t-lg">
                 <span onClick={() => {handleProfilePage("account")}} className={`rounded-t-lg w-full h-13 text-center flex items-center justify-start px-5 hover:bg-gray-200 cursor-pointer ${profilePage == "account" ? "bg-gray-200" : "bg-cartCard"}`}>Account</span>

@@ -32,11 +32,10 @@ const orderSchema = new mongoose.Schema({
 
     // shipping info
     shippingAddress: {
-        street: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        zipCode: { type: String, required: true },
-        country: { type: String, required: true }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address',
+        required: true
+        
     },
 
     // order totals

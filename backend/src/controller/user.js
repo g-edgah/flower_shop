@@ -31,10 +31,11 @@ export const getUser = async (req, res) => {
 
         const formattedUser = { 
             _id: user._id, 
+            email: user.email,
             firstName: user.firstName, 
             lastName: user.lastName, 
             userName: user.userName, 
-            location: user.location, 
+            address: user.address, 
             picturePath: user.picturePath 
             //cart: user.cart
         };

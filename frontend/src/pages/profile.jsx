@@ -42,7 +42,8 @@ const ProfilePage = ({setPage}) => {
 
 
     const user = data.formattedUser
-    //console.log(user.picturePath)
+
+    console.log(user)
     
 
     return (
@@ -50,7 +51,7 @@ const ProfilePage = ({setPage}) => {
             <SideBar profilePage={profilePage} setProfilePage={setProfilePage}/>
 
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">
-                {profilePage === "account" && (<Account />)}
+                {profilePage === "account" && (<Account user={user} />)}
                 {profilePage === "orders" && (<Orders />)}
                 {profilePage === "wishlist" && (<Wishlist />)}
                 {profilePage === "reviews" && (<Reviews />)}
