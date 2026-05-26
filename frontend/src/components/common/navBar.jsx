@@ -40,6 +40,13 @@ const NavBar = ({page, setPage }) => {
         }
     }
 
+    const handlePage = (page) => {
+        if (page) {
+            setPage(page)
+            //console.log(page)
+        }
+    }
+
     
     return (
         <>
@@ -92,7 +99,7 @@ const NavBar = ({page, setPage }) => {
                                 </button>
                             )}
                         </div>
-                        <Link to='/profile' className="text-navText hover:text-navHover">
+                        <Link to='/profile' className={` hover:text-navHover ${page == 'profile' ? 'text-navHover':'text-navText'}`}>
                             <HiUser className="h-6 w-6"/>
                         </Link>
                         <button onClick={() => navigate('/cart')} className={`group relative cursor-pointer text-navText hover:text-navHover ${page == 'cart' ? 'text-navHover':'text-navText'}`}>
@@ -112,15 +119,15 @@ const NavBar = ({page, setPage }) => {
 
                 <div className={`flex justify-around px-1  xs:space-x-6 xs:items-center xs:justify-center absolute w-full md:w-110 text-sm font-medium md:text-[16px] transition-all duration-300 ease-in-out ${isSearch ? 'flex bottom-3 md:pr-4 md:flex duration-0' : 'bottom-3 md:bottom-8 md:pr-4 '}`} >
                         <Link onClick={()=>{
-                            setPage('home')}} to='/' className={`text-700 hover:text-navHover ${page == 'home' ? 'text-navHover':'text-navText'}`} >home</Link>
+                            handlePage('home')}} to='/' className={`text-700 hover:text-navHover ${page == 'home' ? 'text-navHover':'text-navText'}`} >home</Link>
                         <Link onClick={()=>{
-                            setPage('bouquets')}} to='/bouquets' className={`text-700 hover:text-navHover ${page == 'bouquets' ? 'text-navHover':'text-navText'}`} >bouquets</Link>
+                            handlePage('bouquets')}} to='/bouquets' className={`text-700 hover:text-navHover ${page == 'bouquets' ? 'text-navHover':'text-navText'}`} >bouquets</Link>
                         <Link onClick={()=>{
-                            setPage('flowers')}} to='/flowers' className={`text-700 hover:text-navHover ${page == 'flowers' ? 'text-navHover':'text-navText'}`} >flowers</Link>
+                            handlePage('flowers')}} to='/flowers' className={`text-700 hover:text-navHover ${page == 'flowers' ? 'text-navHover':'text-navText'}`} >flowers</Link>
                         <Link onClick={()=>{
-                            setPage('popular')}} to='/popular' className={`text-700 hover:text-navHover ${page == 'popular' ? 'text-navHover':'text-navText'}`} >popular</Link>
+                            handlePage('popular')}} to='/popular' className={`text-700 hover:text-navHover ${page == 'popular' ? 'text-navHover':'text-navText'}`} >popular</Link>
                          <Link onClick={()=>{
-                            setPage('design')}} to='/design' className={`text-700 hover:text-navHover ${page == 'design' ? 'text-navHover':'text-navText'}`} >design</Link>
+                            handlePage('design')}} to='/design' className={`text-700 hover:text-navHover ${page == 'design' ? 'text-navHover':'text-navText'}`} >design</Link>
                     </div>
             </div>
         
