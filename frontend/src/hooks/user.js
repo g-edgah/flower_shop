@@ -1,8 +1,13 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '../setup/axios';
 
+
+//getting userId
+const userId = localStorage.getItem('userId');
+
+
 // hook for home data
-export const useUser = (userId) => {
+export const useUser = () => {
     return useQuery({
         queryKey: ['user', userId],
         queryFn: () => api.get(`/user/${userId}`).then(res => res.data),
@@ -16,14 +21,24 @@ export const useUser = (userId) => {
     });
 };
 
+// user details editing
+export const useEditUser = (formData) => {
+    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/user/${userId}`, formData).then(res => res.data)
+    });
+    
+};
+
 
 // hook for bouquets
-export const useCart = (userId) => {
+export const useCart = () => {
     //console.log(`filters: ${JSON.stringify(filters)}`) 
 
     return useQuery({ 
         queryKey: ['user', userId],
-        queryFn: () => api.gett(`/user/cart/${userId}`).then(res => res.data)
+        queryFn: () => api.get(`/user/cart/${userId}`).then(res => res.data)
     });
     
 };

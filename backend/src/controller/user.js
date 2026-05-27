@@ -86,3 +86,57 @@ export const getUserCart = async (req, res) => {
         console.log(`error while fetching user cart: ${error}`)
     }
 }
+
+// edit user details
+export const editUser = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { firstName, lastName, userName, mobile, address } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { firstName, lastName, userName, mobile, address },
+            { new: true }
+        ).select('-password');
+
+        res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
+
+    } catch (error) {
+        res.status(500).json({ error: "error while updating user details" });
+        console.log(`error while updating user details: ${error}`)
+    }
+}
+
+// edit user cart
+export const editUserCart = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { firstName, lastName, userName, mobile, address } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { firstName, lastName, userName, mobile, address },
+            { new: true }
+        ).select('-password');
+
+        res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
+
+    } catch (error) {
+        res.status(500).json({ error: "error while updating user details" });
+        console.log(`error while updating user details: ${error}`)
+    }
+}
