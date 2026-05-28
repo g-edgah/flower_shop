@@ -87,7 +87,7 @@ export const getUserCart = async (req, res) => {
     }
 }
 
-// edit user details
+// edit non-sensitive user details
 export const editUser = async (req, res) => {
     try {
         const { id } = req.user
@@ -98,12 +98,29 @@ export const editUser = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const { firstName, lastName, userName, mobile, address } = req.body;
+        const { 
+            firstName, 
+            lastName, 
+            address 
+        } = req.body;
+
+        console.log("edit user req body address: ",req.body.address)
+
+        // if (newPassword !== confirmPassword) {
+        //     res.status(400).json({error: "passwords do not match"})
+        //     return
+        // }
+
+        // if (currentPassword === newPassword) {
+        //     res.status(400).json({error: "new and current passsword cannot be the same"})
+        //     return
+        // } //this compares from user input rather than from database to prevent password enumeration
+
 
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            { firstName, lastName, userName, mobile, address },
-            { new: true }
+            { firstName, lastName, address },
+            { returnDocument: true }
         ).select('-password');
 
         res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured

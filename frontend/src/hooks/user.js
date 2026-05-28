@@ -26,7 +26,7 @@ export const useEditUser = (formData) => {
     //console.log(`formdata: ${JSON.stringify(formData)}`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`/user/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.put(`/user/${userId}`, formData).then(res => res.data)
     });
     
 };
