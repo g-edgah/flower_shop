@@ -6,10 +6,11 @@ import axios from 'axios'
 import { useEditUser } from '../../hooks/user.js';
 
 
-const Account = ({ user }) => {
+const Account = ({refetch, user}) => {
     const [ accountEdit, setAccountEdit ] = useState(false)
     const [ addressEdit, setAddressEdit ] = useState(false)
     const [errors, setErrors] = useState({})
+
 
     const [formData, setFormData] = useState({
         firstName: user.firstName,
@@ -91,7 +92,7 @@ const Account = ({ user }) => {
 
     
     // api call
-    const { mutate: editUser, isLoading, error, data } = useEditUser();
+    const { mutate: editUser, isLoading, error, userdata } = useEditUser();
 
     //form submission
     const handleSubmit = async (e, type) => {
@@ -111,7 +112,7 @@ const Account = ({ user }) => {
         editUser(formData, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-
+                refetch()
                 
             },
             onError: (error) => {

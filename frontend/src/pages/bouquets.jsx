@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
 import SideBar from '../components/bouquets/boquetSideBar.jsx'
-import FlowerCard from '../components/home/flowerCard.jsx'
+import FlowerCard from '../components/common/flowerCard.jsx'
 import Filter from '../components/common/filter.jsx'
 
 import { useBouquets } from '../hooks/products.js';

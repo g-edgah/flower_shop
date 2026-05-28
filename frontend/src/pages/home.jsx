@@ -10,7 +10,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import FlowerCard from '../components/home/flowerCard.jsx'
+import FlowerCard from '../components/common/flowerCard.jsx'
 import OccassionCard from '../components/home/occassionCard.jsx'
 import DiscountCard from '../components/home/discountCard.jsx'
 import DiscountSlider from '../components/home/discount.jsx'

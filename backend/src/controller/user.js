@@ -48,44 +48,6 @@ export const getUser = async (req, res) => {
     }
 }
 
-//if you go for option 1
-export const getUserCart = async (req, res) => {
-    try {
-        //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
-        const { id } = req.user
-
-         //also get id from params(to mess with those burpsuite warriors)
-        const paramId = req.params.id
-
-        //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
-
-        const user = await User.findById(id);
-
-        //option 1
-        const cart = await Product.find({
-            _id: { $in: user.cart }
-        });
-
-
-        const formattedCart = cart.map( ({ 
-            _id, 
-            name, 
-            price, 
-            description, 
-            picturePath 
-        }) => {
-            return { _id, name, price, description, picturePath }
-        })
-
-        res.status(200).json({ formattedCart })
-    } catch (error) {
-        res.status(404).json({ error: "error while fetching user cart" });
-        console.log(`error while fetching user cart: ${error}`)
-    }
-}
 
 // edit non-sensitive user details
 export const editUser = async (req, res) => {
@@ -131,8 +93,49 @@ export const editUser = async (req, res) => {
     }
 }
 
+
+//if you go for option 1. get user cart
+export const getUserCart = async (req, res) => {
+    try {
+        //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
+        const { id } = req.user
+
+         //also get id from params(to mess with those burpsuite warriors)/
+        const paramId = req.params.id
+
+        //let's send a fun error message if someone tries to access another user's data just for kicks and send them on a wild goose chase 
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const user = await User.findById(id);
+
+        //option 1
+        const cart = await Product.find({
+            _id: { $in: user.cart }
+        });
+
+
+        const formattedCart = cart.map( ({ 
+            _id, 
+            name, 
+            price, 
+            description, 
+            picturePath 
+        }) => {
+            return { _id, name, price, description, picturePath }
+        })
+
+        res.status(200).json({ formattedCart })
+    } catch (error) {
+        res.status(404).json({ error: "error while fetching user cart" });
+        console.log(`error while fetching user cart: ${error}`)
+    }
+}
+
+
 // edit user cart
-export const editUserCart = async (req, res) => {
+export const editCartItem = async (req, res) => {
     try {
         const { id } = req.user
 
@@ -142,18 +145,160 @@ export const editUserCart = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const { firstName, lastName, userName, mobile, address } = req.body;
+        const { productId, quantity } = req.body;
 
-        const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { firstName, lastName, userName, mobile, address },
-            { new: true }
-        ).select('-password');
+        // validate quantity
+        if (!quantity || quantity < 1 || quantity > 999) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be between 1 and 999'
+            });
+        }
+
+
+        // find user and update the specific cart item quantity
+        const user = await User.findOneAndUpdate(
+            { 
+                _id: id, 
+                'cart.product': productId 
+            },
+            { 
+                $set: { 'cart.$.quantity': quantity } 
+            },
+            { 
+                new: true, // return updated document
+                runValidators: true // run schema validators
+            }
+        )
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found or product not in cart'
+            });
+        }
 
         res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
 
     } catch (error) {
         res.status(500).json({ error: "error while updating user details" });
         console.log(`error while updating user details: ${error}`)
+    }
+}
+
+export const deleteCartItem = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { productId } = req.body;
+
+        const user = await User.findByIdAndUpdate(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // check if product exists in cart
+        const itemExists = user.cart.some(
+            item => item.product.toString() === productId
+        );
+
+        if (!itemExists) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found in cart'
+            });
+        }
+
+        // remove item 
+        await User.findByIdAndUpdate(
+            id,
+            { $pull: { cart: { product: productId } } }
+        );
+
+        res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
+
+    } catch (error) {
+        res.status(500).json({ error: "error while deleting cart item" });
+        console.log(`error while deleting cart item: ${error}`)
+    }
+}
+
+export const addCartItem = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { productId, quantity } = req.body;
+
+        // validate quantity
+        if (!quantity || quantity < 1 || quantity > 999) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be between 1 and 999'
+            });
+        }   
+
+        // find user
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // check if product already in cart
+        const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
+
+        if (existingCartItem !== -1) {
+            newQuantity = user.cart[existingCartItem].quantity + quantity;
+
+            if (newQuantity > 999) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Total quantity for this product cannot exceed 999. Please place a bulk order for larger quantities.'
+                });
+            }
+
+            user.cart[existingCartItem].quantity = newQuantity;
+
+
+        } else {
+            user.cart.push({ 
+                product: productId, 
+                quantity: quantity 
+            })
+        }
+
+        //save user
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: existingItemIndex !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
+        });
+
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while adding cart item: ${error}`)
     }
 }

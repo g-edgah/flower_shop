@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdArrowRight } from "react-icons/md";
 import { MdArrowDropDown } from "react-icons/md";
 
-import FlowerCard from '../home/flowerCard.jsx'
+import FlowerCard from '../common/flowerCard.jsx'
 
 
 const SideBar = ({ colors, toggleColors, occasion, setOccasions, inputMin, inputMax, setInputMax, setInputMin, handlePriceRange }) => {
