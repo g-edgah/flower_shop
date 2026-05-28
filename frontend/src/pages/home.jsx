@@ -16,6 +16,7 @@ import DiscountCard from '../components/home/discountCard.jsx'
 import DiscountSlider from '../components/home/discount.jsx'
 
 import { useHome } from '../hooks/products.js';
+import { useUser } from '../hooks/user.js';
 
 
 
@@ -37,6 +38,14 @@ const HomePage = ({setPage}) => {
         setPage("home")
 
     }, []);
+
+    const { data: userData, isUserLoading, userError, isUserFetching, userRefetch } = useUser();
+
+    const userCart = userData?.formattedUser.cart
+
+    console.log(userCart)
+
+
 
     const { data, isLoading, error, isFetching, refetch } = useHome();
 
@@ -70,14 +79,17 @@ const HomePage = ({setPage}) => {
             <div className="new flex flex-col items-center w-full space-y-5 justify-center">
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
-                    {newProducts.map(({ name, price, picturePath }, index) => (
+                    {newProducts.map(({ name, price, picturePath }, index) => {
+                        //if (_id)
+                        (
                         <FlowerCard
                         key={index} 
                         name={name}
                         price={price}
                         image={picturePath}
+                        
                         />
-                    ))}
+                    )})}
                 </div>
                 
             </div>

@@ -155,21 +155,53 @@ export const editCartItem = async (req, res) => {
             });
         }
 
+        // find user
+        const user = await User.findById(id);
 
-        // find user and update the specific cart item quantity
-        const user = await User.findOneAndUpdate(
-            { 
-                _id: id, 
-                'cart.product': productId 
-            },
-            { 
-                $set: { 'cart.$.quantity': quantity } 
-            },
-            { 
-                new: true, // return updated document
-                runValidators: true // run schema validators
-            }
-        )
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+
+        // check if product already in cart
+        const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
+
+        if (existingCartItem !== -1) {
+            // find user and update the specific cart item quantity
+            const user = await User.findOneAndUpdate(
+                { 
+                    _id: id, 
+                    'cart.product': productId 
+                },
+                { 
+                    $set: { 'cart.$.quantity': quantity } 
+                },
+                { 
+                    returnDocument: 'after', // return updated document
+                    runValidators: true // run schema validators
+                }
+            )
+        } else {
+            // if product not in cart, add it with the specified quantity
+            const user = await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        cart: {
+                            product: productId,
+                            quantity: quantity
+                        }
+                    }
+                },
+                {
+                    returnDocument: 'after',  // returns updated document
+                    runValidators: true  // vlidates against schema
+                }
+            );
+        }
 
         if (!user) {
             return res.status(404).json({
@@ -185,6 +217,111 @@ export const editCartItem = async (req, res) => {
         console.log(`error while updating user details: ${error}`)
     }
 }
+
+export const addCartItem = async (req, res, next) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+ 
+        const { productId, quantity } = req.body;
+
+        // validate quantity
+        if (!quantity || quantity < 1 || quantity > 999) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be between 1 and 999'
+            });
+        }   
+
+        
+
+        // find user
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+
+        // check if product already in cart
+        const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
+
+        
+        if (existingCartItem !== -1) {
+            const newQuantity = user.cart[existingCartItem].quantity + quantity;
+            console.log("new quantity: "+newQuantity)   
+
+
+            if (newQuantity > 999) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Total quantity for this product cannot exceed 999. Please place a bulk order for larger quantities.'
+                });
+            }
+            
+            user.cart[existingCartItem].quantity = newQuantity;
+
+            await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        cart: {
+                            product: productId,
+                            quantity: newQuantity
+                        }
+                    }
+                },
+                {
+                    returnDocument: 'after',  // Returns updated document
+                    runValidators: true  // Validates against schema
+                }
+            );
+
+
+        } else {
+            //console.log("adding item to cart");
+           await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        cart: {
+                            product: productId,
+                            quantity: quantity
+                        }
+                    }
+                },
+                {
+                    new: true,  // Returns updated document
+                    runValidators: true  // Validates against schema
+                }
+            );
+        }
+        
+
+        res.status(200).json({
+            success: true,
+            message: existingCartItem !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
+        });
+
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while adding cart item: ${error}`)
+    }
+}
+
 
 export const deleteCartItem = async (req, res) => {
     try {
@@ -232,8 +369,7 @@ export const deleteCartItem = async (req, res) => {
         console.log(`error while deleting cart item: ${error}`)
     }
 }
-
-export const addCartItem = async (req, res) => {
+export const getUserWishlist = async (req, res) => {
     try {
         const { id } = req.user
 
@@ -243,18 +379,30 @@ export const addCartItem = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const { productId, quantity } = req.body;
-
-        // validate quantity
-        if (!quantity || quantity < 1 || quantity > 999) {
-            return res.status(400).json({
-                success: false,
-                message: 'Quantity must be between 1 and 999'
-            });
-        }   
-
-        // find user
         const user = await User.findById(id);
+
+        const wishlist = user.wishlist.map(item => item.toString())
+
+        res.status(200).json({ wishlist })
+    } catch (error) {
+        res.status(404).json({ error: "error while fetching user wishlist" });
+        console.log(`error while fetching user wishlist: ${error}`)
+    }
+}
+
+export const editUserWishlist = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { productId } = req.body;
+
+        const user = await User.findByIdAndUpdate(id);
 
         if (!user) {
             return res.status(404).json({
@@ -262,43 +410,51 @@ export const addCartItem = async (req, res) => {
                 message: 'User not found'
             });
         }
-
-        // check if product already in cart
-        const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
-
-        if (existingCartItem !== -1) {
-            newQuantity = user.cart[existingCartItem].quantity + quantity;
-
-            if (newQuantity > 999) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Total quantity for this product cannot exceed 999. Please place a bulk order for larger quantities.'
-                });
-            }
-
-            user.cart[existingCartItem].quantity = newQuantity;
-
-
-        } else {
-            user.cart.push({ 
-                product: productId, 
-                quantity: quantity 
-            })
+        console.log("user wishlist before update: ", user.wishlist)
+        // check if product exists in wishlist
+        const itemExists = user.wishlist.some(
+            item => item.toString() === productId
+        );
+        console.log("item exists in wishlist: ", itemExists)
+        // add item
+        if (!itemExists) {
+            console.log("adding item to wishlist");
+            await User.findByIdAndUpdate(
+                id,
+                {
+                    $addToSet: {
+                        wishlist:  productId
+                    }
+                },
+                {
+                    returnDocument: 'after',  // returns updated document
+                    runValidators: true  // validates against schema
+                }
+            );
+        
+        } else if (itemExists) {
+            console.log("removing item from wishlist");
+            // remove item 
+            await User.findByIdAndUpdate(
+                id,
+                { 
+                    $pull: { 
+                        wishlist: productId 
+                    } 
+                },
+                {
+                    returnDocument: 'after',  // returns updated document
+                    runValidators: true  // validates against schema
+                }
+            );
         }
 
-        //save user
-        await user.save();
+        res.status(200).json({ 
+            message: 'success'
+        }) 
 
-        res.status(200).json({
-            success: true,
-            message: existingItemIndex !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
-        });
-
-    } catch (error) {
-        res.status(500).json({            
-            success: false,
-            message: 'Internal server error', 
-        });
-        console.error(`error while adding cart item: ${error}`)
+    }catch (error) {
+        res.status(500).json({ error: "error while updating wishlist" });
+        console.log(`error while updating wishlist: ${error}`)
     }
-}
+}   

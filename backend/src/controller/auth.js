@@ -20,12 +20,12 @@ export const register = async (req, res) => {
             return
         }
 
-        // const salt = await bcrypt.genSalt();
+        // const salt = await bcrypt.genSalt(10);
         // const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
             email,
-            password,//: passwordHash,
+            password: passwordHash,
         });
 
         const savedUser = await newUser.save()

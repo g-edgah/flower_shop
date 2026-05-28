@@ -34,7 +34,7 @@ const ProfilePage = ({setPage}) => {
         }
     }
 
-    const { data, isLoading, error, isFetching, refetch } = useUser(userId);
+    const { data, isLoading, error, isFetching, refetch } = useUser();
      
      
     if (isLoading) return <div>Loading...</div>;
