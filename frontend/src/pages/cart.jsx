@@ -28,8 +28,8 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     if (isCartLoading) return <div>Loading first time...</div>;
     if (cartError) return <div>Error: {cartError.message}</div>;
 
-    const cart = cartData.formatttedCart || [1, 2, 3];
-    console.log("user cart: ",cartData);
+    const cart = cartData.formattedCart;
+    console.log("user cart: ",cart.length);
 
 
     return (
@@ -50,20 +50,24 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             
                                 {cart.map(
                                     ({
-                                        key={index},
-                                        id,
+                                        _id,
                                         name,
+                                        type,
                                         price,
                                         quantity,
                                         image,
-                                    }) => (
+                                    }, index) => (
+                                    
                                     <CartCard 
                                         key={index}
-                                        itemId={id}
+                                        id={_id}
                                         name={name}
+                                        type={type}
                                         price={price}
                                         quantity={quantity}
                                         image={image}
+                                        userRefetch={userRefetch}
+                                        cartRefetch={cartRefetch}
                                         
                                     />
                                 ))}

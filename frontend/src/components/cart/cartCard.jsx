@@ -3,7 +3,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { useAddCart, useMinusCart, useDeleteCart } from "../../hooks/user";
 
 
-const CartCard = ({id, name, price, quantity, image, handleChangeQuantity, handleDelete, userRefetch}) => {  
+const CartCard = ({id, name, type, price, quantity, image, userRefetch, cartRefetch}) => {  
     const productPrice = price * quantity;
 
     // api call
@@ -14,10 +14,13 @@ const CartCard = ({id, name, price, quantity, image, handleChangeQuantity, handl
             
     
     const deleteCartToggle = () => {
-        deleteCart({productId: id}, {
+        deleteCart({
+            productId: id
+        }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
                     userRefetch()
+                    cartRefetch()
                     
                 },
                 onError: (error) => {
@@ -32,11 +35,13 @@ const CartCard = ({id, name, price, quantity, image, handleChangeQuantity, handl
     const addCartToggle = () => {
         addCart({
             productId: id,
+            productModel: type === "bouquet" ? "Bouquet" : "Flower",
             quantity: 1
         }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
                     userRefetch()
+                    cartRefetch()
                     
                 },
                 onError: (error) => {
@@ -49,15 +54,16 @@ const CartCard = ({id, name, price, quantity, image, handleChangeQuantity, handl
 
 
     const minusCartToggle = () => {
-        console.log("product to wishlist id: ", id)
         minusCart({
             productId: id,
+            productModel: type === "bouquet" ? "Bouquet" : "Flower",
             quantity: 1
         }, 
         {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
                 userRefetch()
+                cartRefetch()
                 
             },
             onError: (error) => {

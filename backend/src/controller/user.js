@@ -422,12 +422,14 @@ export const deleteCartItem = async (req, res) => {
         const { id } = req.user
 
         const paramId = req.params.id
+        const productId = req.params.productId
+
+        console.log("deleting item: ", productId)
+        console.log("deleting for user: ", id)
 
         if (paramId !== id) {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
-
-        const { productId } = req.body;
 
         const user = await User.findByIdAndUpdate(id);
 
@@ -444,6 +446,7 @@ export const deleteCartItem = async (req, res) => {
         );
 
         if (!itemExists) {
+            console.log('here')
             return res.status(404).json({
                 success: false,
                 message: 'Product not found in cart'
@@ -455,6 +458,7 @@ export const deleteCartItem = async (req, res) => {
             id,
             { $pull: { cart: { product: productId } } }
         );
+        console.log("item removed from cart")
 
         res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
 

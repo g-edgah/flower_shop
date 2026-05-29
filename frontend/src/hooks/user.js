@@ -66,11 +66,11 @@ export const useMinusCart = (formData) => {
 
 
 // user cart editing
-export const useDeleteCart = (formData) => {
+export const useDeleteCart = () => {
     //console.log(`formdata: ${JSON.stringify(formData)}`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.delete(`/user/cart/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.delete(`/user/cart/${userId}/${formData.productId}`).then(res => res.data)
     });
     
 };
