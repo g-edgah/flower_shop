@@ -119,13 +119,14 @@ const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, u
                         return (
                             
                             <FlowerCard
+                            id={_id}
                             key={index} 
                             name={name}
                             price={price}
                             image={picturePath}
                             liked={liked}
                             carted={carted}
-                            
+                            userRefetch={userRefetch}
                             />
                     )})}
                     

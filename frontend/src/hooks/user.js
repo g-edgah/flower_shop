@@ -53,6 +53,16 @@ export const useEditCart = (formData) => {
     
 };
 
+// user cart editing
+export const useAddCart = (formData) => {
+    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data)
+    });
+    
+};
+
 // getting wishlist
 export const useWishlist = () => {
     //console.log(`filters: ${JSON.stringify(filters)}`) 
@@ -65,11 +75,10 @@ export const useWishlist = () => {
 };
 
 // user wishlist editing
-export const useEditWishlist = (formData) => {
-    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+export const useEditWishlist = () => {
 
     return useMutation({ 
-        mutationFn: (formData) => api.patch(`/user/wishlist/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data)
     });
     
 };

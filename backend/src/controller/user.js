@@ -252,46 +252,44 @@ export const addCartItem = async (req, res, next) => {
                 message: 'User not found'
             });
         }
-
+        //console.log("user confirmed: ",user.firstName)
 
         // check if product already in cart
         const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
 
-        
+        // console.log("existingCartItem index: ", existingCartItem)
+
         if (existingCartItem !== -1) {
             const newQuantity = user.cart[existingCartItem].quantity + quantity;
-            console.log("new quantity: "+newQuantity)   
+            //console.log("item already exists in cart");
+            //console.log("new quantity: "+newQuantity)   
 
 
-            if (newQuantity > 999) {
+            if (!quantity || quantity < 1 || quantity > 999) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Total quantity for this product cannot exceed 999. Please place a bulk order for larger quantities.'
+                    message: 'Total quantity must be between 1 and 999'
                 });
-            }
+            }   
             
-            user.cart[existingCartItem].quantity = newQuantity;
-
-            await User.findByIdAndUpdate(
-                id,
-                {
-                    $push: {
-                        cart: {
-                            product: productId,
-                            quantity: newQuantity
-                        }
-                    }
+            await User.findOneAndUpdate(
+                { 
+                    _id: id, 
+                    'cart.product': productId 
                 },
-                {
-                    returnDocument: 'after',  // Returns updated document
-                    runValidators: true  // Validates against schema
+                { 
+                    $set: { 'cart.$.quantity': newQuantity } 
+                },
+                { 
+                    returnDocument: 'after', // return updated document
+                    runValidators: true // run schema validators
                 }
-            );
+            )
 
 
         } else {
-            //console.log("adding item to cart");
-           await User.findByIdAndUpdate(
+            //console.log("item does not exist in cart");
+            await User.findByIdAndUpdate(
                 id,
                 {
                     $push: {
@@ -402,6 +400,14 @@ export const editUserWishlist = async (req, res) => {
         }
 
         const { productId } = req.body;
+        console.log("productId: ", req.body)
+
+        if (!productId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required'
+            });
+        }
 
         const user = await User.findByIdAndUpdate(id);
 
@@ -419,7 +425,7 @@ export const editUserWishlist = async (req, res) => {
         console.log("item exists in wishlist: ", itemExists)
         // add item
         if (!itemExists) {
-            console.log("adding item to wishlist");
+            console.log("adding item to wishlist", productId);
             await User.findByIdAndUpdate(
                 id,
                 {
@@ -433,6 +439,7 @@ export const editUserWishlist = async (req, res) => {
                 }
             );
         
+            console.log("user wishlist after adding item: ", await User.findById(id).select('wishlist'))
         } else if (itemExists) {
             console.log("removing item from wishlist");
             // remove item 

@@ -37,22 +37,23 @@ const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
                     {data && (
                     <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                     
-                            {data.products.map(({ _id, name, price, picturePath }, index) => {
+                        {data.products.map(({ _id, name, price, picturePath }, index) => {
                             const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
                             const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
-                            
+                                
                             return (
                                 
                                 <FlowerCard
+                                id={_id}
                                 key={index} 
                                 name={name}
                                 price={price}
                                 image={picturePath}
                                 liked={liked}
                                 carted={carted}
-                                
+                                userRefetch={userRefetch}
                                 />
-                        )})}
+                            )})}
                         
                     </div>
                     )}

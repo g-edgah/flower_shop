@@ -75,25 +75,20 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
                     {newProducts.map(({ _id, name, price, picturePath }, index) => {
-                        let liked = false;
-                        let carted = false;
-
-                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
-                            liked=true
-                        }
-                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
-                            carted=true
-                        }
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        
                         return (
                             
                             <FlowerCard
+                            id={_id}
                             key={index} 
                             name={name}
                             price={price}
                             image={picturePath}
                             liked={liked}
                             carted={carted}
-                            
+                            userRefetch={userRefetch}
                             />
                     )})}
                 </div>
@@ -151,25 +146,20 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
                     {popularProducts.map(({ _id, name, price, picturePath }, index) => {
-                        let liked = false;
-                        let carted = false;
-
-                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
-                            liked=true
-                        }
-                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
-                            carted=true
-                        }
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        
                         return (
                             
                             <FlowerCard
+                            id={_id}
                             key={index} 
                             name={name}
                             price={price}
                             image={picturePath}
                             liked={liked}
                             carted={carted}
-                            
+                            userRefetch={userRefetch}
                             />
                     )})}
                     
@@ -182,25 +172,20 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
                     {floristPicks.map(({ _id, name, price, picturePath }, index) => {
-                        let liked = false;
-                        let carted = false;
-
-                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
-                            liked=true
-                        }
-                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
-                            carted=true
-                        }
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        
                         return (
                             
                             <FlowerCard
+                            id={_id}
                             key={index} 
                             name={name}
                             price={price}
                             image={picturePath}
                             liked={liked}
                             carted={carted}
-                            
+                            userRefetch={userRefetch}
                             />
                     )})}
                     
