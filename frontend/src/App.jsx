@@ -7,19 +7,18 @@ import UserLayout from './layout/userLayout.jsx'
 import AdminLayout from './layout/adminLayout.jsx'
 import ProfileLayout from './layout/profile.jsx'
 
-import { useUser, useCart, useEditCart, useWishlist, useEditWishlist } from './hooks/user.js';
+import { useUser } from './hooks/user.js';
 
 
 
 function App() {
   const { data: userData, isLoading: isUserLoading, error: userError, isFetching: isUserFetching, refetch: userRefetch } = useUser();
   
-  if (userData) {
-    //console.log("user: ",user)
-
-    const userCart = userData.formattedUser.cart
-    const userWishlist = userData.formattedUser.wishlist
-  }
+  // if (userData) {
+  //   console.log("user at app: ",userData)
+  //   const userCart = userData.formattedUser.cart
+  //   const userWishlist = userData.formattedUser.wishlist
+  // }
 
   return (
     <BrowserRouter>

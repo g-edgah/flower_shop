@@ -109,22 +109,24 @@ export const getUserCart = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('cart.product'); //populate product details in cart
 
-        //option 1
-        const cart = await Product.find({
-            _id: { $in: user.cart }
-        });
+        console.log("user cart: ", user.cart)
 
+        // console.log(user.cart.map(i => ({
+        //     product: i.product,
+        //     productModel: i.productModel
+        // })));
 
-        const formattedCart = cart.map( ({ 
-            _id, 
-            name, 
-            price, 
-            description, 
-            picturePath 
+        // console.log(
+        //     User.schema.path('cart').schema.path('product').options
+        // );
+
+        const formattedCart = user.cart.map( ({ 
+            product: { _id, name, price, description, picturePath },
+            quantity
         }) => {
-            return { _id, name, price, description, picturePath }
+            return { _id, name, price, description, picturePath, quantity }
         })
 
         res.status(200).json({ formattedCart })
@@ -146,7 +148,7 @@ export const editCartItem = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const { productId, quantity } = req.body;
+        const { productId, productModel,quantity } = req.body;
 
         // validate quantity
         if (!quantity || quantity < 1 || quantity > 999) {
@@ -193,6 +195,7 @@ export const editCartItem = async (req, res) => {
                     $push: {
                         cart: {
                             product: productId,
+                            productModel: productModel,
                             quantity: quantity
                         }
                     }
@@ -220,6 +223,109 @@ export const editCartItem = async (req, res) => {
 }
 
 export const addCartItem = async (req, res, next) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+ 
+        const { productId, quantity, productModel } = req.body;
+
+        // validate quantity
+        if (!quantity || quantity < 1 || quantity > 999) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be between 1 and 999'
+            });
+        }   
+
+        
+
+        // find user
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        //console.log("user confirmed: ",user.firstName)
+
+        // check if product already in cart
+        const existingCartItem = user.cart.findIndex(item => item.product.toString() === productId);
+
+        // console.log("existingCartItem index: ", existingCartItem)
+
+        if (existingCartItem !== -1) {
+            const newQuantity = user.cart[existingCartItem].quantity + quantity;
+            //console.log("item already exists in cart");
+            //console.log("new quantity: "+newQuantity)   
+
+
+            if (!newQuantity || newQuantity < 1 || newQuantity > 999) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Total quantity must be between 1 and 999'
+                });
+            }   
+            
+            await User.findOneAndUpdate(
+                { 
+                    _id: id, 
+                    'cart.product': productId 
+                },
+                { 
+                    $set: { 'cart.$.quantity': newQuantity } 
+                },
+                { 
+                    returnDocument: 'after', // return updated document
+                    runValidators: true // run schema validators
+                }
+            )
+
+
+        } else {
+            //console.log("item does not exist in cart");
+            await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        cart: {
+                            product: productId,
+                            productModel: productModel,
+                            quantity: quantity
+                        }
+                    }
+                },
+                {
+                    new: true,  // Returns updated document
+                    runValidators: true  // Validates against schema
+                }
+            );
+        }
+        
+
+        res.status(200).json({
+            success: true,
+            message: existingCartItem !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
+        });
+
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while adding cart item: ${error}`)
+    }
+}
+
+export const minusCartItem = async (req, res, next) => {
     try {
         const { id } = req.user
 
@@ -260,12 +366,12 @@ export const addCartItem = async (req, res, next) => {
         // console.log("existingCartItem index: ", existingCartItem)
 
         if (existingCartItem !== -1) {
-            const newQuantity = user.cart[existingCartItem].quantity + quantity;
+            const newQuantity = user.cart[existingCartItem].quantity - quantity;
             //console.log("item already exists in cart");
             //console.log("new quantity: "+newQuantity)   
 
 
-            if (!quantity || quantity < 1 || quantity > 999) {
+            if (!newQuantity || newQuantity < 1 || newQuantity > 999) {
                 return res.status(400).json({
                     success: false,
                     message: 'Total quantity must be between 1 and 999'
@@ -289,21 +395,11 @@ export const addCartItem = async (req, res, next) => {
 
         } else {
             //console.log("item does not exist in cart");
-            await User.findByIdAndUpdate(
-                id,
-                {
-                    $push: {
-                        cart: {
-                            product: productId,
-                            quantity: quantity
-                        }
-                    }
-                },
-                {
-                    new: true,  // Returns updated document
-                    runValidators: true  // Validates against schema
-                }
-            );
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found in cart'
+            });
+            
         }
         
 
@@ -320,7 +416,6 @@ export const addCartItem = async (req, res, next) => {
         console.error(`error while adding cart item: ${error}`)
     }
 }
-
 
 export const deleteCartItem = async (req, res) => {
     try {

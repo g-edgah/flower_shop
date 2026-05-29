@@ -44,7 +44,18 @@ export const useCart = () => {
 };
 
 // user cart editing
-export const useEditCart = (formData) => {
+export const useAddCart = (formData) => {
+    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data)
+    });
+    
+};
+
+
+// user cart editing
+export const useMinusCart = (formData) => {
     //console.log(`formdata: ${JSON.stringify(formData)}`) 
 
     return useMutation({ 
@@ -53,12 +64,13 @@ export const useEditCart = (formData) => {
     
 };
 
+
 // user cart editing
-export const useAddCart = (formData) => {
+export const useDeleteCart = (formData) => {
     //console.log(`formdata: ${JSON.stringify(formData)}`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.delete(`/user/cart/${userId}`, formData).then(res => res.data)
     });
     
 };

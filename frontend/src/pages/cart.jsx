@@ -5,6 +5,8 @@ import CartHeader from '../components/cart/cartHeader.jsx';
 import CartCard from '../components/cart/cartCard.jsx';
 import Footer from '../components/common/footer.jsx';
 
+import { useCart } from '../hooks/user.js';
+
 const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const Navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
@@ -19,103 +21,20 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
         setPage("cart")
     }, [])
 
-    //mock cart items for use in frontend design
-    const sampleCartItems = [
-        {
-            id: 1,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        },
-        {
-            id: 2,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        },
-        {
-            id: 3,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        },
-        {
-            id: 4,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        },
-        {
-            id: 5,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        },
-        {
-            id: 6,
-            name: 'pink roses bouquet',
-            price: 2900,
-            quantity: 2,
-            tags: {type: 'roses', color: 'pink', bundling: 'bouquet'},
-            image: 'pink_roses_bouquet.png',
-        }
-    ]
 
-    const handleDelete = (productId) => {
-        //logic to handle deleting items from cart
-        console.log("deleted")
-    }
+    const { data: cartData, isLoading: isCartLoading, error: cartError, isFetching: isCartFetching, refetch: cartRefetch } = useCart();
+    
+    
+    if (isCartLoading) return <div>Loading first time...</div>;
+    if (cartError) return <div>Error: {cartError.message}</div>;
 
-    const handleChangeQuantity = (change, productId) => {
-        // Logic to change quantity of cart item
-        if (change === 0) {
-            console.log("minus")
-        } else if (change=1) {
-            console.log("plus")
-        }
-    }
-
-    const getCartTotal = () => {
-        // Logic to calculate cart total
-    }
-
-    const getTotalAmount = () => {
-        // Logic to calculate total amount
-    }
-
-    const handleCoupon = (e) => {
-        e.preventDefault();
-        // Logic to apply coupon
-        getTotalAmount();
-    }
-
-    const handleCheckout = () => {
-        // Logic to handle checkout
-    }
-
-
-    const getCartItems = () => {
-        // Logic to fetch cart items
-    }
-
-    useEffect(() => {
-        getCartItems();
-    }, []);
+    const cart = cartData.formatttedCart || [1, 2, 3];
+    console.log("user cart: ",cartData);
 
 
     return (
     <div className="min-h-full pt-10 w-full flex flex-col space-y-3 md:space-y-5 items-center">
-            {sampleCartItems.length === 0 ? (
+            {cart.length === 0 ? (
                 <div className="emptyCart w-full h-[50vh] flex flex-col items-center space-y-10 justify-center mt-20">
                     <div className="text-center space-y-4">
                         <h2 className="text-2xl font-medium">your cart is empty</h2>
@@ -129,8 +48,9 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                     <div className="productContainer flex flex-col gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto w-full rounded-md">
                         
                             
-                                {sampleCartItems.map(
+                                {cart.map(
                                     ({
+                                        key={index},
                                         id,
                                         name,
                                         price,
@@ -138,14 +58,13 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                                         image,
                                     }) => (
                                     <CartCard 
-                                        key={id}
+                                        key={index}
                                         itemId={id}
                                         name={name}
                                         price={price}
                                         quantity={quantity}
                                         image={image}
-                                        handleChangeQuantity={handleChangeQuantity}
-                                        handleDelete={handleDelete}
+                                        
                                     />
                                 ))}
                        
@@ -157,7 +76,7 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                         </div>
 
                         <div className="coupon">
-                            <form onSubmit={handleCoupon}></form>
+                            <form ></form>
                             <input 
                                 className="p-2 bg-white w-50 h-10 rounded-md border text-summaryButtons focus:outline-none border-gray-400"
                                 type="text" 

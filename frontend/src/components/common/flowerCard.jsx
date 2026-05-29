@@ -3,7 +3,7 @@ import { IoIosBasket } from "react-icons/io";
 
 import { useEditWishlist, useAddCart } from "../../hooks/user";
 
-const FlowerCard = ({id, name, price, image, liked, carted, userRefetch}) => {
+const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch}) => {
     
     // api call
     const { mutate: editWishlist, isLoading: wishlistLoading, error: wishlistError } = useEditWishlist();
@@ -31,6 +31,7 @@ const FlowerCard = ({id, name, price, image, liked, carted, userRefetch}) => {
         console.log("product to wishlist id: ", id)
         addCart({
             productId: id,
+            productModel: type === "bouquet" ? "Bouquet" : "Flower",
             quantity: 1
         }, {
                 onSuccess: (data) => {

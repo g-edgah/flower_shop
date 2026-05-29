@@ -16,7 +16,7 @@ import DiscountCard from '../components/home/discountCard.jsx'
 import DiscountSlider from '../components/home/discount.jsx'
 
 import { useHome } from '../hooks/products.js';
-import { useUser, useCart, useEditCart, useWishlist, useEditWishlist } from '../hooks/user.js';
+import { useUser, useCart, useWishlist, useEditWishlist } from '../hooks/user.js';
 
 
 
@@ -49,8 +49,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
 
     const wishlist = userData?.formattedUser?.wishlist || [];
     const cart = userData?.formattedUser?.cart || [];
-    console.log("wishlist: ", wishlist)
-    console.log("cart: ", cart)
+    // console.log("wishlist: ", wishlist)
+    // console.log("cart: ", cart)
 
     return (
         <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
@@ -74,7 +74,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
             <div className="new flex flex-col items-center w-full space-y-5 justify-center">
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
-                    {newProducts.map(({ _id, name, price, picturePath }, index) => {
+                    {newProducts.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
                         const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
@@ -84,6 +84,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             id={_id}
                             key={index} 
                             name={name}
+                            type={type}
                             price={price}
                             image={picturePath}
                             liked={liked}
@@ -145,7 +146,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>flying off the shelves</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
-                    {popularProducts.map(({ _id, name, price, picturePath }, index) => {
+                    {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
                         const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
@@ -155,6 +156,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             id={_id}
                             key={index} 
                             name={name}
+                            type={type}
                             price={price}
                             image={picturePath}
                             liked={liked}
@@ -171,7 +173,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>florists' picks</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
-                    {floristPicks.map(({ _id, name, price, picturePath }, index) => {
+                    {floristPicks.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
                         const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
@@ -181,6 +183,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             id={_id}
                             key={index} 
                             name={name}
+                            type={type}
                             price={price}
                             image={picturePath}
                             liked={liked}

@@ -1,10 +1,19 @@
 import mongoose from "mongoose";
 
+import './bouquet.js';  
+import './flower.js';
+
 const cartItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: [true, 'Product ID is required']
+        required: [true, 'Product ID is required'],
+        //ref: 'Bouquet' 
+        refPath: 'cart.productModel' 
+    },
+    productModel: {
+        type: String,
+        required: true,
+        enum: ['Bouquet', 'Flower']  // This validates the model name
     },
     quantity: {
         type: Number,
