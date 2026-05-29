@@ -32,13 +32,44 @@ export const useEditUser = (formData) => {
 };
 
 
-// hook for bouquets
+// getting cart
 export const useCart = () => {
     //console.log(`filters: ${JSON.stringify(filters)}`) 
 
     return useQuery({ 
         queryKey: ['user', userId],
         queryFn: () => api.get(`/user/cart/${userId}`).then(res => res.data)
+    });
+    
+};
+
+// user cart editing
+export const useEditCart = (formData) => {
+    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+
+    return useMutation({ 
+        mutationFn: (formData) => api.patch(`/user/cart/${userId}`, formData).then(res => res.data)
+    });
+    
+};
+
+// getting wishlist
+export const useWishlist = () => {
+    //console.log(`filters: ${JSON.stringify(filters)}`) 
+
+    return useQuery({ 
+        queryKey: ['user', userId],
+        queryFn: () => api.get(`/user/wishlist/${userId}`).then(res => res.data)
+    });
+    
+};
+
+// user wishlist editing
+export const useEditWishlist = (formData) => {
+    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+
+    return useMutation({ 
+        mutationFn: (formData) => api.patch(`/user/wishlist/${userId}`, formData).then(res => res.data)
     });
     
 };

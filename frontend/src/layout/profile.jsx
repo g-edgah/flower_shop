@@ -8,7 +8,7 @@ import Register from '../components/profile/register.jsx';
 import TopBar from '../components/common/topBar.jsx'
 import NavBar from '../components/common/navBar.jsx';
 
-const ProfileLayout = () => {
+const ProfileLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const [page, setPage] = useState("profile")
 
     const handlePage = (page) => {
@@ -24,7 +24,7 @@ const ProfileLayout = () => {
             <TopBar />
             <NavBar page={page} setPage={setPage} />
             <Routes>
-                <Route index element={<Profile setPage={setPage}/>}/>
+                <Route index element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>}/>
                 <Route path='login' element={<Login setPage={setPage} />}/>
                 <Route path='register' element={<Register setPage={setPage} />}/>
 

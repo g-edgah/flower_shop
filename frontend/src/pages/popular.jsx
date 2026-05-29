@@ -6,7 +6,7 @@ import FlowerCard from '../components/common/flowerCard.jsx'
 import { usePopular } from '../hooks/products.js';
 import { use } from "react";
 
-const Popular = ({ setPage }) => {
+const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const [pageNo, setPageNo] = useState(1)
 
     useEffect(() => {
@@ -16,6 +16,9 @@ const Popular = ({ setPage }) => {
 
 
     const { data, isLoading, error, isFetching, refetch } = usePopular(pageNo);
+
+    const wishlist = userData?.formattedUser?.wishlist || [];
+    const cart = userData?.formattedUser?.cart || [];
 
     return (
         <div className='flex justify-center'>
@@ -34,14 +37,22 @@ const Popular = ({ setPage }) => {
                     {data && (
                     <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                     
-                        {data.products.map(({ name, price, picturePath }, index) => (
-                            <FlowerCard
-                            key={index} 
-                            name={name}
-                            price={price}
-                            image={picturePath}
-                            />
-                        ))}
+                            {data.products.map(({ _id, name, price, picturePath }, index) => {
+                            const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                            const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                            
+                            return (
+                                
+                                <FlowerCard
+                                key={index} 
+                                name={name}
+                                price={price}
+                                image={picturePath}
+                                liked={liked}
+                                carted={carted}
+                                
+                                />
+                        )})}
                         
                     </div>
                     )}

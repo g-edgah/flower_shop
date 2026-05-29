@@ -16,12 +16,12 @@ import DiscountCard from '../components/home/discountCard.jsx'
 import DiscountSlider from '../components/home/discount.jsx'
 
 import { useHome } from '../hooks/products.js';
-import { useUser } from '../hooks/user.js';
+import { useUser, useCart, useEditCart, useWishlist, useEditWishlist } from '../hooks/user.js';
 
 
 
 
-const HomePage = ({setPage}) => {
+const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
 
     const [content, setContent] = useState([
         {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
@@ -31,20 +31,12 @@ const HomePage = ({setPage}) => {
     ]); 
 
     //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
-        
-
+    
     useEffect(() => {
 
         setPage("home")
 
     }, []);
-
-    const { data: userData, isUserLoading, userError, isUserFetching, userRefetch } = useUser();
-
-    const userCart = userData?.formattedUser.cart
-
-    console.log(userCart)
-
 
 
     const { data, isLoading, error, isFetching, refetch } = useHome();
@@ -55,7 +47,10 @@ const HomePage = ({setPage}) => {
 
     const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data.data;
 
-    console.log(data.data)
+    const wishlist = userData?.formattedUser?.wishlist || [];
+    const cart = userData?.formattedUser?.cart || [];
+    console.log("wishlist: ", wishlist)
+    console.log("cart: ", cart)
 
     return (
         <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
@@ -79,16 +74,27 @@ const HomePage = ({setPage}) => {
             <div className="new flex flex-col items-center w-full space-y-5 justify-center">
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
-                    {newProducts.map(({ name, price, picturePath }, index) => {
-                        //if (_id)
-                        (
-                        <FlowerCard
-                        key={index} 
-                        name={name}
-                        price={price}
-                        image={picturePath}
-                        
-                        />
+                    {newProducts.map(({ _id, name, price, picturePath }, index) => {
+                        let liked = false;
+                        let carted = false;
+
+                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
+                            liked=true
+                        }
+                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
+                            carted=true
+                        }
+                        return (
+                            
+                            <FlowerCard
+                            key={index} 
+                            name={name}
+                            price={price}
+                            image={picturePath}
+                            liked={liked}
+                            carted={carted}
+                            
+                            />
                     )})}
                 </div>
                 
@@ -144,14 +150,28 @@ const HomePage = ({setPage}) => {
                 <span className='font-bold text-lg md:text-xl'>flying off the shelves</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
-                    {popularProducts.map(({ name, price, picturePath }, index) => (
-                        <FlowerCard 
-                        key={index}
-                        name={name}
-                        price={price}
-                        image={picturePath}
-                        />
-                    ))}
+                    {popularProducts.map(({ _id, name, price, picturePath }, index) => {
+                        let liked = false;
+                        let carted = false;
+
+                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
+                            liked=true
+                        }
+                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
+                            carted=true
+                        }
+                        return (
+                            
+                            <FlowerCard
+                            key={index} 
+                            name={name}
+                            price={price}
+                            image={picturePath}
+                            liked={liked}
+                            carted={carted}
+                            
+                            />
+                    )})}
                     
                     
                 </div>
@@ -161,14 +181,28 @@ const HomePage = ({setPage}) => {
                 <span className='font-bold text-lg md:text-xl'>florists' picks</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
-                    {floristPicks.map(({ name, price, picturePath }, index) => (
-                        <FlowerCard 
-                        key={index}
-                        name={name}
-                        price={price}
-                        image={picturePath}
-                        />
-                    ))}
+                    {floristPicks.map(({ _id, name, price, picturePath }, index) => {
+                        let liked = false;
+                        let carted = false;
+
+                        if (wishlist.some(item => item.toString() === _id.toString()) ) {
+                            liked=true
+                        }
+                        if (cart.some(item => item.product.toString() === _id.toString()) ) {
+                            carted=true
+                        }
+                        return (
+                            
+                            <FlowerCard
+                            key={index} 
+                            name={name}
+                            price={price}
+                            image={picturePath}
+                            liked={liked}
+                            carted={carted}
+                            
+                            />
+                    )})}
                     
                 </div>
             </div>

@@ -9,7 +9,7 @@ import Filter from '../components/common/filter.jsx'
 import { useFlowers } from '../hooks/products.js';
 import { use } from "react";
 
-const Flowers = ({setPage}) => {
+const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const [pageNo, setPageNo] = useState(1);
     const [sortOpen, setSortOpen] = useState(false);
     const [sortBy, setSortBy] = useState('popularity')
@@ -87,7 +87,10 @@ const Flowers = ({setPage}) => {
 
     //const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
 
-    console.log(data)
+    //console.log(data)
+
+    const wishlist = userData?.formattedUser?.wishlist || [];
+    const cart = userData?.formattedUser?.cart || [];
     
    
     
@@ -109,14 +112,22 @@ const Flowers = ({setPage}) => {
                 {data && (
                 <div className="flower-row pb-10 flex gap-5 w-full  flex-wrap justify-center items-center max-w-300">
                 
-                    {data.products.map(({ name, price, picturePath }, index) => (
-                        <FlowerCard
-                        key={index} 
-                        name={name}
-                        price={price}
-                        image={picturePath}
-                        />
-                    ))}
+                    {data.products.map(({ _id, name, price, picturePath }, index) => {
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        
+                        return (
+                            
+                            <FlowerCard
+                            key={index} 
+                            name={name}
+                            price={price}
+                            image={picturePath}
+                            liked={liked}
+                            carted={carted}
+                            
+                            />
+                    )})}
                     
                 </div>
                 )}

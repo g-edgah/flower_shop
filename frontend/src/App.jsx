@@ -7,17 +7,26 @@ import UserLayout from './layout/userLayout.jsx'
 import AdminLayout from './layout/adminLayout.jsx'
 import ProfileLayout from './layout/profile.jsx'
 
+import { useUser, useCart, useEditCart, useWishlist, useEditWishlist } from './hooks/user.js';
+
 
 
 function App() {
+  const { data: userData, isLoading: isUserLoading, error: userError, isFetching: isUserFetching, refetch: userRefetch } = useUser();
   
+  if (userData) {
+    //console.log("user: ",user)
+
+    const userCart = userData.formattedUser.cart
+    const userWishlist = userData.formattedUser.wishlist
+  }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/*' element={<UserLayout/>}/>
+        <Route path='/*' element={<UserLayout userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
         <Route path='/admin/*' element={<AdminLayout/>}/>
-        <Route path='/profile/*' element={<ProfileLayout/>}/>
+        <Route path='/profile/*' element={<ProfileLayout userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
       </Routes>
     </BrowserRouter>
   )

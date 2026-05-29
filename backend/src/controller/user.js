@@ -34,10 +34,11 @@ export const getUser = async (req, res) => {
             email: user.email,
             firstName: user.firstName, 
             lastName: user.lastName, 
-            userName: user.userName, 
             address: user.address, 
-            picturePath: user.picturePath 
-            //cart: user.cart
+            picturePath: user.picturePath,
+            cart: user.cart,
+            wishlist: user.wishlist,
+            orders: user.orders,
         };
 
         res.status(200).json({ formattedUser });

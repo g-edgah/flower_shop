@@ -5,7 +5,7 @@ import CartHeader from '../components/cart/cartHeader.jsx';
 import CartCard from '../components/cart/cartCard.jsx';
 import Footer from '../components/common/footer.jsx';
 
-const CartPage = ({setPage}) => {
+const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const Navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
     const [couponCode, setCouponCode] = useState('');

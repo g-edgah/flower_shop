@@ -15,7 +15,7 @@ import Logout from '../components/profile/logout.jsx'
 import { useUser } from '../hooks/user.js'
 
 
-const ProfilePage = ({setPage}) => {
+const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const userId = localStorage.getItem('userId')
 
     const [ profilePage, setProfilePage ] = useState("account")
@@ -33,15 +33,12 @@ const ProfilePage = ({setPage}) => {
             console.log(profilePage)
         }
     }
-
-    const { data, isLoading, error, isFetching, refetch } = useUser();
      
-     
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (isUserLoading) return <div>Loading...</div>;
+    if (userError) return <div>Error: {userError.message}</div>;
 
 
-    const user = data.formattedUser
+    const user = userData.formattedUser
 
     console.log(user)
     
@@ -51,7 +48,7 @@ const ProfilePage = ({setPage}) => {
             <SideBar profilePage={profilePage} setProfilePage={setProfilePage}/>
 
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">
-                {profilePage === "account" && (<Account refetch={refetch} user={user} />)}
+                {profilePage === "account" && (<Account refetch={userRefetch} user={user} />)}
                 {profilePage === "orders" && (<Orders />)}
                 {profilePage === "wishlist" && (<Wishlist />)}
                 {profilePage === "reviews" && (<Reviews />)}
