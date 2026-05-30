@@ -27,7 +27,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     return (
         <div className='flex flex-col justify-center items-center'>
             <TopBar />
-            <NavBar page={page} setPage={setPage} />
+            <NavBar page={page} setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />
             <Routes>
                 <Route index element={<Home setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>}/>
                 <Route path='bouquets' element={<Bouquets setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>

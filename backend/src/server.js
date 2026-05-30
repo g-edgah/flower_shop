@@ -27,9 +27,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5174', 
+    origin: [
+        'http://localhost:5174', 
+        'http://localhost:4173',
+    ],
     credentials: true,               
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Cookie'],
     exposedHeaders: ['Set-Cookie']
 }));

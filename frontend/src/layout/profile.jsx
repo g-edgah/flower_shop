@@ -22,7 +22,7 @@ const ProfileLayout = ({ userData, isUserLoading, userError, isUserFetching, use
     return (
         <div className='flex flex-col justify-center items-center'>
             <TopBar />
-            <NavBar page={page} setPage={setPage} />
+            <NavBar page={page} setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />
             <Routes>
                 <Route index element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>}/>
                 <Route path='login' element={<Login setPage={setPage} />}/>

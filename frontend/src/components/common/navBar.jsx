@@ -5,12 +5,12 @@ import { ImSearch } from "react-icons/im";
 import { HiMiniXMark } from "react-icons/hi2";
 import { IoIosBasket } from "react-icons/io";
 import { BiMenu } from "react-icons/bi";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import SearchBar from './searchBar';
 import NavDrawer from './navDrawer';    
 
-const NavBar = ({page, setPage }) => {
+const NavBar = ({ page, setPage, userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const navigate = useNavigate();
     const [isSearch, setIsSearch] = useState(false);
     const [isSearchBar, setIsSearchBar] = useState(false);
@@ -46,6 +46,8 @@ const NavBar = ({page, setPage }) => {
             //console.log(page)
         }
     }
+    
+    const navCart = userData?.formattedUser?.cart || [];
 
     
     return (
@@ -105,7 +107,7 @@ const NavBar = ({page, setPage }) => {
                         <button onClick={() => navigate('/cart')} className={`group relative cursor-pointer text-navText hover:text-navHover ${page == 'cart' ? 'text-navHover':'text-navText'}`}>
                             <IoIosBasket className={`h-6 w-6 ${page == 'cart' ? 'text-navHover':'text-navText group-hover:text-navHover'}`}   />
                             <span className={`absolute -top-1  text-white text-xs rounded-full px-2 py-0.5 ${page == 'cart' ? 'bg-navHover':'bg-navText group-hover:bg-navHover'}`}>
-                                0
+                                {navCart?.length || 0}
                             </span>
                         </button >
                         

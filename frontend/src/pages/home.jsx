@@ -36,6 +36,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
 
         setPage("home")
         userRefetch() 
+        console.log("home")
 
     }, []);
 

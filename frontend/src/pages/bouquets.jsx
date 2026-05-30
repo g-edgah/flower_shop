@@ -80,6 +80,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     useEffect(() => {
         //ensures page is set to bouquets when navigation is through other channels apart from button clicking such as navigating back 
         setPage("bouquets")
+        userRefetch()
     }, [])
 
     

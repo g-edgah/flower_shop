@@ -15,7 +15,7 @@ export const bouquets = async (req, res) => {
             pageNo
         } = req.body;
 
-        console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
+        //console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
 
         let limit = 20; // default items per page
         // pagination
@@ -31,13 +31,13 @@ export const bouquets = async (req, res) => {
         let newColors = colors
         if (newColors && newColors.includes('all')) {
             newColors = ['red', 'pink', 'blue', 'white', 'yellow', 'purple', 'black'];
-            console.log("new: "+newColors, "old: "+colors);
+            //console.log("new: "+newColors, "old: "+colors);
         }
 
         let newOccasion = occasion;
         if (newOccasion && newOccasion.includes('all')) {
             newOccasion = ['birthday', 'no occasion', 'bridal shower', 'wedding', 'anniversary', 'baby shower', 'apology', 'funeral'];
-            console.log(newOccasion);
+            //console.log(newOccasion);
         }
 
         //fetch boquets
@@ -89,7 +89,7 @@ export const flowers = async (req, res) => {
             pageNo
         } = req.body;
 
-        console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
+        //console.log("Received filters:", { occasion, colors, priceRange, sortBy, pageNo });
 
         let limit = 20; // default items per page
         // pagination
@@ -111,7 +111,7 @@ export const flowers = async (req, res) => {
         let newOccasion = occasion;
         if (newOccasion && newOccasion.includes('all')) {
             newOccasion = ['birthday', 'no occasion', 'bridal shower', 'wedding', 'anniversary', 'baby shower', 'apology', 'funeral'];
-            console.log(newOccasion);
+            //console.log(newOccasion);
         }
 
         //fetch flowers
@@ -159,7 +159,7 @@ export const popular = async (req, res) => {
             pageNo
         } = req.body;
 
-        console.log("Received filters:", { pageNo });
+        //console.log("Received filters:", { pageNo });
 
         let limit = 20; // default items per page
         // pagination

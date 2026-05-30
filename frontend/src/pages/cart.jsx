@@ -59,7 +59,7 @@ const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetc
                                         type,
                                         price,
                                         quantity,
-                                        image,
+                                        picturePath,
                                     }, index) => (
                                     
                                     <CartCard 
@@ -69,7 +69,7 @@ const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetc
                                         type={type}
                                         price={price}
                                         quantity={quantity}
-                                        image={image}
+                                        image={picturePath}
                                         userRefetch={userRefetch}
                                         cartRefetch={refetch}
                                         
