@@ -19,7 +19,6 @@ const CartCard = ({id, name, type, price, quantity, image, userRefetch, cartRefe
         }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
-                    userRefetch()
                     cartRefetch()
                     
                 },
@@ -40,7 +39,6 @@ const CartCard = ({id, name, type, price, quantity, image, userRefetch, cartRefe
         }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
-                    userRefetch()
                     cartRefetch()
                     
                 },
@@ -62,7 +60,6 @@ const CartCard = ({id, name, type, price, quantity, image, userRefetch, cartRefe
         {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-                userRefetch()
                 cartRefetch()
                 
             },

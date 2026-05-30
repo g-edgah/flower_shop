@@ -8,6 +8,8 @@ const userId = localStorage.getItem('userId');
 
 // hook for home data
 export const useUser = () => {
+    console.log(`fetching user data for userId: ${userId}`)
+
     return useQuery({
         queryKey: ['user', userId],
         queryFn: () => api.get(`/user/${userId}`).then(res => res.data),
@@ -34,14 +36,16 @@ export const useEditUser = (formData) => {
 
 // getting cart
 export const useCart = () => {
-    //console.log(`filters: ${JSON.stringify(filters)}`) 
+    console.log(`fetching cart for userId: ${userId}`) 
 
     return useQuery({ 
-        queryKey: ['user', userId],
+        queryKey: ['cart', userId],
         queryFn: () => api.get(`/user/cart/${userId}`).then(res => res.data)
     });
     
 };
+
+
 
 // user cart editing
 export const useAddCart = (formData) => {

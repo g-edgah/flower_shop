@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import Product from "../models/product.js";
 
 export const getUser = async (req, res) => {
+    console.log("get user request received")
     try {
         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
         const { id } = req.user;
@@ -41,11 +42,13 @@ export const getUser = async (req, res) => {
             orders: user.orders,
         };
 
-        res.status(200).json({ formattedUser });
+        res.status(200).json({ 
+            formattedUser 
+        });
 
     } catch (error) {
         res.status(404).json({error: "error while fetching user" });
-        console.log(`error while fetching user: ${error}`)
+        console.error(`error while fetching user: ${error}`)
     }
 }
 
@@ -67,7 +70,7 @@ export const editUser = async (req, res) => {
             address 
         } = req.body;
 
-        console.log("edit user req body address: ",req.body.address)
+        //console.log("edit user req body address: ",req.body.address)
 
         // if (newPassword !== confirmPassword) {
         //     res.status(400).json({error: "passwords do not match"})
@@ -82,21 +85,21 @@ export const editUser = async (req, res) => {
 
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            { firstName, lastName, address },
-            { returnDocument: true }
+            { firstName, lastName, address }
         ).select('-password');
 
         res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured
 
     } catch (error) {
         res.status(500).json({ error: "error while updating user details" });
-        console.log(`error while updating user details: ${error}`)
+        console.error(`error while updating user details: ${error}`)
     }
 }
 
 
 //if you go for option 1. get user cart
 export const getUserCart = async (req, res) => {
+    console.log("get cart request received")
     try {
         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
         const { id } = req.user
@@ -111,7 +114,7 @@ export const getUserCart = async (req, res) => {
 
         const user = await User.findById(id).populate('cart.product'); //populate product details in cart
 
-        console.log("user cart: ", user.cart)
+        //console.log("user cart: ", user.cart)
 
         // console.log(user.cart.map(i => ({
         //     product: i.product,
@@ -129,7 +132,9 @@ export const getUserCart = async (req, res) => {
             return { _id, name, price, description, picturePath, quantity }
         })
 
-        res.status(200).json({ formattedCart })
+        res.status(200).json({ 
+            formattedCart })
+
     } catch (error) {
         res.status(404).json({ error: "error while fetching user cart" });
         console.log(`error while fetching user cart: ${error}`)
@@ -183,7 +188,6 @@ export const editCartItem = async (req, res) => {
                     $set: { 'cart.$.quantity': quantity } 
                 },
                 { 
-                    returnDocument: 'after', // return updated document
                     runValidators: true // run schema validators
                 }
             )
@@ -201,7 +205,6 @@ export const editCartItem = async (req, res) => {
                     }
                 },
                 {
-                    returnDocument: 'after',  // returns updated document
                     runValidators: true  // vlidates against schema
                 }
             );
@@ -284,7 +287,6 @@ export const addCartItem = async (req, res, next) => {
                     $set: { 'cart.$.quantity': newQuantity } 
                 },
                 { 
-                    returnDocument: 'after', // return updated document
                     runValidators: true // run schema validators
                 }
             )
@@ -304,7 +306,6 @@ export const addCartItem = async (req, res, next) => {
                     }
                 },
                 {
-                    new: true,  // Returns updated document
                     runValidators: true  // Validates against schema
                 }
             );
@@ -387,7 +388,6 @@ export const minusCartItem = async (req, res, next) => {
                     $set: { 'cart.$.quantity': newQuantity } 
                 },
                 { 
-                    returnDocument: 'after', // return updated document
                     runValidators: true // run schema validators
                 }
             )
@@ -446,7 +446,7 @@ export const deleteCartItem = async (req, res) => {
         );
 
         if (!itemExists) {
-            console.log('here')
+            
             return res.status(404).json({
                 success: false,
                 message: 'Product not found in cart'
@@ -464,7 +464,7 @@ export const deleteCartItem = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: "error while deleting cart item" });
-        console.log(`error while deleting cart item: ${error}`)
+        console.error(`error while deleting cart item: ${error}`)
     }
 }
 export const getUserWishlist = async (req, res) => {
@@ -484,7 +484,7 @@ export const getUserWishlist = async (req, res) => {
         res.status(200).json({ wishlist })
     } catch (error) {
         res.status(404).json({ error: "error while fetching user wishlist" });
-        console.log(`error while fetching user wishlist: ${error}`)
+        console.error(`error while fetching user wishlist: ${error}`)
     }
 }
 
@@ -499,7 +499,7 @@ export const editUserWishlist = async (req, res) => {
         }
 
         const { productId } = req.body;
-        console.log("productId: ", req.body)
+        // console.log("productId: ", req.body)
 
         if (!productId) {
             return res.status(400).json({
@@ -516,12 +516,12 @@ export const editUserWishlist = async (req, res) => {
                 message: 'User not found'
             });
         }
-        console.log("user wishlist before update: ", user.wishlist)
+        // console.log("user wishlist before update: ", user.wishlist)
         // check if product exists in wishlist
         const itemExists = user.wishlist.some(
             item => item.toString() === productId
         );
-        console.log("item exists in wishlist: ", itemExists)
+        // console.log("item exists in wishlist: ", itemExists)
         // add item
         if (!itemExists) {
             console.log("adding item to wishlist", productId);
@@ -533,12 +533,11 @@ export const editUserWishlist = async (req, res) => {
                     }
                 },
                 {
-                    returnDocument: 'after',  // returns updated document
                     runValidators: true  // validates against schema
                 }
             );
         
-            console.log("user wishlist after adding item: ", await User.findById(id).select('wishlist'))
+            //console.log("user wishlist after adding item: ", await User.findById(id).select('wishlist'))
         } else if (itemExists) {
             console.log("removing item from wishlist");
             // remove item 
@@ -550,7 +549,6 @@ export const editUserWishlist = async (req, res) => {
                     } 
                 },
                 {
-                    returnDocument: 'after',  // returns updated document
                     runValidators: true  // validates against schema
                 }
             );
@@ -562,6 +560,6 @@ export const editUserWishlist = async (req, res) => {
 
     }catch (error) {
         res.status(500).json({ error: "error while updating wishlist" });
-        console.log(`error while updating wishlist: ${error}`)
+        console.error(`error while updating wishlist: ${error}`)
     }
 }   

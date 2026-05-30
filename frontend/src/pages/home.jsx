@@ -35,6 +35,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     useEffect(() => {
 
         setPage("home")
+        userRefetch() 
 
     }, []);
 
@@ -46,11 +47,11 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     if (error) return <div>Error: {error.message}</div>;
 
     const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data.data;
-
-    const wishlist = userData?.formattedUser?.wishlist || [];
-    const cart = userData?.formattedUser?.cart || [];
-    // console.log("wishlist: ", wishlist)
-    // console.log("cart: ", cart)
+    console.log("home data: ",data)
+    const homeWishlist = userData?.formattedUser?.wishlist || [];
+    const homeCart = userData?.formattedUser?.cart || [];
+    console.log("wishlist: ", homeWishlist)
+    console.log("cart: ", homeCart)
 
     return (
         <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
@@ -75,8 +76,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
                     {newProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -147,8 +148,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
                     {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -174,8 +175,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
                     {floristPicks.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             

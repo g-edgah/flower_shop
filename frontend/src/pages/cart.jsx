@@ -7,7 +7,7 @@ import Footer from '../components/common/footer.jsx';
 
 import { useCart } from '../hooks/user.js';
 
-const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const Navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
     const [couponCode, setCouponCode] = useState('');
@@ -16,25 +16,29 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     const [shippingLocation, setShippingLocation] = useState('');
     const [shippingCost, setShippingCost] = useState(0);
 
+    const { data, isLoading, error, isFetching, refetch } = useCart();
+
+
     useEffect(() => {
         //ensures page is set to popular when navigation is through other channels apart from button clicking such as navigating back 
         setPage("cart")
+
+        //cartRefetch()
     }, [])
-
-
-    const { data: cartData, isLoading: isCartLoading, error: cartError, isFetching: isCartFetching, refetch: cartRefetch } = useCart();
     
     
-    if (isCartLoading) return <div>Loading first time...</div>;
-    if (cartError) return <div>Error: {cartError.message}</div>;
-
-    const cart = cartData.formattedCart;
-    console.log("user cart: ",cart.length);
-
+    if (isLoading) return <div>Loading first time...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+    
+    const { banners, formattedCart, stats } = data;
+    
+   // const populatedCart = cartData.formattedCart;
+    console.log("user cart: ",data);
+    console.log("formatted cart: ", formattedCart)
 
     return (
     <div className="min-h-full pt-10 w-full flex flex-col space-y-3 md:space-y-5 items-center">
-            {cart.length === 0 ? (
+            {formattedCart?.length === 0 ? (
                 <div className="emptyCart w-full h-[50vh] flex flex-col items-center space-y-10 justify-center mt-20">
                     <div className="text-center space-y-4">
                         <h2 className="text-2xl font-medium">your cart is empty</h2>
@@ -48,7 +52,7 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                     <div className="productContainer flex flex-col gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto w-full rounded-md">
                         
                             
-                                {cart.map(
+                                {formattedCart.map(
                                     ({
                                         _id,
                                         name,
@@ -67,7 +71,7 @@ const CartPage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                                         quantity={quantity}
                                         image={image}
                                         userRefetch={userRefetch}
-                                        cartRefetch={cartRefetch}
+                                        cartRefetch={refetch}
                                         
                                     />
                                 ))}

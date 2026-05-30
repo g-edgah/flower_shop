@@ -23,6 +23,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     useEffect(() => {
     
             setPage("profile")
+            userRefetch()
     
      }, []);
 
