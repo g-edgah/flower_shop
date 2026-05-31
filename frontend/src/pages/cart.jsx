@@ -4,11 +4,12 @@ import { Link, useNavigate, Routes, Route } from 'react-router-dom';
 import CartHeader from '../components/cart/cartHeader.jsx';
 import Footer from '../components/common/footer.jsx';
 import Cart from '../components/cart/cart.jsx';
+import Checkout from '../components/cart/checkout.jsx';
 
 import { useCart } from '../hooks/user.js';
 
 const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetch}) => {
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
     const [ cart, setCart ] = useState([]);
     const [ couponCode, setCouponCode ] = useState('');
     //const [ subTotal, setSubTotal ] = useState(0);
@@ -59,7 +60,11 @@ const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetc
 
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-between">
-            <Cart cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} userRefetch={userRefetch} refetch={refetch} />
+            <Routes>
+                <Route path='checkout' element={<Cart cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} userRefetch={userRefetch} refetch={refetch} />} />
+                <Route path='/' element={<Checkout cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} userRefetch={userRefetch} refetch={refetch} />} />
+
+            </Routes>
         </div>
     )
 }

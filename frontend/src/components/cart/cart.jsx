@@ -1,6 +1,9 @@
 import CartCard from './cartCard.jsx';
+import { Link, useNavigate } from 'react-router-dom'
 
 const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, userRefetch, refetch }) => {
+    const navigate = useNavigate();
+
     return (
         <div className="min-h-full pt-10 w-full flex flex-col space-y-3 md:space-y-5 items-center">
                     {cart?.length === 0 ? (
@@ -70,8 +73,8 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                             </div>
         
                             <div className="cartActions mx-auto justify-center flex flex-row space-x-5 md:space-x-16 text-checkoutButtonsText pr-1 pb-15">
-                                <button className="bg-checkoutButtons hover:bg-checkoutButtonsHover hover:bg-gray-450 w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 transition" onClick={()=> Navigate('/')}>continue shopping</button>
-                                <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition">checkout</button>
+                                <button className="bg-checkoutButtons hover:bg-checkoutButtonsHover hover:bg-gray-450 w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 transition" onClick={()=> navigate('/')}>continue shopping</button>
+                                <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition" onClick={()=> navigate('cart/checkout')}>checkout</button>
                                 
                             </div>
                         </div>

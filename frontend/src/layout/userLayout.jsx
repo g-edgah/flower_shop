@@ -31,6 +31,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         <div className='flex flex-col justify-center items-center'>
             <TopBar />
             <NavBar page={page} setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />
+            
             <Routes>
                 <Route index element={<Home setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>}/>
 
@@ -44,7 +45,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                   
                 <Route path='profile/*' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>} />
 
-                <Route path='/cart' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+                <Route path='cart/*' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
 
                 <Route path='login' element={<Login setPage={setPage} />}/>
 
