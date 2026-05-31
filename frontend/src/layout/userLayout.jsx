@@ -12,6 +12,9 @@ import Popular from '../pages/popular.jsx';
 import CartPage from '../pages/cart.jsx';
 import TopBar from '../components/common/topBar.jsx'
 import NavBar from '../components/common/navBar.jsx';
+import Profile from '../pages/profile.jsx';
+import Login from '../components/profile/login.jsx';
+import Register from '../components/profile/register.jsx';
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const [page, setPage] = useState("home")
@@ -30,11 +33,22 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             <NavBar page={page} setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />
             <Routes>
                 <Route index element={<Home setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>}/>
+
                 <Route path='bouquets' element={<Bouquets setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+
                 <Route path='flowers' element={<Flowers setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+
                 <Route path='design' element={<Design setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+
                 <Route path='popular' element={<Popular setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+                  
+                <Route path='profile/*' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch}/>} />
+
                 <Route path='/cart' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
+
+                <Route path='login' element={<Login setPage={setPage} />}/>
+
+                <Route path='register' element={<Register setPage={setPage} />}/>
 
             </Routes>
             

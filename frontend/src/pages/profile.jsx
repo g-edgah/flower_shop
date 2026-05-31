@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+
 import Header from '../components/common/header.jsx';
 import Footer from '../components/common/footer.jsx';
 import SideBar from '../components/profile/sidebar.jsx'
@@ -16,6 +18,7 @@ import { useUser } from '../hooks/user.js'
 
 
 const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+    const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
 
     const [ profilePage, setProfilePage ] = useState("account")
@@ -24,6 +27,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     
             setPage("profile")
             userRefetch()
+            navigate(`/profile/${profilePage}`)
     
      }, []);
 
@@ -49,14 +53,16 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
             <SideBar profilePage={profilePage} setProfilePage={setProfilePage}/>
 
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">
-                {profilePage === "account" && (<Account refetch={userRefetch} user={user} />)}
-                {profilePage === "orders" && (<Orders />)}
-                {profilePage === "wishlist" && (<Wishlist />)}
-                {profilePage === "reviews" && (<Reviews />)}
-                {profilePage === "vouchers" && (<Vouchers />)}
-                {profilePage === "management" && (<Management />)}
-                {profilePage === "payment" && (<Payment />)}
-                {profilePage === "logout" && (<Logout />)}
+                <Routes>
+                    <Route path='account' element={<Account refetch={userRefetch} user={user} />} />
+                    <Route path='orders' element={<Orders />} />
+                    <Route path='wishlist' element={<Wishlist />} />
+                    <Route path='reviews' element={<Reviews />} />
+                    <Route path='vouchers' element={<Vouchers />} />
+                    <Route path='management' element={<Management />} />
+                    <Route path='payment' element={<Payment />} />
+                    <Route path='logout' element={<Logout />} />
+                </Routes>
             </div>
             {/* <div className="min-h-screen">
                 <div className="details">

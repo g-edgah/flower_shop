@@ -5,7 +5,6 @@ import CartPage from './pages/cart.jsx';
 
 import UserLayout from './layout/userLayout.jsx'
 import AdminLayout from './layout/adminLayout.jsx'
-import ProfileLayout from './layout/profile.jsx'
 
 import { useUser } from './hooks/user.js';
 
@@ -25,7 +24,6 @@ function App() {
       <Routes>
         <Route path='/*' element={<UserLayout userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
         <Route path='/admin/*' element={<AdminLayout/>}/>
-        <Route path='/profile/*' element={<ProfileLayout userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} />}/>
       </Routes>
     </BrowserRouter>
   )
