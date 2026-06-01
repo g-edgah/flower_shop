@@ -12,7 +12,9 @@ import {
     toggleFloristPick,
     toggleNewProduct,
     getAllProductsAdmin
-} from '../controller/admin/admin.js';
+} from '../controller/admin/products.js';
+
+import { updateOrderStatus } from '../controller/admin/orders.js';
 
 
 const adminRouter = express.Router();
@@ -33,6 +35,9 @@ adminRouter.patch('/products/:productId/stock', updateProductStock);
 adminRouter.patch('/products/:productId/discount', updateProductDiscount);
 adminRouter.patch('/products/:productId/florist-pick', toggleFloristPick);
 adminRouter.patch('/products/:productId/new', toggleNewProduct);
+
+// order management
+adminRouter.patch('/orders/:id/:orderId', updateOrderStatus)
 
 
 export default adminRouter
