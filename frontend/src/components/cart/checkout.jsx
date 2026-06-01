@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
-import { useEditUser } from '../../hooks/user.js';
+import { useEditUser, useCreateOrder } from '../../hooks/user.js';
 
 const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, refetch }) => {
     const navigate = useNavigate();
@@ -16,6 +16,10 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
     useEffect(() => {
         userRefetch()
         refetch()
+
+        if (cart.length === 0) {
+            navigate('/cart')
+        }
     }, [])
 
     const [formData, setFormData] = useState({
@@ -33,10 +37,6 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
 
     });
 
-
-    const handleAccount = (state) => {
-        setAccountEdit(state)
-    }
 
     const handleAddress = (state) => {
         setAddressEdit(state)
@@ -98,8 +98,9 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
 
 
     
-    // api call
     const { mutate: editUser, isLoading, error, userdata } = useEditUser();
+
+    
 
     //form submission
     const handleSubmit = async (e, type) => {
@@ -142,6 +143,34 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         }
                
     };
+
+    const { mutate: createOrder, isLoading: createOrderLoading, error: createOrderError } = useCreateOrder();
+
+    const handleCreateOrder = () => {
+        const orderData = {
+            cart,
+            subTotal,
+            shippingCost,
+            total,
+            payment: formData.paymentMethod,
+            shippingAddress: formData.address
+        }
+
+        createOrder(orderData, {
+            onSuccess: (data) => {
+                console.log('Order created successfully!', data)
+                userRefetch()
+                refetch()
+                navigate('/profile/orders')
+                
+            },
+            onError: (error) => {
+                console.error('Order creation failed: ', error)
+                alert('Order creation failed. Please try again.')
+                
+            }
+        })
+    }
 
 
 
@@ -293,27 +322,27 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                         <div className="flex flex-col">
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Name: </span>
-                                <span className="text font-bold">{user.firstName} {user.lastName}</span> 
+                                <span className="text font-bold">{user?.firstName} {user?.lastName}</span> 
                             </div>
                             <div className="region h-10 flex items-center p-4 gap-2">
                                 <span className="text">Region:</span> 
-                                <span className="text font-bold">{user.address.region}</span> 
+                                <span className="text font-bold">{user?.address.region}</span> 
                             </div>
                             <div className="city h-10 flex items-center p-4 gap-2">
                                 <span className="text">City:</span> 
-                                <span className="text font-bold">{user.address.city}</span> 
+                                <span className="text font-bold">{user?.address.city}</span> 
                             </div>
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Address: </span>
-                                <span className="text font-bold">{user.address.address}</span> 
+                                <span className="text font-bold">{user?.address.address}</span> 
                             </div>
                             <div className="info h-10 flex items-center p-4 gap-2">
                                 <span className="text">Additional info:</span>
-                                <span className="text font-bold">{user.address.info}</span> 
+                                <span className="text font-bold">{user?.address.info}</span> 
                             </div>
                             <div className="phone h-10 flex items-center p-4 gap-2">
                                 <span className="text">Phone:</span>
-                                <span className="text font-bold">{user.address.mobile}</span> 
+                                <span className="text font-bold">{user?.address.mobile}</span> 
                             </div>
                         </div>
 
@@ -396,7 +425,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
 
                 <div className="cartActions mx-auto justify-center flex flex-row space-x-5 md:space-x-16 text-checkoutButtonsText pr-1 pb-15">
                     
-                    <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition" onClick={()=> navigate('/cart/checkout')}>Confirm order</button>
+                    <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition" onClick={handleCreateOrder}>Confirm order</button>
                     
                 </div>
             </div>

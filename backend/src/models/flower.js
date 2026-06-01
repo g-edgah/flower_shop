@@ -50,8 +50,9 @@ const flowerSchema = new mongoose.Schema({
         default: false,
     },
     inStock: {
-        type: Boolean,
-        default: true,
+        type: Number,
+        required: true,
+        default: 0,
     },
 
 }, { 

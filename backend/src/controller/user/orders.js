@@ -1,58 +1,79 @@
 import Order from '../../models/order.js';
 import User from '../../models/user.js';
-import Product from '../../models/product.js';
+import Bouquet from '../../models/bouquet.js';
+import Flower from '../../models/flower.js';
 
 // Create order from cart
 export const createOrder = async (req, res) => {
     try {
         const {id} = req.user;
-        const { paymentMethod, shippingAddress } = req.body;
+        const { payment } = req.body;
         
+
         // get user with populated cart
         const user = await User.findById(id)
             .populate('cart.product');
+        const userObject = user.toObject(); // convert to plain object for logging
+        const paymentMethod = userObject.paymentMethod; 
         
-        console.log("user payment info: ", user.paymentMethod)
-        
+        console.log("payment method: ", paymentMethod)
+        console.log("create order request recieved for user: ", id)
+        //console.log("Full user object:", JSON.stringify(user, null, 2));
+       
         if (!user.cart.length) {
+            console.log("cart empty")
             return res.status(400).json({ message: "Cart is empty" });
         }
+       
 
         // validate all products still exist and have sufficient stock
         for (const item of user.cart) {
-            const product = await Product.findById(item.product._id);
+            let product
+
+            if (item.product.type === 'bouquet') {
+                product = await Bouquet.findById(item.product._id)
+                console.log("bouquet found: ")
+            } else if (item.product.type === 'flower') {
+                product = await Flower.findById(item.product._id);
+                //console.log("flower found: ")
+            }
+            // console.log("here: ", product)
             
             if (!product) {
+                console.log("product not found")
                 return res.status(404).json({ 
                     message: `Product ${item.product.name} no longer exists` 
                 });
             }
             
+            
             if (product.inStock < item.quantity) {
+                console.log("checking stock")
                 return res.status(400).json({ 
                     message: `Insufficient stock for ${product.name}. Available: ${product.inStock}` 
                 });
             }
         }
 
-        
+        console.log("about to create order")
         // create order items from cart items
         const orderItems = user.cart.map(cartItem => ({
             product: cartItem.product._id,
             name: cartItem.product.name,
+            productModel: cartItem.productModel,
             price: cartItem.product.price,
             quantity: cartItem.quantity,
-            size: cartItem.size,
-            color: cartItem.color,
             totalPrice: cartItem.product.price * cartItem.quantity
         }));
+
+        console.log("cart123: ", user.cart)
         
         // calculate totals
         //subtotals
-        const subtotal = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
+        const subTotal = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
         
         // tax if applicable
-        const tax = subtotal * 0; // 0% tax
+        const tax = subTotal * 0; // 0% tax
 
         //shipping cost
         const region = user.address?.region?.toLowerCase() || "unknown region";
@@ -67,20 +88,23 @@ export const createOrder = async (req, res) => {
             user: id,
             items: orderItems,
             status: 'pending',
-            paymentMethod: user.paymentMethod,
+            paymentMethod: paymentMethod,
             shippingAddress: user.address,
-            subtotal,
+            subTotal,
             tax,
             shippingCost,
             total,
             orderDate: new Date()
         });
         
+        console.log("saving order: ")
         await order.save();
+
+        console.log("order saved: ")
         
         // add order reference to user and clear cart
         const updatedUser = await User.findOneAndUpdate(
-            { _id: userId },
+            { _id: id},
             {
                 $push: { orders: order._id }, // add order reference
                 $set: { cart: [] } // clear cart
@@ -89,12 +113,21 @@ export const createOrder = async (req, res) => {
                 runValidators: true 
             }
         );
+
+        console.log("updating stock")
         
-        // update product stock (optional)
+        // update product stock
         for (const item of orderItems) {
-            await Product.findByIdAndUpdate(item.product, {
-                $inc: { inStock: -item.quantity }
-            });
+            if (item.productModel === 'Bouquet') {
+                await Bouquet.findByIdAndUpdate(item.product, {
+                    $inc: { inStock: -item.quantity }
+                });
+            } else if (item.productModel === 'Flower') {
+                await Flower.findByIdAndUpdate(item.product, {
+                    $inc: { inStock: -item.quantity }
+                });
+            }
+            
         }
         
         res.status(201).json({
@@ -103,6 +136,7 @@ export const createOrder = async (req, res) => {
         });
         
     } catch (error) {
+        console.error("Error creating order:", error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -131,10 +165,17 @@ export const getOrderById = async (req, res) => {
     try {
         const { orderId } = req.params;
         const userId = req.user.id;
-        
-        const order = await Order.findOne({ _id: orderId, user: userId })
-            .populate('items.product');
-        
+
+        // check if user is authorized 
+        const isOwner = order.user.toString() === userId;
+       
+        if (!isOwner) {
+            return res.status(403).json({ message: "You are not authorized to view this order" });
+
+        } else if (isOwner) {
+            const order = await Order.findOne({ _id: orderId, user: userId })
+                .populate('items.product');
+        }    
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }

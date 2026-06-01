@@ -70,9 +70,3 @@ export const useProduct = (productId) => {
     });
 };
 
-// hook for creating order (mutation)
-export const useCreateOrder = () => {
-    return useMutation({
-        mutationFn: (orderData) => api.post('/orders/create', orderData)
-    });
-};

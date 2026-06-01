@@ -39,7 +39,7 @@ const orderSchema = new mongoose.Schema({
     },
 
     // order totals
-    subtotal: {
+    subTotal: {
         type: Number,
         required: true
     },
@@ -79,7 +79,7 @@ const orderSchema = new mongoose.Schema({
     }
 }, { 
     timestamps: true,
-    collection: 'users',
+    collection: 'orders',
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields
  });
 
@@ -88,20 +88,20 @@ orderSchema.index({ user: 1, orderDate: -1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ paymentStatus: 1 });
 
-// calculate order totals
-orderSchema.methods.calculateTotals = function() {
-    this.subtotal = this.items.reduce((sum, item) => sum + item.totalPrice, 0);
-    this.total = this.subtotal + this.tax + this.shippingCost - this.discount;
-    return this.total;
-};
+// // calculate order totals
+// orderSchema.methods.calculateTotals = function() {
+//     this.subtotal = this.items.reduce((sum, item) => sum + item.totalPrice, 0);
+//     this.total = this.subtotal + this.tax + this.shippingCost - this.discount;
+//     return this.total;
+// };
 
-// static method to get user's order history
-orderSchema.statics.getUserOrders = function(userId, limit = 10) {
-    return this.find({ user: userId })
-        .sort({ orderDate: -1 })
-        .limit(limit)
-        .populate('items.product');
-};
+// // static method to get user's order history
+// orderSchema.statics.getUserOrders = function(userId, limit = 10) {
+//     return this.find({ user: userId })
+//         .sort({ orderDate: -1 })
+//         .limit(limit)
+//         .populate('items.product');
+// };
 
 const Order = mongoose.model('Order', orderSchema);
 

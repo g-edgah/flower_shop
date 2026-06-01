@@ -1,4 +1,3 @@
-import Product from '../../models/product.js';
 import Bouquet from '../../models/bouquet.js';
 import Flower from '../../models/flower.js';
 
@@ -16,14 +15,14 @@ export const getHomeData = async (req, res) => {
             // Florist Picks
             Bouquet.find({ 
                 floristPick: true,
-                inStock: true 
+                inStock: { $gt: 0 } 
             })
             .sort({ popularity: -1 })
             .limit(8),
             
             // Popular Products
             Bouquet.find({ 
-                inStock: true 
+                inStock: { $gt: 0 } 
             })
             .sort({ popularity: -1 })
             .limit(8),
@@ -31,7 +30,7 @@ export const getHomeData = async (req, res) => {
             // New Products
             Bouquet.find({ 
                 new: true,
-                inStock: true 
+                inStock: { $gt: 0 } 
             })
             .sort({ createdAt: -1 })
             .limit(4),
@@ -39,7 +38,7 @@ export const getHomeData = async (req, res) => {
             // Featured Bouquets
             Bouquet.find({ 
                 type: 'bouquet',
-                inStock: true 
+                inStock: { $gt: 0 } 
             })
             .sort({ popularity: -1 })
             .limit(8),
@@ -47,7 +46,7 @@ export const getHomeData = async (req, res) => {
             // Featured Flowers
             Flower.find({ 
                 type: 'flower',
-                inStock: true 
+                inStock: { $gt: 0 } 
             })
             .sort({ popularity: -1 })
             .limit(8)
@@ -61,6 +60,7 @@ export const getHomeData = async (req, res) => {
             { id: 4, name: "Sympathy", slug: "sympathy", imagePath: "/categories/sympathy.jpg" },
             { id: 5, name: "Just Because", slug: "just-because", imagePath: "/categories/just-because.jpg" }
         ];
+
 
         res.status(200).json({
             success: true,

@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 const orderItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        refPath: 'order.productModel' 
+        required: [true, 'Product ID is required'],
+        //ref: 'Bouquet' },
+        refPath: 'items.productModel' 
     },
     productModel: {
         type: String,

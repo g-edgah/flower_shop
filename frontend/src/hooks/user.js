@@ -98,3 +98,10 @@ export const useEditWishlist = () => {
     });
     
 };
+
+// creating order 
+export const useCreateOrder = () => {
+    return useMutation({
+        mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data)
+    });
+};

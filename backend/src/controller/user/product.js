@@ -43,7 +43,7 @@ export const bouquets = async (req, res) => {
         //fetch boquets
         const bouquets = await Bouquet.find({ 
             type: 'bouquet',
-            inStock: true,
+            inStock: { $gt: 0 },
             price: { $gte: priceRange.min, $lte: priceRange.max },
             ...(newColors.length > 0 ? { colors: { $in: newColors } } : {}),
             ...(newOccasion.length > 0 ? { category: { $in: newOccasion } } : {})
@@ -54,7 +54,7 @@ export const bouquets = async (req, res) => {
 
         const total = await Bouquet.countDocuments({ 
             type: 'bouquet',
-            inStock: true 
+            inStock: { $gt: 0 } 
         });
 
         res.status(200).json({
@@ -117,7 +117,7 @@ export const flowers = async (req, res) => {
         //fetch flowers
         const flowers = await Flower.find({ 
             type: 'flower',
-            inStock: true,
+            inStock: { $gt: 0 },
             price: { $gte: priceRange.min, $lte: priceRange.max },
             ...(newColors.length > 0 ? { colors: { $in: newColors } } : {}),
             ...(newOccasion.length > 0 ? { category: { $in: newOccasion } } : {})
@@ -128,7 +128,7 @@ export const flowers = async (req, res) => {
 
         const total = await Flower.countDocuments({ 
             type: 'flower',
-            inStock: true 
+            inStock: { $gt: 0 } 
         });
 
         res.status(200).json({
@@ -169,7 +169,7 @@ export const popular = async (req, res) => {
         //fetch boquets
         const bouquets = await Bouquet.find({ 
             type: 'bouquet',
-            inStock: true,
+            inStock: { $gt: 0 },
         })
         .sort({ popularity: -1 })
         .skip(skip)
@@ -177,7 +177,7 @@ export const popular = async (req, res) => {
 
         const total = await Bouquet.countDocuments({ 
             type: 'bouquet',
-            inStock: true 
+            inStock: { $gt: 0 } 
         });
 
         res.status(200).json({
@@ -209,7 +209,7 @@ export const floristPicks = async (req, res) => {
 
         const picks = await Product.find({ 
             floristPick: true,
-            inStock: true 
+            inStock: { $gt: 0 } 
         })
         .sort({ popularity: -1 })
         .limit(parseInt(limit));
@@ -237,7 +237,7 @@ export const newProducts = async (req, res) => {
 
         const newProducts = await Product.find({ 
             new: true,
-            inStock: true 
+            inStock: { $gt: 0 } 
         })
         .sort({ _id: -1 })  // Newest first (by creation date)
         .limit(parseInt(limit));
@@ -267,14 +267,14 @@ export const getProductsByCategory = async (req, res) => {
 
         const products = await Product.find({ 
             category: category,
-            inStock: true 
+            inStock: { $gt: 0 } 
         })
         .skip(skip)
         .limit(parseInt(limit));
 
         const total = await Product.countDocuments({ 
             category: category,
-            inStock: true 
+            inStock: { $gt: 0 } 
         });
 
         res.status(200).json({
@@ -337,7 +337,7 @@ export const searchProducts = async (req, res) => {
         const { q, type, category, minPrice, maxPrice, page = 1, limit = 20 } = req.query;
         const skip = (page - 1) * limit;
         
-        let query = { inStock: true };
+        let query = { inStock: { $gt: 0 } };
         
         // Search by name or description
         if (q) {
