@@ -66,8 +66,8 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
         
                                 <div className="payableAmount flex flex-col space-y-2 md:space-y-4">
                                     <span className='text-lg'>Shipping: Ksh {shippingCost}</span>
-                                    <span className='font-bold text-xl'>Total: {total}</span>
-                                    <button className='text-summaryButtonsText bg-summaryButtons w-50 h-9.5 md:h-10 rounded-md hover:bg-active transition'>change order details</button>
+                                    <span className='font-bold text-xl'>Total: Ksh {total}</span>
+                                    <button  onClick={()=> navigate('/cart/checkout')} className='text-summaryButtonsText bg-summaryButtons w-50 h-9.5 md:h-10 rounded-md hover:bg-active transition'>change order details</button>
                                 </div>
         
                             </div>

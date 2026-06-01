@@ -19,15 +19,15 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
     }, [])
 
     const [formData, setFormData] = useState({
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
         address: {
-            country: user.address.country,
-            region: user.address.region,
-            city: user.address.city,
-            address: user.address.address,
-            info: user.address.info,
-            mobile: user.address.mobile
+            country: user?.address?.country,
+            region: user?.address?.region,
+            city: user?.address?.city,
+            address: user?.address?.address,
+            info: user?.address?.info,
+            mobile: user?.address?.mobile
         },
         paymentMethod: payMethod
 

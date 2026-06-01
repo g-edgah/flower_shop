@@ -5,12 +5,14 @@ import Product from '../../models/product.js';
 // Create order from cart
 export const createOrder = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const {id} = req.user;
         const { paymentMethod, shippingAddress } = req.body;
         
         // get user with populated cart
-        const user = await User.findById(userId)
+        const user = await User.findById(id)
             .populate('cart.product');
+        
+        console.log("user payment info: ", user.paymentMethod)
         
         if (!user.cart.length) {
             return res.status(400).json({ message: "Cart is empty" });
@@ -46,17 +48,27 @@ export const createOrder = async (req, res) => {
         }));
         
         // calculate totals
+        //subtotals
         const subtotal = orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
-        const tax = subtotal * 0.1; // 10% tax
-        const shippingCost = subtotal > 50 ? 0 : 10; // Free shipping over $50
-        const total = subtotal + tax + shippingCost;
+        
+        // tax if applicable
+        const tax = subtotal * 0; // 0% tax
+
+        //shipping cost
+        const region = user.address?.region?.toLowerCase() || "unknown region";
+
+        const shippingCost = region === 'nairobi' ? 300 : 800
+
+        //grand total
+        const total = subTotal + tax + shippingCost
         
         // create order
         const order = new Order({
-            user: userId,
+            user: id,
             items: orderItems,
-            paymentMethod,
-            shippingAddress,
+            status: 'pending',
+            paymentMethod: user.paymentMethod,
+            shippingAddress: user.address,
             subtotal,
             tax,
             shippingCost,
@@ -67,9 +79,16 @@ export const createOrder = async (req, res) => {
         await order.save();
         
         // add order reference to user and clear cart
-        user.orders.push(order._id);
-        user.cart = [];  // Clear cart
-        await user.save();
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: userId },
+            {
+                $push: { orders: order._id }, // add order reference
+                $set: { cart: [] } // clear cart
+            },
+            { 
+                runValidators: true 
+            }
+        );
         
         // update product stock (optional)
         for (const item of orderItems) {

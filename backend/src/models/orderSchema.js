@@ -3,8 +3,13 @@ import mongoose from 'mongoose';
 const orderItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true
+        required: true,
+        refPath: 'order.productModel' 
+    },
+    productModel: {
+        type: String,
+        required: true,
+        enum: ['Bouquet', 'Flower']  // This validates the model name
     },
     name: {
         type: String,
