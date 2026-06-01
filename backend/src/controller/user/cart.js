@@ -33,11 +33,37 @@ export const getUserCart = async (req, res) => {
             product: { _id, name, price, description, picturePath },
             quantity
         }) => {
-            return { _id, name, price, description, picturePath, quantity }
+            return { 
+                _id, 
+                name, 
+                price, 
+                description, 
+                picturePath, 
+                quantity,
+                subTotal: price * quantity
+            }
         })
 
+        //subTotal
+        const subTotal = formattedCart.reduce((sum, item) => sum + item.subTotal, 0)
+
+        //shipping cost
+        const region = user.address?.region?.toLowerCase() || "unknown region";
+
+        const shippingCost = region === 'nairobi' ? 300 : 800
+
+        //grand total
+        const grandTotal = subTotal + shippingCost
+
+
         res.status(200).json({ 
-            formattedCart })
+            formattedCart,
+            subTotal,
+            shippingCost,
+            grandTotal
+        })
+
+        
 
     } catch (error) {
         res.status(404).json({ error: "error while fetching user cart" });

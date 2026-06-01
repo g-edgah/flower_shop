@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { BiSolidEdit } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import axios from 'axios'
@@ -11,6 +11,12 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
     const [ addressEdit, setAddressEdit ] = useState(false)
     const [errors, setErrors] = useState({})
     const [ payMethod, setPayMethod] = useState('card')
+
+
+    useEffect(() => {
+        userRefetch()
+        refetch()
+    }, [])
 
     const [formData, setFormData] = useState({
         firstName: user.firstName,
@@ -114,6 +120,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
                 userRefetch()
+                refetch()
                 
             },
             onError: (error) => {
@@ -362,8 +369,8 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
             </div>
             <div className="summary fllex flex-col w-70 space-y-5">
                 <div className="summaryContainer flex flex-col w-full max-w-[95vw] mx-auto py-3 px-4 md:p-6 space-y-4 bg-cartCard font-normal text-md text-summaryText rounded-lg">
-                    <div className="cartTotal text-[22px]">
-                        <span>sub total: </span>
+                    <div className="cartTotal">
+                        <span>Sub Total: Ksh </span>
                         <span className="amount">{subTotal}</span>
                     </div>
 
@@ -380,8 +387,8 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                     </div>
 
                     <div className="payableAmount flex flex-col space-y-2 md:space-y-4">
-                        <span>shipping : {shippingCost}</span>
-                        <span>Total: {total}</span>
+                        <span className=''>Shipping: Ksh {shippingCost}</span>
+                        <span className='font-bold text-lg'>Total: Ksh {total}</span>
                         
                     </div>
 

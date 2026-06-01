@@ -47,8 +47,8 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                             </div>
         
                             <div className="summaryContainer flex flex-col w-full max-w-[95vw] mx-auto py-3 px-4 md:p-6 space-y-4 bg-cartSummary font-normal text-md text-summaryText rounded-lg">
-                                <div className="cartTotal text-[22px]">
-                                    <span>sub total: </span>
+                                <div className="cartTotal text-lg">
+                                    <span>Sub Total: Ksh </span>
                                     <span className="amount">{subTotal}</span>
                                 </div>
         
@@ -65,8 +65,8 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                 </div>
         
                                 <div className="payableAmount flex flex-col space-y-2 md:space-y-4">
-                                    <span>shipping  {shippingLocation}: {shippingCost}</span>
-                                    <span>Total: {total}</span>
+                                    <span className='text-lg'>Shipping: Ksh {shippingCost}</span>
+                                    <span className='font-bold text-xl'>Total: {total}</span>
                                     <button className='text-summaryButtonsText bg-summaryButtons w-50 h-9.5 md:h-10 rounded-md hover:bg-active transition'>change order details</button>
                                 </div>
         
