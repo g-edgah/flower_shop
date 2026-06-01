@@ -1,6 +1,6 @@
-import Product from '../models/product.js';
-import Bouquet from '../models/bouquet.js';
-import Flower from '../models/flower.js';
+import Product from '../../models/product.js';
+import Bouquet from '../../models/bouquet.js';
+import Flower from '../../models/flower.js';
 
 export const getHomeData = async (req, res) => {
     try {

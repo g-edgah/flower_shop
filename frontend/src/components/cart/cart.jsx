@@ -52,12 +52,12 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                     <span className="amount">{subTotal}</span>
                                 </div>
         
-                                <div className="coupon">
+                                <div className="voucher">
                                     <form ></form>
                                     <input 
                                         className="p-2 bg-white w-50 h-10 rounded-md border text-summaryButtons focus:outline-none border-gray-400"
                                         type="text" 
-                                        placeholder="enter your coupon code" 
+                                        placeholder="enter your voucher code" 
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value)}
                                     />
@@ -65,7 +65,7 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                 </div>
         
                                 <div className="payableAmount flex flex-col space-y-2 md:space-y-4">
-                                    <span>shipping to {shippingLocation}: {shippingCost}</span>
+                                    <span>shipping  {shippingLocation}: {shippingCost}</span>
                                     <span>Total: {total}</span>
                                     <button className='text-summaryButtonsText bg-summaryButtons w-50 h-9.5 md:h-10 rounded-md hover:bg-active transition'>change order details</button>
                                 </div>
@@ -74,7 +74,7 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
         
                             <div className="cartActions mx-auto justify-center flex flex-row space-x-5 md:space-x-16 text-checkoutButtonsText pr-1 pb-15">
                                 <button className="bg-checkoutButtons hover:bg-checkoutButtonsHover hover:bg-gray-450 w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 transition" onClick={()=> navigate('/')}>continue shopping</button>
-                                <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition" onClick={()=> navigate('cart/checkout')}>checkout</button>
+                                <button className="bg-summaryButtons w-40 md:w-50 h-10 rounded-xl hover:shadow-md hover:shadow-gray-600 hover:bg-active transition" onClick={()=> navigate('/cart/checkout')}>checkout</button>
                                 
                             </div>
                         </div>

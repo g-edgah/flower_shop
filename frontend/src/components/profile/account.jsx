@@ -312,7 +312,7 @@ const Account = ({refetch, user}) => {
                         </div>
                         <div className="info h-10 flex items-center p-4 gap-2">
                             <span className="text">Additional info:</span>
-                            <input 
+                            <textarea
                                 className={`w-full pl-4 pr-2 py-1.5 border ${errors.info ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
                                 type="text" 
                                 id='info' 

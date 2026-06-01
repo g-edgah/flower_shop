@@ -1,8 +1,8 @@
-import Bouquet from '../models/bouquet.js';
-import Flower from '../models/flower.js';
-import Product from '../models/product.js';
+import Bouquet from '../../models/bouquet.js';
+import Flower from '../../models/flower.js';
+import Product from '../../models/product.js';
 
-import Order from '../models/order.js';
+import Order from '../../models/order.js';
 
 // create product
 export const createProduct = async (req, res) => {

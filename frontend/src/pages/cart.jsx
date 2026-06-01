@@ -8,14 +8,14 @@ import Checkout from '../components/cart/checkout.jsx';
 
 import { useCart } from '../hooks/user.js';
 
-const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const CartPage = ({userData, setPage, isUserLoading, userError, isUserFetching, userRefetch}) => {
     const navigate = useNavigate();
     const [ cart, setCart ] = useState([]);
     const [ couponCode, setCouponCode ] = useState('');
     //const [ subTotal, setSubTotal ] = useState(0);
     const [ total, setTotal ] = useState(0);
     const [ shippingLocation, setShippingLocation ] = useState('');
-    const [shippingCost, setShippingCost] = useState(0);
+    const [shippingCost, setShippingCost] = useState(500);
 
 
 
@@ -24,17 +24,20 @@ const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetc
         setPage("cart")
     }, [])
 
+    const user = userData.formattedUser
 
-    const { itemTotals, subTotal } = useMemo(() => {
+
+    const { itemTotals, subTotal, grandTotal } = useMemo(() => {
         const totals = cart.map(item => ({
             ...item,
             subtotal: item.price * item.quantity
         }));
         return {
             itemTotals: totals,
-            subTotal: totals.reduce((sum, item) => sum + item.subtotal, 0)
+            subTotal: totals.reduce((sum, item) => sum + item.subtotal, 0),
+            grandTotal: totals.reduce((sum, item) => sum + item.subtotal, 0) + shippingCost
         };
-    }, [cart]);
+    }, [cart, shippingCost]);
 
     
     const { data, isLoading, error, isFetching, refetch } = useCart();
@@ -61,8 +64,8 @@ const CartPage = ({setPage, isUserLoading, userError, isUserFetching, userRefetc
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-between">
             <Routes>
-                <Route path='checkout' element={<Cart cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} userRefetch={userRefetch} refetch={refetch} />} />
-                <Route path='/' element={<Checkout cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} userRefetch={userRefetch} refetch={refetch} />} />
+                <Route path='/' element={<Cart cart={cart} subTotal={subTotal} total={grandTotal} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} userRefetch={userRefetch} refetch={refetch} />} />
+                <Route path='checkout' element={<Checkout cart={cart} subTotal={subTotal} total={grandTotal} couponCode={couponCode} setCouponCode={setCouponCode} shippingLocation={shippingLocation} setShippingLocation={setShippingLocation} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} userRefetch={userRefetch} refetch={refetch} />} />
 
             </Routes>
         </div>

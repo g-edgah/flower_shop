@@ -45,6 +45,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    mobile: {
+        type: String,
+        required: false,
+        trim: true,
+        match: [/^\d{10}$/, "invalid mobile number"],
+    },
+    paymentMethods: {
+        card: {
+            type: Object,
+            required: false,
+        },
+        mpesa: {
+            type: Object,
+            required: false,
+        },
+    },
     cart: [cartItemSchema],
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
