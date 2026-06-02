@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 
 import Header from '../components/common/header.jsx';
 import Footer from '../components/common/footer.jsx';
@@ -18,6 +18,7 @@ import { useUser } from '../hooks/user.js'
 
 
 const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+    const { page } = useParams()
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
 
@@ -27,12 +28,19 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     
             setPage("profile")
             userRefetch()
-            navigate(`/profile/${profilePage}`)
+            console.log("page:", page)
+            if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
+                setProfilePage(page)
+                console.log("profile page:", page)
+            } else {
+                navigate("/profile/account")
+                setProfilePage("account")
+            }
     
      }, []);
 
     const handleProfilePage = (profilePage) => {
-        e.preventDefault()
+        
         if (profilePage) {
             setProfilePage(profilePage)
             console.log(profilePage)
@@ -50,19 +58,19 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
 
     return (
         <div className=" min-h-screen w-full flex  space-x-3 md:space-y-5 items-start justify-center">
-            <SideBar profilePage={profilePage} setProfilePage={setProfilePage}/>
+            <SideBar profilePage={profilePage} handleProfilePage={handleProfilePage}/>
 
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">
-                <Routes>
-                    <Route path='account' element={<Account refetch={userRefetch} user={user} />} />
-                    <Route path='orders' element={<Orders />} />
-                    <Route path='wishlist' element={<Wishlist />} />
-                    <Route path='reviews' element={<Reviews />} />
-                    <Route path='vouchers' element={<Vouchers />} />
-                    <Route path='management' element={<Management />} />
-                    <Route path='payment' element={<Payment />} />
-                    <Route path='logout' element={<Logout />} />
-                </Routes>
+             
+                    {page === "account" && <Account refetch={userRefetch} user={user} />} 
+                    {page === "orders" && <Orders />} 
+                    {page === "wishlist" && <Wishlist />} 
+                    {page === "reviews" && <Reviews />} 
+                    {page === "vouchers" && <Vouchers />} 
+                    {page === "management" && <Management />} 
+                    {page === "payment" && <Payment />} 
+                    {page === "logout" && <Logout />} 
+                
             </div>
             {/* <div className="min-h-screen">
                 <div className="details">
