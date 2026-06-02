@@ -28,11 +28,12 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     
             setPage("profile")
             userRefetch()
-            console.log("page:", page)
+            //console.log("page:", page)
             if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
                 setProfilePage(page)
-                console.log("profile page:", page)
+                //console.log("profile page:", page)
             } else {
+                console.log("no page")
                 navigate("/profile/account")
                 setProfilePage("account")
             }
@@ -43,7 +44,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
         
         if (profilePage) {
             setProfilePage(profilePage)
-            console.log(profilePage)
+            //console.log(profilePage)
         }
     }
      
@@ -53,7 +54,6 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
 
     const user = userData.formattedUser
 
-    console.log(user)
     
 
     return (

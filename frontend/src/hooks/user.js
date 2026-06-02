@@ -84,7 +84,7 @@ export const useWishlist = () => {
     //console.log(`filters: ${JSON.stringify(filters)}`) 
 
     return useQuery({ 
-        queryKey: ['user', userId],
+        queryKey: ['wishlist', userId],
         queryFn: () => api.get(`/user/wishlist/${userId}`).then(res => res.data)
     });
     
@@ -104,4 +104,15 @@ export const useCreateOrder = () => {
     return useMutation({
         mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data)
     });
+};
+
+// getting orders
+export const useOrders = () => {
+    console.log(`getting them orders`) 
+
+    return useQuery({ 
+        queryKey: ['orders', userId],
+        queryFn: () => api.get(`/user/orders/${userId}`).then(res => res.data)
+    });
+    
 };

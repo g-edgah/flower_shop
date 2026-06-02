@@ -145,10 +145,14 @@ export const createOrder = async (req, res) => {
 export const getUserOrders = async (req, res) => {
     try {
         const userId = req.user.id;
+
+        console.log("fetching orders for user: ", userId)
         
         const orders = await Order.find({ user: userId })
             .sort({ orderDate: -1 })
             .populate('items.product');
+        
+        console.log("orders found: ", orders.length)
         
         res.status(200).json({
             orders: orders,
