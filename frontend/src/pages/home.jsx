@@ -51,7 +51,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     console.log("home data: ",data)
     const homeWishlist = userData?.formattedUser?.wishlist || [];
     const homeCart = userData?.formattedUser?.cart || [];
-    console.log("wishlist: ", homeWishlist)
+    console.log("home wishlist: ", homeWishlist)
     console.log("cart: ", homeCart)
 
     return (
@@ -149,7 +149,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
                     {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const liked = homeWishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
                         const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (

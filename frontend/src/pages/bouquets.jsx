@@ -121,7 +121,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row pb-10 flex gap-5 w-full flex-wrap justify-start pl-3 items-center max-w-300">
                 
                     {data.products.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const liked = wishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
                         const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (

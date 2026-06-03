@@ -20,7 +20,7 @@ const OrderCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, h
                 <div className="info flex flex-col gap-1 justify-between text-[15px] text-gray-800">
 
                     <span className="name font-semibold text-lg text-black">{name}</span>
-                    <span className="tracking">Order: {trackingNo}</span>
+                    <span className="tracking">Order {trackingNo}</span>
                     <span>Status: {status}</span>
                     <span>Delivery Date: {new Date(deliveryDate).toLocaleDateString()}</span>
                     

@@ -63,13 +63,13 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">
              
                     {page === "account" && <Account refetch={userRefetch} user={user} />} 
-                    {page === "orders" && <Orders />} 
-                    {page === "wishlist" && <Wishlist />} 
-                    {page === "reviews" && <Reviews />} 
-                    {page === "vouchers" && <Vouchers />} 
-                    {page === "management" && <Management />} 
-                    {page === "payment" && <Payment />} 
-                    {page === "logout" && <Logout />} 
+                    {page === "orders" && <Orders refetch={userRefetch} user={user} />} 
+                    {page === "wishlist" && <Wishlist refetch={userRefetch} user={user} />} 
+                    {page === "reviews" && <Reviews refetch={userRefetch} user={user} />} 
+                    {page === "vouchers" && <Vouchers refetch={userRefetch} user={user} />} 
+                    {page === "management" && <Management refetch={userRefetch} user={user} />} 
+                    {page === "payment" && <Payment refetch={userRefetch} user={user} />} 
+                    {page === "logout" && <Logout refetch={userRefetch} user={user} />} 
                 
             </div>
             {/* <div className="min-h-screen">

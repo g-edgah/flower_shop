@@ -2,9 +2,8 @@ import express from 'express'
 
 import { getUser, editUser } from '../controller/user/user.js'
 import { getUserCart, editCartItem, addCartItem, minusCartItem, deleteCartItem } from '../controller/user/cart.js'
-import { getUserWishlist, editUserWishlist } from '../controller/user/wishlist.js'
+import { getUserWishlist, editWishlist } from '../controller/user/wishlist.js'
 import { createOrder, getUserOrders, getOrderById } from '../controller/user/orders.js'
-import { } from '../controller/user/orders.js'
 import { verifyToken } from '../middleware/auth.js'
 
 
@@ -23,7 +22,7 @@ userRouter.delete('/cart/:id/:productId', verifyToken, deleteCartItem)
 
 // wishlist
 userRouter.get('/wishlist/:id', verifyToken, getUserWishlist)
-userRouter.post('/wishlist/:id', verifyToken, editUserWishlist)
+userRouter.post('/wishlist/:id', verifyToken, editWishlist)
 
 // orders
 userRouter.post('/orders/:id', verifyToken, createOrder)

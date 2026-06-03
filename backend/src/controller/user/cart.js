@@ -29,6 +29,7 @@ export const getUserCart = async (req, res) => {
         //     User.schema.path('cart').schema.path('product').options
         // );
 
+        //console.log("cart user: ", user.cart)
         const formattedCart = user.cart.map( ({ 
             product: { _id, name, price, description, picturePath },
             quantity
@@ -67,7 +68,7 @@ export const getUserCart = async (req, res) => {
 
     } catch (error) {
         res.status(404).json({ error: "error while fetching user cart" });
-        console.log(`error while fetching user cart: ${error}`)
+        console.error(`error while fetching user cart: ${error}`)
     }
 }
 
@@ -168,6 +169,7 @@ export const addCartItem = async (req, res, next) => {
         }
  
         const { productId, quantity, productModel } = req.body;
+        console.log("addcart req body: ", req.body)
 
         // validate quantity
         if (!quantity || quantity < 1 || quantity > 999) {
@@ -176,6 +178,15 @@ export const addCartItem = async (req, res, next) => {
                 message: 'Quantity must be between 1 and 999'
             });
         }   
+
+        // validate productmodel
+        if (!productModel || (productModel !== 'Bouquet' && productModel !== 'Flower')) {
+            console.log("invalid productModel:, ", productModel)
+            return res.status(500).json({
+                success: false,
+                message: 'weird data dude'
+            });
+        } 
 
         
 

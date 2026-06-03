@@ -4,6 +4,7 @@ import { IoIosBasket } from "react-icons/io";
 import { useEditWishlist, useAddCart } from "../../hooks/user";
 
 const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch}) => {
+
     
     // api call
     const { mutate: editWishlist, isLoading: wishlistLoading, error: wishlistError } = useEditWishlist();
@@ -13,7 +14,10 @@ const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch}) 
 
     const handleWishlistToggle = (productId) => {
         console.log("product to wishlist id: ", id)
-        editWishlist({productId: id}, {
+        editWishlist({
+            productId: id,
+            productModel: type === "bouquet" ? "Bouquet" : "Flower"
+        }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
                     userRefetch()

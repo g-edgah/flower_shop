@@ -11,16 +11,17 @@ const Orders = ({ refetch, user }) => {
 
     const { data, isLoading, error, userdata } = useOrders();
 
-    if (data) {
-        console.log("orders data: ", data)
-    }
+    // if (data) {
+    //     console.log("orders data: ", data)
+    // }
    
+    //console.log("order user: ", user)
     
     const ongoingOrders = data?.orders.filter(order => order.status === "Pending" || order.status === "Delivered" || order.status === "Shipped" || order.status === "Processing");
-    console.log("ongoing orders: ", ongoingOrders)
+    //console.log("ongoing orders: ", ongoingOrders)
 
     const cancelledOrders = data?.orders.filter(order => order.status === "Cancelled" || order.status === "Returned");
-    console.log("cancelled orders: ", cancelledOrders)
+    //console.log("cancelled orders: ", cancelledOrders)
 
     const handleOrdersType = (type) => {
         if (type) {
@@ -33,13 +34,16 @@ const Orders = ({ refetch, user }) => {
         setOrderState(state)
     }
 
-    console.log("orderState: ", orderState)
+    //console.log("orderState: ", orderState)
     return (
        
         <div className="orders">
             {orderState === "orders" && (
             <div className='p-3'>
-                <span className="title text-xl font-bold">Orders</span>
+                <div className="title border-b border-gray-300 w-10/10 p-3">
+                    <span className="title text-xl font-bold ">Orders</span>
+                </div>
+                
                 <div className="top text-lg flex gap-5 px-2 py-5">
                     <span onClick={() => handleOrdersType("ongoing")} className="cursor-pointer" className={`font-semibold cursor-pointer ${ordersType === "ongoing" ? "text-summaryButtons" : ""}`}>Ongoing/Delivered</span>
                     <span onClick={() => handleOrdersType("cancelled")} className="cursor-pointer" className={`font-semibold cursor-pointer ${ordersType === "cancelled" ? "text-summaryButtons" : ""}`}>Cancelled/Returned</span>
@@ -79,7 +83,7 @@ const Orders = ({ refetch, user }) => {
             )}
             {orderState === "details" && (
             <div className="details flex flex-col p-3 gap-5">
-                <div className="title flex gap-5 items-center border-b border-gray-400 w-full pb-3">
+                <div className="title flex gap-5 items-center border-b border-gray-300 w-full p-3">
                     <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setOrderState("orders")} />
                     <span className="title text-xl font-bold">Order Details</span>
                 </div>
@@ -129,6 +133,7 @@ const Orders = ({ refetch, user }) => {
                     <div className="deliveryinf0 flex flex-col gap-2 border-[1.5px] border-gray-400 rounded-md  w-5/10 bg-gray-200">
                         <span className="title font-semibold text-lg border-b border-gray-400 pb-2 p-3">Delivery Information</span>
                         <div className="flex flex-col gap-2 p-3">
+                            <span className="name">Name: {user?.firstName} {user?.lastName}</span>
                             <span className="name">Region: {orderDetails?.shippingAddress?.region}</span>
                             <span className="phone">City: {orderDetails?.shippingAddress?.city}</span>
                             <span className="address">Address: {orderDetails?.shippingAddress?.address}</span>

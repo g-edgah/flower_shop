@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 import cartItemSchema from './cartItemSchema.js'
+import wishlistItemSchema from './wishlistItemSchema.js'
 import addressSchema from './addressSchema.js'
 
 
@@ -66,10 +67,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'   
     }],
-    wishlist: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-    }],
+    wishlist: [wishlistItemSchema],
     role: {
         type: String,
         enum: ['user', 'admin'],

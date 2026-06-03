@@ -49,7 +49,7 @@ export const useCart = () => {
 
 // user cart editing
 export const useAddCart = (formData) => {
-    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+    console.log(`adding to cart`) 
 
     return useMutation({ 
         mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data)
@@ -81,7 +81,7 @@ export const useDeleteCart = () => {
 
 // getting wishlist
 export const useWishlist = () => {
-    //console.log(`filters: ${JSON.stringify(filters)}`) 
+    console.log(`getting the wishlist`) 
 
     return useQuery({ 
         queryKey: ['wishlist', userId],

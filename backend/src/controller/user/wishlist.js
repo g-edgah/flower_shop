@@ -11,9 +11,24 @@ export const getUserWishlist = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('wishlist.product');
 
-        const wishlist = user.wishlist.map(item => item.toString())
+        //console.log("wishlist user: ", user.wishlist)
+
+        const wishlist = user.wishlist.map( ({ 
+            product: { _id, name, type, description, picturePath, inStock  },
+        }) => {
+            return { 
+                _id, 
+                name, 
+                type, 
+                description, 
+                picturePath, 
+                inStock: inStock > 0 ? true : false,
+            }
+        })
+
+        
 
         res.status(200).json({ wishlist })
     } catch (error) {
@@ -22,27 +37,34 @@ export const getUserWishlist = async (req, res) => {
     }
 }
 
-export const editUserWishlist = async (req, res) => {
+export const editWishlist = async (req, res, next) => {
     try {
         const { id } = req.user
 
         const paramId = req.params.id
 
+        
+
         if (paramId !== id) {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
+ 
+        const { productId, productModel } = req.body;
+        console.log("edit wishlist req body: ", req.body)
 
-        const { productId } = req.body;
-        // console.log("productId: ", req.body)
-
-        if (!productId) {
-            return res.status(400).json({
+        // validate productmodel
+        if (!productModel || (productModel !== 'Bouquet' && productModel !== 'Flower')) {
+            //console.log("invalid productModel:, ", productModel)
+            return res.status(500).json({
                 success: false,
-                message: 'Product ID is required'
+                message: 'weird data dude'
             });
-        }
+        } 
 
-        const user = await User.findByIdAndUpdate(id);
+        
+
+        // find user
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({
@@ -50,50 +72,61 @@ export const editUserWishlist = async (req, res) => {
                 message: 'User not found'
             });
         }
-        // console.log("user wishlist before update: ", user.wishlist)
-        // check if product exists in wishlist
-        const itemExists = user.wishlist.some(
-            item => item.toString() === productId
-        );
-        // console.log("item exists in wishlist: ", itemExists)
-        // add item
-        if (!itemExists) {
-            console.log("adding item to wishlist", productId);
-            await User.findByIdAndUpdate(
-                id,
-                {
-                    $addToSet: {
-                        wishlist:  productId
-                    }
-                },
-                {
-                    runValidators: true  // validates against schema
-                }
-            );
         
-            //console.log("user wishlist after adding item: ", await User.findById(id).select('wishlist'))
-        } else if (itemExists) {
-            console.log("removing item from wishlist");
+
+        // check if product already in wishlist
+        const existingWishlisttItem = user.wishlist.findIndex(item => item.product.toString() === productId);
+
+        
+
+        // console.log("existingWishlisttItem index: ", existingCartItem)
+
+        if (existingWishlisttItem !== -1) {
+            
             // remove item 
             await User.findByIdAndUpdate(
                 id,
                 { 
-                    $pull: { 
-                        wishlist: productId 
+                    $pull: { wishlist: { 
+                        product: productId 
                     } 
+                } 
+            }
+            );
+            console.log("item removed from wishlist")
+
+
+        } else {
+            
+            //add item
+            await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        wishlist: {
+                            product: productId,
+                            productModel: productModel
+                        }
+                    }
                 },
                 {
-                    runValidators: true  // validates against schema
+                    runValidators: true  // Validates against schema
                 }
             );
+            console.log("item added to wishlist")
         }
+        
 
-        res.status(200).json({ 
-            message: 'success'
-        }) 
+        res.status(200).json({
+            success: true,
+            message: existingWishlisttItem !== -1 ? 'Item removed from wishlist successfully' : 'Item added to wishlist successfully',
+        });
 
-    }catch (error) {
-        res.status(500).json({ error: "error while updating wishlist" });
-        console.error(`error while updating wishlist: ${error}`)
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while adding wishlist item: ${error}`)
     }
-}   
+}

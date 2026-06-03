@@ -13,7 +13,7 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                 <p className="text-gray-600">looks like you haven't added anything to your cart yet.</p>
                             </div>
                             
-                            <button className="bg-gray-400 w-50 h-10 rounded-lg hover:bg-gray-500 hover:shadow-md hover:shadow-black transition" onClick={()=> Navigate('/')}>start shopping</button>
+                            <button className="bg-gray-400 w-50 h-10 rounded-lg hover:bg-gray-500 hover:shadow-md transition" onClick={()=> navigate('/bouquets')}>start shopping</button>
                         </div>
                     ) : (
                         <div className='w-full max-w-234 flex flex-col space-y-3 md:space-y-5 items-center'>
