@@ -50,7 +50,7 @@ const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch}) 
     return (
         <div className="relative group h-73 md:h-91 w-42 min-w-42 md:w-55 md:min-w-45 bg-cartCard rounded-lg flex flex-col space-y-2 md:space-y-3">
             <ImHeart onClick={handleWishlistToggle} className={` absolute top-2 right-3   cursor-pointer size-6 ${liked ? 'text-summaryButtons block hover:text-gray-500' : 'text-gray-500 hidden group-hover:block hover:text-summaryButtons'}`} />
-            <img className='w-full  rounded-lg' src={`/${image}`} alt="flowers" />
+            <img className='w-full h-73 rounded-lg' src={`/${image}`} alt="flowers" />
 
             <div className="flex justify-between pl-4 pr-3 items-center">
                 <div className="flex flex-col space-y-3">

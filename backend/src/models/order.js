@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import orderItemSchema from './orderSchema.js';
+import addressSchema from './addressSchema.js';
 
 const orderSchema = new mongoose.Schema({
     user: {
@@ -11,8 +12,8 @@ const orderSchema = new mongoose.Schema({
     items: [orderItemSchema],
     status: {
         type: String,
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'],
-        default: 'pending'
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned'],
+        default: 'Pending'
     },
 
     // payment info
@@ -23,20 +24,15 @@ const orderSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['pending', 'paid', 'failed', 'refunded'],
-        default: 'pending'
+        enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
+        default: 'Pending'
     },
         paymentId: {
         type: String  // Mpesa/PayPal transaction ID
     },
 
     // shipping info
-    shippingAddress: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address',
-        required: true
-        
-    },
+    shippingAddress: addressSchema,
 
     // order totals
     subTotal: {
@@ -64,8 +60,7 @@ const orderSchema = new mongoose.Schema({
 
     // tracking info
     trackingNumber: {
-        type: String,
-        default: ''
+        type: Number
     },
     estimatedDelivery: {
         type: Date
@@ -74,7 +69,7 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    deliveredAt: {
+    deliveryDate: {
         type: Date
     }
 }, { 

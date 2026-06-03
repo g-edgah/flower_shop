@@ -1,10 +1,12 @@
 import Order from '../../models/order.js';
+import Counter from '../../models/counter.js';
 import User from '../../models/user.js';
 import Bouquet from '../../models/bouquet.js';
 import Flower from '../../models/flower.js';
 
 // Create order from cart
 export const createOrder = async (req, res) => {
+   
     try {
         const {id} = req.user;
         const { payment } = req.body;
@@ -82,19 +84,32 @@ export const createOrder = async (req, res) => {
 
         //grand total
         const total = subTotal + tax + shippingCost
+
+        //tracking no
+        const counter = await Counter.findOneAndUpdate(
+            { name: 'trackingNumber' },
+            { $inc: { sequenceValue: 1 } },
+            { returnDocument: true, upsert: true } //create if it doesn't exist
+        )
+
+        const trackingNo = counter.sequenceValue;
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + 2); // estimated delivery in 2 days
         
         // create order
         const order = new Order({
             user: id,
             items: orderItems,
-            status: 'pending',
+            status: 'Pending',
             paymentMethod: paymentMethod,
             shippingAddress: user.address,
             subTotal,
+            trackingNumber: trackingNo,
             tax,
             shippingCost,
             total,
-            orderDate: new Date()
+            orderDate: new Date(),
+            deliveryDate: deliveryDate
         });
         
         console.log("saving order: ")
@@ -150,7 +165,8 @@ export const getUserOrders = async (req, res) => {
         
         const orders = await Order.find({ user: userId })
             .sort({ orderDate: -1 })
-            .populate('items.product');
+            .populate('items.product')
+            .populate('shippingAddress');
         
         console.log("orders found: ", orders.length)
         
@@ -221,7 +237,7 @@ export const deleteOrder = async (req, res) => {
         }
 
         // check if order can be deleted (only pending orders or admins)
-        if (!isAdmin && order.status !== 'pending') {
+        if (!isAdmin && order.status !== 'Pending') {
             return res.status(400).json({ 
                 success: false,
                 message: "Can only delete pending orders. Contact support for assistance." 

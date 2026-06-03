@@ -57,7 +57,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     
 
     return (
-        <div className=" min-h-screen w-full flex  space-x-3 md:space-y-5 items-start justify-center">
+        <div className=" min-h-screen w-full flex  space-x-3 md:space-y-5 items-start justify-center mb-20">
             <SideBar profilePage={profilePage} handleProfilePage={handleProfilePage}/>
 
             <div className="right w-6/10 max-w-200 bg-cartCard mt-8 rounded-md">

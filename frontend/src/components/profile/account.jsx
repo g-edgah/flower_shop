@@ -140,8 +140,8 @@ const Account = ({refetch, user}) => {
 
     return (
         <div className="flex p-4 justify-around gap-4 w-full">
-            <div className="account flex flex-col border w-5/10 rounded-md">
-                <div className="title font-bold h-13 flex items-center border-b-1 w-full p-4 flex justify-between">
+            <div className="account flex flex-col border-[1.75px] border-gray-400 w-5/10 rounded-md bg-gray-200">
+                <div className="title font-bold h-13 flex items-center border-b-1 border-gray-400 w-full p-4 flex justify-between ">
                     <span>Account Details</span> 
                     {!accountEdit ? 
                         <BiSolidEdit onClick={() => {handleAccount(true)}} className="size-6 cursor-pointer"/> 
@@ -222,8 +222,8 @@ const Account = ({refetch, user}) => {
                     </div>
                 }
             </div>
-            <div className="address flex flex-col border w-5/10 rounded-md">
-                <div className="title font-bold h-13 flex items-center border-b-1 w-full p-4 flex justify-between">
+            <div className="address flex flex-col border w-5/10 rounded-md bg-gray-200  border-gray-400">
+                <div className="title font-bold h-13 flex items-center border-b-1 border-gray-400 w-full p-4 flex justify-between">
                     <span>Address Book</span> 
                     {!addressEdit ? 
                         <BiSolidEdit onClick={() => {handleAddress(true)}} className="size-6 cursor-pointer"/> 
