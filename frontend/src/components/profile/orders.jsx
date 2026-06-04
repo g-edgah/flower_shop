@@ -45,8 +45,10 @@ const Orders = ({ refetch, user }) => {
                 </div>
                 
                 <div className="top text-lg flex gap-5 px-2 py-5">
-                    <span onClick={() => handleOrdersType("ongoing")} className="cursor-pointer" className={`font-semibold cursor-pointer ${ordersType === "ongoing" ? "text-summaryButtons" : ""}`}>Ongoing/Delivered</span>
-                    <span onClick={() => handleOrdersType("cancelled")} className="cursor-pointer" className={`font-semibold cursor-pointer ${ordersType === "cancelled" ? "text-summaryButtons" : ""}`}>Cancelled/Returned</span>
+                    
+                    <span onClick={() => handleOrdersType("ongoing")} className={`font-semibold cursor-pointer ${ordersType === "ongoing" ? "text-summaryButtons" : ""}`}>Ongoing/Delivered</span>
+                    
+                    <span onClick={() => handleOrdersType("cancelled")}  className={`font-semibold cursor-pointer ${ordersType === "cancelled" ? "text-summaryButtons" : ""}`}>Cancelled/Returned</span>
                 </div>
                 
 

@@ -12,7 +12,7 @@ const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch}) 
     
         
 
-    const handleWishlistToggle = (productId) => {
+    const handleWishlistToggle = () => {
         console.log("product to wishlist id: ", id)
         editWishlist({
             productId: id,

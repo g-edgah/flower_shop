@@ -16,12 +16,13 @@ export const getUserWishlist = async (req, res) => {
         //console.log("wishlist user: ", user.wishlist)
 
         const wishlist = user.wishlist.map( ({ 
-            product: { _id, name, type, description, picturePath, inStock  },
+            product: { _id, name, type, price, description, picturePath, inStock  },
         }) => {
             return { 
                 _id, 
                 name, 
                 type, 
+                price,
                 description, 
                 picturePath, 
                 inStock: inStock > 0 ? true : false,
