@@ -75,13 +75,18 @@ const WishlistCard = ({ item, wishlistRefetch, userRefetch }) => {
                 </div>
             </div>
             <div className="details flex gap-2 items-end">
-                <button onClick={handleWishlistToggle}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-1 rounded-md cursor-pointer">
-                    <span  className="detail " onClick={() => handlzxeOrderDetails(order, "details")}>remove</span>
+                <button onClick={handleWishlistToggle}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-2 rounded-md cursor-pointer text-gray-700 hover:text-black">
+                    <span  className="detail ">remove</span>
                     <ImHeartBroken className="size-4"/>
                 </button>
 
-                <button onClick={handleCartToggle} className="addcart flex items-center gap-1 border-[1.5px] h-10 px-1 rounded-md text-summaryButtons cursor-pointer ">
-                    <span  className="detail " onClick={() => handlzxeOrderDetails(order, "details")}>{inStock ? 'add to cart' : 'out of stock' }</span>
+                <button onClick={() => {
+
+                    if (inStock){
+                        handleCartToggle
+                    } 
+                    }} className="addcart flex items-center gap-1 h-10 px-2 rounded-md text-white bg-summaryButtons hover:bg-active font-[450] cursor-pointer ">
+                    <span  className="detail " >{inStock ? 'add to cart' : 'out of stock' }</span>
                     <IoIosBasket className="size-5"/>
                 </button>
                 

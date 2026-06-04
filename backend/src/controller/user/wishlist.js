@@ -13,8 +13,9 @@ export const getUserWishlist = async (req, res) => {
 
         const user = await User.findById(id).populate('wishlist.product');
 
-        //console.log("wishlist user: ", user.wishlist)
-
+        // const initialWishlist = user.wishlist
+        // //console.log("wishlist user: ", user.wishlist)
+        // const orderedWishlist = initialWishlist.sort({addedAt: -1 })
         const wishlist = user.wishlist.map( ({ 
             product: { _id, name, type, price, description, picturePath, inStock  },
         }) => {
