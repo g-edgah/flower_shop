@@ -29,6 +29,17 @@ const orderItemSchema = new mongoose.Schema({
     totalPrice: {
         type: Number,
         required: true  // price * quantity
+    },
+    productRating: {
+        type: Number,
+        enum: [ 1, 2, 3, 4, 5 ]
+    },
+    serviceRating: {
+        type: Number,
+        enum: [ 1, 2, 3, 4, 5 ]
+    },
+    review: {
+        type: String
     }
 }, { 
     timestamps: true,

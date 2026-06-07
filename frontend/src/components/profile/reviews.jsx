@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOrders } from "../../hooks/user";
-import OrderCard from "./orderCard";
+import ReviewCard from "./orderCard";
 
 import { FaArrowLeft } from "react-icons/fa6";
 
@@ -38,7 +38,7 @@ const Reviews = ({ refetch, user }) => {
     return (
        
         <div className="orders">
-            {orderState === "orders" && (
+            {reviewState === "orders" && (
             <div className='p-3'>
                 <div className="title border-b border-gray-300 w-10/10 p-3">
                     <span className="title text-xl font-bold ">Orders</span>
@@ -55,7 +55,7 @@ const Reviews = ({ refetch, user }) => {
                 <div className="cont flex flex-col gap-3">
                 {isLoading && <span>fetching orders</span>}
                 {error && <span>error fetching orders: {error.message}</span>}
-                {data && data.orders && ordersType === "ongoing" && (
+                {data && data.reviews && ordersType === "ongoing" && (
                     (ongoingOrders.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
                             <span className="text-lg">No ongoing or delivered orders found.</span>

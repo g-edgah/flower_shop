@@ -1,6 +1,6 @@
 
 
-const OrderCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, handleOrderDetails }) => {
+const ReviewCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, handleOrderDetails }) => {
     //console.log("order: ", order)
     const { name, price, picturePath } = item.product;
 
@@ -34,4 +34,4 @@ const OrderCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, h
     );
 };
 
-export default OrderCard;
+export default ReviewCard;

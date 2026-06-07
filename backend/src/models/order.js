@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import orderItemSchema from './orderSchema.js';
+import orderItemSchema from './orderItemSchema.js';
 import addressSchema from './addressSchema.js';
 
 const orderSchema = new mongoose.Schema({
@@ -71,7 +71,7 @@ const orderSchema = new mongoose.Schema({
     },
     deliveryDate: {
         type: Date
-    }
+    },
 }, { 
     timestamps: true,
     collection: 'orders',
