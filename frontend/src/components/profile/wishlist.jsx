@@ -6,6 +6,10 @@ import WishlistCard from "./wishlistCard";
 const Wishlist = ({ userRefetch, user }) => {
 
     const { data, isLoading, error, refetch: wishlistRefetch } = useWishlist();
+
+    const wishlistCart = user?.cart || [];
+    console.log("user cart from wishlist: ", user.cart)
+    console.log("wishlistcart: ", wishlistCart)
     
     
 
@@ -28,9 +32,19 @@ const Wishlist = ({ userRefetch, user }) => {
                         </div>
                     ) : (  
                         
-                        wishlist.map((item) =>(
-                            <WishlistCard key={item._id} item={item} wishlistRefetch={wishlistRefetch} userRefetch={userRefetch}/>
-                        ))
+                        wishlist.map((item) =>{
+                            const carted = wishlistCart?.some(cartItem => cartItem.product?.toString() === item._id?.toString()) || false;
+                            
+                            return (
+                            
+                            <WishlistCard 
+                                key={item._id} 
+                                item={item} 
+                                wishlistRefetch={wishlistRefetch} 
+                                userRefetch={userRefetch}
+                                carted={carted}
+                            />
+                        )})
                     
                     )
                 )}

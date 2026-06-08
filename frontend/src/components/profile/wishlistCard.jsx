@@ -3,7 +3,7 @@ import { ImHeartBroken } from "react-icons/im";
 
 import { useEditWishlist, useAddCart } from "../../hooks/user";
 
-const WishlistCard = ({ item, wishlistRefetch, userRefetch }) => {
+const WishlistCard = ({ item, wishlistRefetch, userRefetch, carted }) => {
     //console.log("order: ", order)
     const { _id, name, description, inStock, price, type, picturePath } = item;
     console.log("wishlist item: ", item)
@@ -80,13 +80,22 @@ const WishlistCard = ({ item, wishlistRefetch, userRefetch }) => {
                     <ImHeartBroken className="size-4"/>
                 </button>
 
-                <button onClick={() => {
+                <button 
+                
+                    onClick={() => {
 
-                    if (inStock){
-                        handleCartToggle
-                    } 
-                    }} className="addcart flex items-center gap-1 h-10 px-2 rounded-md text-white bg-summaryButtons hover:bg-active font-[450] cursor-pointer ">
-                    <span  className="detail " >{inStock ? 'add to cart' : 'out of stock' }</span>
+                        if (inStock){
+                            handleCartToggle()
+                        } 
+                    }}
+
+                    className={`addcart flex items-center gap-1 h-10 px-2 rounded-md text-white ${ carted ? 'bg-summaryButtons hover:bg-gray-400' : 'bg-gray-500 hover:bg-summaryButtons'} font-[450] cursor-pointer `}
+                >
+                    <span  className="detail " >
+                        {inStock && !carted && 'add to cart' }
+                        {inStock && carted && 'in cart'}
+                        {!inStock && 'out of stock' }
+                    </span>
                     <IoIosBasket className="size-5"/>
                 </button>
                 

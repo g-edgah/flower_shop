@@ -30,6 +30,8 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true  // price * quantity
     },
+
+    // rating
     productRating: {
         type: Number,
         enum: [ 1, 2, 3, 4, 5 ]
@@ -38,8 +40,18 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         enum: [ 1, 2, 3, 4, 5 ]
     },
+
+    // comment
     review: {
-        type: String
+        type: String,
+        default: ''
+    },
+
+    //review status
+    reviewStatus: {
+        type: String,
+        enum: ["reviewed", "notReviewed"],
+        default: "notReviewed"
     }
 }, { 
     timestamps: true,

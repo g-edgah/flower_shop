@@ -311,3 +311,91 @@ export const cancelOrder = async (req, res) => {
         });
     }
 };
+
+
+// add review/ratings
+export const addOrderReview = async ( req, res) => {
+    try {
+        const { id } = req.user
+        const { productRating, serviceRating, comment, productId, orderId } = req.body
+
+        // validate ratings if provided
+        if (productRating && ![1, 2, 3, 4, 5].includes(productRating)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product rating must be between 1 and 5'
+            });
+        }
+
+        if (serviceRating && ![1, 2, 3, 4, 5].includes(serviceRating)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Service rating must be between 1 and 5'
+            });
+        }
+
+        const order = await Order.findOne({ _id: orderId });
+
+        if (!order) {
+            return res.status(404).json({ 
+                success: false,
+                message: "Order not found" 
+            });
+        }
+
+        // check if the order belongs to the user
+        if (order.user.toString() !== id) {
+            return res.status(403).json({
+                success: false,
+                message: 'Unauthorized to review this order'
+            });
+        }
+
+        // check if order can be reviewed/rated
+        if (order.status !== 'delivered' ) {
+            return res.status(400).json({ 
+                success: false,
+                message: `Cannot rate undelivered order}` 
+            });
+        }
+
+        // preparing update object
+        const updateFields = {};
+        
+        if (productRating !== undefined) {
+            updateFields['items.$.productRating'] = productRating;
+        }
+        
+        if (serviceRating !== undefined) {
+            updateFields['items.$.serviceRating'] = serviceRating;
+        }
+        
+        if (review !== undefined) {
+            updateFields['items.$.review'] = review;
+        }
+
+        const updateOrder = await Order.findOneAndUpdate(
+            { 
+                '_id': orderId, 
+                'user': id, 
+                'items._id': productId
+            },
+            {
+                $set: updateFields 
+            },
+            { 
+                runValidators: true 
+            }
+        );
+
+
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to cancel order", 
+            error: error.message 
+        });
+    }
+
+} 

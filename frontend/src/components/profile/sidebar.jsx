@@ -24,7 +24,7 @@ const SideBar = ({ profilePage, handleProfilePage }) => {
                 <span onClick={() => {
                     navigate("/profile/reviews")
                     handleProfilePage("reviews")
-                }} className={`w-full h-13 text-center flex items-center justify-start px-5 hover:bg-gray-200 cursor-pointer ${profilePage == "reviews" ? "bg-gray-200" : "bg-cartCard"}`}>Pending Reviews</span>
+                }} className={`w-full h-13 text-center flex items-center justify-start px-5 hover:bg-gray-200 cursor-pointer ${profilePage == "reviews" ? "bg-gray-200" : "bg-cartCard"}`}>Reviews</span>
                 <span onClick={() => {
                     navigate("/profile/vouchers")
                     handleProfilePage("vouchers")

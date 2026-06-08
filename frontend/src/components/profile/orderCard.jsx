@@ -5,7 +5,7 @@ const OrderCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, h
     const { name, price, picturePath } = item.product;
 
     return (
-        <div className="order-card bg-gray-200 p-3 border-[1.5px] border-gray-400 rounded-md flex gap-2 justify-between">
+        <div className="order-card relative bg-gray-200 p-3 border-[1.5px] border-gray-400 rounded-md flex gap-2 justify-between">
             <div className="order-info flex gap-5">
                 <div className="img size-32">
                     <img
@@ -27,9 +27,9 @@ const OrderCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, h
                     
                 </div>
             </div>
-            <div className="details">
-                <span  className="detail cursor-pointer text-summaryButtons hover:underline" onClick={() => handleOrderDetails(order, "details")}>more details</span>
-            </div>
+            <button className="details text-summaryButtons  h-10 w-30 rounded-md px-2 absolute right-0 top-1.75">
+                <span  className="detail cursor-pointer  hover:underline" onClick={() => handleOrderDetails(order, "details")}>more details</span>
+            </button>
         </div>
     );
 };

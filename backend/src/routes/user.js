@@ -3,7 +3,7 @@ import express from 'express'
 import { getUser, editUser } from '../controller/user/user.js'
 import { getUserCart, editCartItem, addCartItem, minusCartItem, deleteCartItem } from '../controller/user/cart.js'
 import { getUserWishlist, editWishlist } from '../controller/user/wishlist.js'
-import { createOrder, getUserOrders, getOrderById } from '../controller/user/orders.js'
+import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controller/user/orders.js'
 import { verifyToken } from '../middleware/auth.js'
 
 
@@ -26,8 +26,10 @@ userRouter.post('/wishlist/:id', verifyToken, editWishlist)
 
 // orders
 userRouter.post('/orders/:id', verifyToken, createOrder)
+userRouter.post('/orders/reviews/:id', verifyToken, addOrderReview)
 userRouter.get('/orders/:id', verifyToken, getUserOrders)
 userRouter.get('/orders/:id/:orderId', verifyToken, getOrderById)
+
 
 
 export default userRouter
