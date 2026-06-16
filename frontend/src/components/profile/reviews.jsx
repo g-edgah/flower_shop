@@ -3,11 +3,19 @@ import { useOrders } from "../../hooks/user";
 import ReviewCard from "./reviewCard";
 
 import { FaArrowLeft } from "react-icons/fa6";
+import { HiStar, HiOutlineStar } from "react-icons/hi2";
 
 const Reviews = ({ refetch, user }) => {
     const [ reviewsType, setReviewsType ] = useState("notReviewed")
     const [reviewState, setReviewState] = useState("reviews")
-    const [ reviewDetails, setReviewDetails ] = useState(null)
+    const [ reviewOrderDetails, setReviewOrderDetails ] = useState(null)
+    const [ reviewItemDetails, setReviewItemDetails ] = useState(null)
+
+    const [productRating, setProductRating] = useState(reviewItemDetails?.productRating);
+    const [serviceRating, setServiceRating] = useState(reviewItemDetails?.serviceRating);
+    const [comment, setComment] = useState(reviewItemDetails?.review);
+    const [hover, setHover] = useState(0);
+    
 
     const { data, isLoading, error, userdata } = useOrders();
 
@@ -28,10 +36,31 @@ const Reviews = ({ refetch, user }) => {
         }
     }
 
-    const handleReviewDetails = (order, state) => {
-        setReviewDetails(order)
+    const handleReviewDetails = (order, item, state) => {
+        setReviewOrderDetails(order)
+        setReviewItemDetails(item)
         setReviewState(state)
     }
+
+    const handleClick = (selectedRating) => {
+        if (disabled || readOnly) return;
+        setRating(selectedRating);
+        if (onRatingChange) {
+            onRatingChange(selectedRating);
+        }
+    };
+
+    const handleMouseEnter = (starValue) => {
+        if (disabled || readOnly) return;
+        setHover(starValue);
+    };
+
+    const handleMouseLeave = () => {
+        if (disabled || readOnly) return;
+        setHover(0);
+    };
+
+
 
     console.log("review type: ", reviewsType)
 
@@ -42,7 +71,7 @@ const Reviews = ({ refetch, user }) => {
             {reviewState === "reviews" && (
             <div className='p-3'>
                 <div className="title border-b border-gray-300 w-10/10 p-3">
-                    <span className="title text-xl font-bold ">Orders</span>
+                    <span className="title text-xl font-bold ">Reviews</span>
                 </div>
                 
                 <div className="top text-lg flex gap-5 px-2 py-5">
@@ -92,25 +121,24 @@ const Reviews = ({ refetch, user }) => {
             <div className="details flex flex-col p-3 gap-5">
                 <div className="title flex gap-5 items-center border-b border-gray-300 w-full p-3">
                     <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setReviewState("reviews")} />
-                    <span className="title text-xl font-bold">Order Details</span>
+                    <span className="title text-xl font-bold">Review/Rate</span>
                 </div>
 
 
                 <div className="details flex flex-col gap-2 border-[1.5px] border-gray-400 rounded-md p-3 bg-gray-200">
-                    <span className="number font-bold mb-2 pt-2">Order NO {reviewDetails?.trackingNumber}</span>
-                    <span className="status">Status: {reviewDetails?.status}</span>
-                    <span className="orderDate">Order Date: {new Date(reviewDetails?.orderDate).toLocaleDateString()}</span>
-                    <span className="deliveryDate">Delivery Date: {new Date(reviewDetails?.deliveryDate).toLocaleDateString()}</span>
-                    <span className="itemsTitle font-semibold text-md mt-3">Items: {reviewDetails?.items?.length || 0}</span>
+                    <span className="number font-bold mb-2 pt-2">Order NO {reviewOrderDetails?.trackingNumber}</span>
+                    <span className="status">Status: {reviewOrderDetails?.status}</span>
+                    <span className="orderDate">Order Date: {new Date(reviewOrderDetails?.orderDate).toLocaleDateString()}</span>
+                    <span className="deliveryDate">Delivery Date: {new Date(reviewOrderDetails?.deliveryDate).toLocaleDateString()}</span>
+                    <span className="itemsTitle font-semibold text-md mt-3">Items: {reviewOrderDetails?.items?.length || 0}</span>
                 </div>
 
                 <div className="items flex flex-col gap-3">
-                    {reviewDetails?.items?.map((item) => (
-                        <div key={item._id} className="item flex gap-5 items-center border-[1.5px] border-gray-400 rounded-md p-3 bg-gray-200">
+                        <div  className="item flex gap-5 items-center border-[1.5px] border-gray-400 rounded-md p-3 bg-gray-200">
                             <div className="img size-32">
                                 <img
-                                    src={`/${item.product.picturePath}`}
-                                    alt={`${item.product.name}`}
+                                    src={`/${reviewItemDetails.product.picturePath}`}
+                                    alt={`${reviewItemDetails.name}`}
                                     className="rounded-md w-full h-full object-cover"
                                     onError={(e) => {
                                         e.target.src = '/default-product.png';
@@ -118,37 +146,30 @@ const Reviews = ({ refetch, user }) => {
                                 />
                             </div>
                             <div className="info flex flex-col gap-5 text-[15px] text-gray-800 ">
-                                <span className="name font-semibold text-lg text-black">{item.product.name}</span>
-                                <span className="quantity">Quantity: {item.quantity}</span>
-                                <span className="price">Price: Ksh {item.product.price}</span>
+                                <span className="name font-semibold text-lg text-black">{reviewItemDetails.name}</span>
+                                <span className="quantity">rate this product</span>
+                                <div className="stars flex">
+                                    {[1, 2, 3, 4, 5 ].map((star) => (
+                                        <button 
+                                            onClick={() => handleClick(star)}
+                                            onMouseEnter={() => handleMouseEnter(star)}
+                                            onMouseLeave={handleMouseLeave}
+                                            
+                                            className="5 flex">
+                                                <HiStar className="size-7 hover:text-summaryButtons"/>
+                                        </button> 
+                                    ))} 
+        
+                                </div>
+                                <span className="price">Rate the service delivery</span>
                             </div>
                         </div>
-                    ))}
+                    
                 </div>
-                <div className="detail flex justify-between">
-                    <div className="payinfo flex flex-col gap-2 border-[1.5px] border-gray-400 rounded-md mr-5 w-5/10 bg-gray-200">
-                        <span className="title font-semibold text-lg border-b border-gray-400 pb-2 p-3">Payment Information</span>
-                        <div className="flex flex-col gap-3 p-3">
-                            
-                            <span className="method">Method: {reviewDetails?.paymentMethod}</span>
-                            <span className="subtotal">Sub Total: Ksh {reviewDetails?.subTotal}</span>
-                            <span className="shipping">Shipping Cost: Ksh {reviewDetails?.shippingCost}</span>
-                            <span className="total font-bold pt-3 text-lg">Total: Ksh {reviewDetails?.total}</span>
-                        </div>
-                    </div>
-
-                    <div className="deliveryinf0 flex flex-col gap-2 border-[1.5px] border-gray-400 rounded-md  w-5/10 bg-gray-200">
-                        <span className="title font-semibold text-lg border-b border-gray-400 pb-2 p-3">Delivery Information</span>
-                        <div className="flex flex-col gap-2 p-3">
-                            <span className="name">Name: {user?.firstName} {user?.lastName}</span>
-                            <span className="name">Region: {reviewDetails?.shippingAddress?.region}</span>
-                            <span className="phone">City: {reviewDetails?.shippingAddress?.city}</span>
-                            <span className="address">Address: {reviewDetails?.shippingAddress?.address}</span>
-                            <span className="address">Info: {reviewDetails?.shippingAddress?.info}</span>
-                            <span className="address">Mobile: {reviewDetails?.shippingAddress?.mobile}</span>
-                        </div>
-                    </div>
-                </div>
+                <button className="detail flex bg-summaryButtons rounded-md p-2 text-white items-center justify-center">
+                    <span>submit</span>
+                    
+                </button>
 
 
                 

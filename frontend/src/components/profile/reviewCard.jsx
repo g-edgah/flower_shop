@@ -28,7 +28,7 @@ const ReviewCard = ({ order, status, trackingNo, deliveryDate, orderDate, item, 
                 </div>
             </div>
             <button className="details text-summaryButtons  h-10 w-42 rounded-md px-2 absolute right-0 top-1.75">
-                <span  className="detail cursor-pointer  hover:underline" onClick={() => handleReviewDetails(order, "details")}>review/rate order</span>
+                <span  className="detail cursor-pointer  hover:underline" onClick={() => handleReviewDetails(order, item, "details")}>review/rate order</span>
             </button>
         </div>
     );
