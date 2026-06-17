@@ -12,6 +12,8 @@ import { useUser } from './hooks/user.js';
 
 function App() {
   const { data: userData, isLoading: isUserLoading, error: userError, isFetching: isUserFetching, refetch: userRefetch } = useUser();
+
+
   
   // if (userData) {
   //   console.log("user at app: ",userData)

@@ -25,7 +25,7 @@ export const useUser = () => {
 
 // user details editing
 export const useEditUser = (formData) => {
-    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+    console.log(`editing user`) 
 
     return useMutation({ 
         mutationFn: (formData) => api.patch(`/user/${userId}`, formData).then(res => res.data)
@@ -60,7 +60,7 @@ export const useAddCart = (formData) => {
 
 // user cart editing
 export const useMinusCart = (formData) => {
-    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+    console.log(`minusing from cart`) 
 
     return useMutation({ 
         mutationFn: (formData) => api.patch(`/user/cart/${userId}`, formData).then(res => res.data)
@@ -71,7 +71,7 @@ export const useMinusCart = (formData) => {
 
 // user cart editing
 export const useDeleteCart = () => {
-    //console.log(`formdata: ${JSON.stringify(formData)}`) 
+    console.log(`deleting from cart`) 
 
     return useMutation({ 
         mutationFn: (formData) => api.delete(`/user/cart/${userId}/${formData.productId}`).then(res => res.data)
@@ -92,6 +92,7 @@ export const useWishlist = () => {
 
 // user wishlist editing
 export const useEditWishlist = () => {
+    console.log(`editting the wishlist`) 
 
     return useMutation({ 
         mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data)
@@ -101,6 +102,8 @@ export const useEditWishlist = () => {
 
 // creating order 
 export const useCreateOrder = () => {
+    console.log(`creating order`) 
+
     return useMutation({
         mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data)
     });

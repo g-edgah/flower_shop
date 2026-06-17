@@ -3,6 +3,7 @@ import api from '../setup/axios';
 
 // hook for home data
 export const useHome = () => {
+    console.log('getting home data')
     return useQuery({
         queryKey: ['home'],
         queryFn: () => api.get('/home/').then(res => res.data),

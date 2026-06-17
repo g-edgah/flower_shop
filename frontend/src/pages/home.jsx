@@ -21,7 +21,7 @@ import { useUser, useCart, useWishlist, useEditWishlist } from '../hooks/user.js
 
 
 
-const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
+const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
 
     const [content, setContent] = useState([
         {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
@@ -49,10 +49,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
 
     const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data.data;
     console.log("home data: ",data)
-    const homeWishlist = userData?.formattedUser?.wishlist || [];
-    const homeCart = userData?.formattedUser?.cart || [];
-    console.log("home wishlist: ", homeWishlist)
-    console.log("cart: ", homeCart)
+    console.log("home wishlist: ", wishlist)
+    console.log("cart: ", cart)
 
     return (
         <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
@@ -77,8 +75,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
                     {newProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -92,6 +90,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             liked={liked}
                             carted={carted}
                             userRefetch={userRefetch}
+                            handleAddToCart={handleAddToCart}
+                            handleWishlistToggle={handleWishlistToggle}
                             />
                     )})}
                 </div>
@@ -149,8 +149,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
                     {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = homeWishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
-                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = wishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -164,6 +164,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             liked={liked}
                             carted={carted}
                             userRefetch={userRefetch}
+                            handleAddToCart={handleAddToCart}
+                            handleWishlistToggle={handleWishlistToggle}
                             />
                     )})}
                     
@@ -176,8 +178,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
                     {floristPicks.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = homeWishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = homeCart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -191,6 +193,8 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             liked={liked}
                             carted={carted}
                             userRefetch={userRefetch}
+                            handleAddToCart={handleAddToCart}
+                            handleWishlistToggle={handleWishlistToggle}
                             />
                     )})}
                     
