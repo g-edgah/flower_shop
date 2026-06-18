@@ -23,9 +23,9 @@ export const getUser = async (req, res) => {
 
         //option 2
         const user = await User.findById(id)
-            //.populate('cart.product')
+            .populate('cart.product')
             //.populate('orders')
-            //.populate('favorites')
+            //.populate('wishlist')
             .select('-password'); 
         
         //console.log("user: "+user)

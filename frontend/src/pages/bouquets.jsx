@@ -9,7 +9,7 @@ import Filter from '../components/common/filter.jsx'
 import { useBouquets } from '../hooks/products.js';
 import { use } from "react";
 
-const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist, cartRefetch }) => {
     const [pageNo, setPageNo] = useState(1);
     const [sortOpen, setSortOpen] = useState(false);
     const [sortBy, setSortBy] = useState('popularity')
@@ -73,6 +73,8 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
         console.log(colors)
     }   
 
+    console.log("wishlist from bouquet:", wishlist)
+
     const handlePriceRange = () => {
         setPriceRange({ min: inputMin, max: inputMax });
     }
@@ -80,7 +82,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     useEffect(() => {
         //ensures page is set to bouquets when navigation is through other channels apart from button clicking such as navigating back 
         setPage("bouquets")
-        userRefetch()
+        cartRefetch()
     }, [])
 
     
@@ -89,9 +91,6 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     //const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
 
     //console.log(data.products)
-
-    const wishlist = userData?.formattedUser?.wishlist || [];
-    const cart = userData?.formattedUser?.cart || [];
     
    
     
@@ -122,7 +121,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 
                     {data.products.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -136,6 +135,9 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                             liked={liked}
                             carted={carted}
                             userRefetch={userRefetch}
+                            handleAddToCart={handleAddToCart}
+                            handleWishlistToggle={handleWishlistToggle}
+                            cartRefetch={cartRefetch}
                             />
                     )})}
                     

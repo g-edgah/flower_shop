@@ -16,12 +16,16 @@ import Profile from '../pages/profile.jsx';
 import Login from '../components/profile/login.jsx';
 import Register from '../components/profile/register.jsx';
 
-import { useEditWishlist, useAddCart } from '../hooks/user.js';
+import { useWishlist, useEditWishlist, useAddCart, useCart } from '../hooks/user.js';
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
-    const [page, setPage] = useState("home")
-    const [cart, setCart] = useState([]);
-    const [wishlist, setWishlist] = useState([]);
+    const [ page, setPage ] = useState("home")
+    const [ cart, setCart ] = useState([]);
+    const [ wishlist, setWishlist ] = useState([]);
+    const [ couponCode, setCouponCode ] = useState('');
+    const [ subTotal, setSubTotal ] = useState(0);
+    const [ total, setTotal ] = useState(0);
+    const [ shippingCost, setShippingCost ] = useState(500);
 
     const handlePage = (page) => {
         e.preventDefault()
@@ -31,29 +35,52 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         }
     }
 
-    const { mutate: editWishlist, isLoading: wishlistLoading, error: wishlistError } = useEditWishlist();
-    const { mutate: addCart, isLoading: cartLoading, error: cartError } = useAddCart();
+    const { mutate: editWishlist, isLoading: editWishlistLoading, error: editWishlistError } = useEditWishlist();
+    const { data: wishlistData, isLoading: wishlistLoading, error: wishlistError, refetch: wishlistRefetch } = useWishlist();
+    const { mutate: addCart, isLoading: addCartLoading, error: addCartError } = useAddCart();
+    const { data: cartData, isLoading: cartLoading, error: cartError, isFetching: cartFetching , refetch: cartRefetch } = useCart();
+    
 
     useEffect(() => {
-        if (userData?.formattedUser) {
-            console.log("user data available: ", userData?.formattedUser?.cart)
-            setCart(userData?.formattedUser?.cart)
-            setWishlist(userData?.formattedUser?.wishlist)
+        if (cartData?.formattedCart) {
+            console.log("user cart data available: ", cartData?.formattedCart)
+            setCart(cartData?.formattedCart)
+            setSubTotal(cartData?.subTotal);
+            setShippingCost(cartData?.shippingCost);
+            setTotal(cartData?.grandTotal);
+            //console.log("cart data: ", cartData?.formattedCart);
+
         } else {
             console.log("user data not available: ")
             try {
                 const localCart = JSON.parse(localStorage.getItem('cart')) || []
-                const localWishlist = JSON.parse(localStorage.getItem('wishlist')) || []
 
                 setCart(localCart)
-                setWishlist(localWishlist)
             } catch (error) {
                 console.error("error getting cart/wishlist from local storage: ", error)
             }
            
             
         }
-    })
+    }, [cartData])
+
+    useEffect(() => {
+        if (wishlistData?.formattedCart) {
+            console.log("user wishlist data available: ", wishlistData?.formattedCart)
+            setWishlist(userData?.formattedUser?.wishlist)
+        } else {
+            console.log("user data not available: ")
+            try {
+                const localWishlist = JSON.parse(localStorage.getItem('wishlist')) || []
+                setWishlist(localWishlist)
+            } catch (error) {
+                console.error("error getting wishlist from local storage: ", error)
+            }
+           
+            
+        }
+    }, [wishlistData])
+
     
 
     const wishlistToggle = (id, type) => {
@@ -75,6 +102,30 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             })
     };
 
+
+
+    const wishlistLocalToggle = (id, type) => {
+
+        let workingWishlist = wishlist
+        const existingItem = workingWishlist.find(item =>
+            item.product === id
+        )
+
+        if (existingItem) {
+            workingWishlist = workingWishlist.filter(item => !(item.product === id));
+        } else {
+            workingWishlist.push({
+                product: id,
+                type: type
+            })
+
+        }
+
+
+        localStorage.setItem('wishlist', JSON.stringify(workingWishlist));
+    }
+
+
     const addToCart = (id, type) => {
         console.log("product to cart id: ", id)
         addCart({
@@ -84,7 +135,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         }, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-                userRefetch()
+                cartRefetch()
                 
             },
             onError: (error) => {
@@ -95,50 +146,66 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         })
     };
 
-    const wishlistLocalToggle = (id, type) => {
-
-    }
 
     const addToLocalCart = (id, type) => {
-        const existingItem = cart.find(item =>
-            item,product === id && item.type === type
+
+        let workingCart = cart
+        const existingItem = workingCart.find(item =>
+            item.product === id && item.type === type
         )
 
         if (existingItem) {
-            existingItem.quantity = (existingItem.quantity) + 1
+            if (existingItem.quantity < 98) {
+                existingItem.quantity = (existingItem.quantity) + 1
+            }
+            if (existingItem.quantity > 99) {
+                existingItem.quantity = 99
+            }
         } else {
-            cart.push({
+            workingCart.push({
                 product: id,
                 type: type,
                 quantity: 1
             })
         }
 
-        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(workingCart));
     }
 
     const minusFromLocalCart = (id, type) => {
-        const existingItem = cart.find(item =>
-            item,product === id && item.type === type
+        let workingCart = cart
+        const existingItem = workingCart.find(item =>
+            item.product === id && item.type === type
         )
 
         if (existingItem) {
             if (existingItem.quantity > 1) {
                 existingItem.quantity = (existingItem.quantity) - 1
             }
-        } else {
-            cart.push({
-                product: id,
-                type: type,
-                quantity: 1
-            })
+            if (existingItem.quantity < 1) {
+                existingItem.quantity = 1
+            }
         }
 
-        localStorage.setItem('cart', JSON.stringify(cart));
+
+        localStorage.setItem('cart', JSON.stringify(workingCart));
         
     }
 
     const deleteFromLocalCart = (id, type) => {
+
+        let workingCart = cart
+        const existingItem = workingCart.find(item =>
+            item.product === id && item.type === type
+        )
+
+        if (existingItem) {
+            workingCart = cart.filter(item => !(item.product === id && item.type === type));
+        }
+
+
+        localStorage.setItem('cart', JSON.stringify(workingCart));
+        
         
     }
 
@@ -180,7 +247,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             <Routes>
                 <Route index element={<Home setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
-                <Route path='bouquets' element={<Bouquets setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
+                <Route path='bouquets' element={<Bouquets setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} cartRefetch={cartRefetch}/>}/>
 
                 <Route path='flowers' element={<Flowers setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
 
@@ -192,7 +259,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
                 <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
-                <Route path='cart/*' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
+                <Route path='cart/*' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
                 <Route path='login' element={<Login setPage={setPage} />}/>
 

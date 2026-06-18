@@ -6,7 +6,7 @@ import FlowerCard from '../components/common/flowerCard.jsx'
 import { usePopular } from '../hooks/products.js';
 import { use } from "react";
 
-const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
     const [pageNo, setPageNo] = useState(1)
 
     useEffect(() => {
@@ -18,8 +18,6 @@ const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
 
     const { data, isLoading, error, isFetching, refetch } = usePopular(pageNo);
 
-    const wishlist = userData?.formattedUser?.wishlist || [];
-    const cart = userData?.formattedUser?.cart || [];
 
     return (
         <div className='flex justify-center'>
@@ -53,6 +51,8 @@ const Popular = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
                                 liked={liked}
                                 carted={carted}
                                 userRefetch={userRefetch}
+                                handleAddToCart={handleAddToCart}
+                                handleWishlistToggle={handleWishlistToggle}
                                 />
                             )})}
                         

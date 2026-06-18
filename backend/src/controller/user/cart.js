@@ -7,6 +7,7 @@ export const getUserCart = async (req, res) => {
     try {
         //use id from verified token instead of url param to prevent enumeration and ensure users can only access their own data
         const { id } = req.user
+        // console.log('id for user: ', id)
 
          //also get id from params(to mess with those burpsuite warriors)/
         const paramId = req.params.id
@@ -18,7 +19,7 @@ export const getUserCart = async (req, res) => {
 
         const user = await User.findById(id).populate('cart.product'); //populate product details in cart
 
-        //console.log("user cart: ", user.cart)
+        // console.log("user cart: ", user.cart)
 
         // console.log(user.cart.map(i => ({
         //     product: i.product,

@@ -3,7 +3,7 @@ import { IoIosBasket } from "react-icons/io";
 
 import { useEditWishlist, useAddCart } from "../../hooks/user";
 
-const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch, handleAddToCart, handleWishlistToggle }) => {
+const FlowerCard = ({id, name, type, price, image, liked, carted, userRefetch, handleAddToCart, handleWishlistToggle, cartRefetch }) => {
 
     
 

@@ -36,7 +36,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
 
         setPage("home")
         userRefetch() 
-        //console.log("home")
+        console.log("home")
 
     }, []);
 
@@ -76,7 +76,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <div className="flex space-x-5">
                     {newProducts.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -150,7 +150,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
 
                     {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -179,7 +179,7 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 
                     {floristPicks.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
                         
                         return (
                             

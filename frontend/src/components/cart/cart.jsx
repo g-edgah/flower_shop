@@ -1,8 +1,9 @@
 import CartCard from './cartCard.jsx';
 import { Link, useNavigate } from 'react-router-dom'
 
-const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, userRefetch, refetch }) => {
+const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, userRefetch, cartRefetch }) => {
     const navigate = useNavigate();
+    console.log('cart from cart:', cart)
 
     return (
         <div className="min-h-full pt-10 w-full flex flex-col space-y-3 md:space-y-5 items-center">
@@ -39,7 +40,7 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                                 quantity={quantity}
                                                 image={picturePath}
                                                 userRefetch={userRefetch}
-                                                cartRefetch={refetch}
+                                                cartRefetch={cartRefetch}
                                                 
                                             />
                                         ))}

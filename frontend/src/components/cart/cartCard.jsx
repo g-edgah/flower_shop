@@ -79,7 +79,7 @@ const CartCard = ({id, name, type, price, quantity, image, userRefetch, cartRefe
         <div className="container min-w-full h-35 justify-between md:h-40 bg-cartCard text-cartCardText rounded-md flex">
 
             <div className="image h-full aspect-[1/1.1]">
-                <img className="rounded-md h-full" src={`/${image}`} alt="product image" />
+                <img className="rounded-md h-full aspect-[1/1.2]" src={`/${image}`} alt="product image" />
             </div>
 
             <div className="details flex justify-around grow text-md md:text-md items-center">

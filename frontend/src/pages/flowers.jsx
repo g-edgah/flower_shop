@@ -9,7 +9,7 @@ import Filter from '../components/common/filter.jsx'
 import { useFlowers } from '../hooks/products.js';
 import { use } from "react";
 
-const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const Flowers = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
     const [pageNo, setPageNo] = useState(1);
     const [sortOpen, setSortOpen] = useState(false);
     const [sortBy, setSortBy] = useState('popularity')
@@ -89,9 +89,6 @@ const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, u
     //const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data;
 
     //console.log(data)
-
-    const wishlist = userData?.formattedUser?.wishlist || [];
-    const cart = userData?.formattedUser?.cart || [];
     
    
     
@@ -115,7 +112,7 @@ const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, u
                 
                     {data.products.map(({ _id, name, type, price, picturePath }, index) => {
                         const liked = wishlist?.some(item => item?.product?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item.product?.toString() === _id?.toString()) || false;
+                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
                         
                         return (
                             
@@ -129,6 +126,8 @@ const Flowers = ({setPage, userData, isUserLoading, userError, isUserFetching, u
                             liked={liked}
                             carted={carted}
                             userRefetch={userRefetch}
+                            handleAddToCart={handleAddToCart}
+                            handleWishlistToggle={handleWishlistToggle}
                             />
                     )})}
                     
