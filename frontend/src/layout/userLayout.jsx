@@ -51,7 +51,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             //console.log("cart data: ", cartData?.formattedCart);
 
         } else {
-            console.log("user data not available: ")
+            console.log("user cart data not available: ")
             try {
                 const localCart = JSON.parse(localStorage.getItem('cart')) || []
 
@@ -65,11 +65,11 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     }, [cartData])
 
     useEffect(() => {
-        if (wishlistData?.formattedCart) {
-            console.log("user wishlist data available: ", wishlistData?.formattedCart)
-            setWishlist(userData?.formattedUser?.wishlist)
+        if (wishlistData?.wishlist) {
+            console.log("user wishlist data available: ", wishlistData)
+            setWishlist(wishlistData?.wishlist)
         } else {
-            console.log("user data not available: ")
+            console.log("user wishlist data not available: ")
             try {
                 const localWishlist = JSON.parse(localStorage.getItem('wishlist')) || []
                 setWishlist(localWishlist)
@@ -91,7 +91,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         }, {
                 onSuccess: (data) => {
                     console.log('Edit successfull!', data)
-                    userRefetch()
+                    wishlistRefetch()
                     
                 },
                 onError: (error) => {
