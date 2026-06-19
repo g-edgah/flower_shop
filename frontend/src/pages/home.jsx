@@ -21,7 +21,7 @@ import { useUser, useCart, useWishlist, useEditWishlist } from '../hooks/user.js
 
 
 
-const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
+const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
 
     const [content, setContent] = useState([
         {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
@@ -35,7 +35,6 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     useEffect(() => {
 
         setPage("home")
-        userRefetch() 
         console.log("home")
 
     }, []);
@@ -74,22 +73,16 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
             <div className="new flex flex-col items-center w-full space-y-5 justify-center">
                 <span className='font-bold text-lg md:text-xl'>new arrivals</span>
                 <div className="flex space-x-5">
-                    {newProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?._id?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item?._id?.toString() === _id?.toString()) || false;
+                    {newProducts.map((item, index) => {
+                        const liked = wishlist?.some(wishlistItem => wishlistItem?._id?.toString() === item?._id?.toString()) || false;
+                        const carted = cart?.some(cartItem => cartItem?._id?.toString() === item?._id?.toString()) || false;
                         
                         return (
                             
                             <FlowerCard
-                            id={_id}
-                            key={index} 
-                            name={name}
-                            type={type}
-                            price={price}
-                            image={picturePath}
+                            item={item}
                             liked={liked}
                             carted={carted}
-                            userRefetch={userRefetch}
                             handleAddToCart={handleAddToCart}
                             handleWishlistToggle={handleWishlistToggle}
                             />
@@ -148,22 +141,16 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>flying off the shelves</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
 
-                    {popularProducts.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?._id?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item?._id?.toString() === _id?.toString()) || false;
+                    {popularProducts.map((item, index) => {
+                        const liked = wishlist?.some(wishlistItem => wishlistItem?._id?.toString() === item?._id?.toString()) || false;
+                        const carted = cart?.some(cartItem => cartItem?._id?.toString() === item?._id?.toString()) || false;
                         
                         return (
                             
                             <FlowerCard
-                            id={_id}
-                            key={index} 
-                            name={name}
-                            type={type}
-                            price={price}
-                            image={picturePath}
+                            item={item}
                             liked={liked}
                             carted={carted}
-                            userRefetch={userRefetch}
                             handleAddToCart={handleAddToCart}
                             handleWishlistToggle={handleWishlistToggle}
                             />
@@ -177,22 +164,16 @@ const HomePage = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 <span className='font-bold text-lg md:text-xl'>florists' picks</span>
                 <div className="flower-row flex gap-5 w-full  flex-wrap justify-center items-center max-w-280">
                 
-                    {floristPicks.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?._id?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item?._id?.toString() === _id?.toString()) || false;
+                    {floristPicks.map((item, index) => {
+                        const liked = wishlist?.some(wishlistItem => wishlistItem?._id?.toString() === item?._id?.toString()) || false;
+                        const carted = cart?.some(cartItem => cartItem?._id?.toString() === item?._id?.toString()) || false;
                         
                         return (
                             
                             <FlowerCard
-                            id={_id}
-                            key={index} 
-                            name={name}
-                            type={type}
-                            price={price}
-                            image={picturePath}
+                            item={item}
                             liked={liked}
                             carted={carted}
-                            userRefetch={userRefetch}
                             handleAddToCart={handleAddToCart}
                             handleWishlistToggle={handleWishlistToggle}
                             />

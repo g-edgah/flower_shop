@@ -3,54 +3,11 @@ import { ImHeartBroken } from "react-icons/im";
 
 import { useEditWishlist, useAddCart } from "../../hooks/user";
 
-const WishlistCard = ({ item, wishlistRefetch, userRefetch, carted }) => {
+const WishlistCard = ({ item, handleAddToCart, handleWishlistToggle, carted }) => {
     //console.log("order: ", order)
     const { _id, name, description, inStock, price, type, picturePath } = item;
     console.log("wishlist item: ", item)
 
-    const { mutate: editWishlist, isLoading: wishlistLoading, error: wishlistError } = useEditWishlist();
-    const { mutate: addCart, isLoading: cartLoading, error: cartError } = useAddCart();
-
-    const handleWishlistToggle = () => {
-        console.log("product to wishlist id: ", _id)
-        editWishlist({
-            productId: _id,
-            productModel: type === "bouquet" ? "Bouquet" : "Flower"
-        }, {
-                onSuccess: (data) => {
-                    console.log('Edit successfull!', data)
-                    wishlistRefetch()
-                    userRefetch()
-                    
-                },
-                onError: (error) => {
-                    console.error('Edit failed: ', error)
-                    alert('Edit failed. Please try again.')
-                   
-                }
-            })
-    };
-
-    const handleCartToggle = () => {
-        console.log("product to wishlist id: ", _id)
-        addCart({
-            productId: _id,
-            productModel: type === "bouquet" ? "Bouquet" : "Flower",
-            quantity: 1
-        }, {
-                onSuccess: (data) => {
-                    console.log('Edit successfull!', data)
-                    wishlistRefetch()
-                    userRefetch()
-                    
-                },
-                onError: (error) => {
-                    console.error('Edit failed: ', error)
-                    alert('Edit failed. Please try again.')
-                   
-                }
-            })
-    };
 
     return (
         <div className="order-card bg-gray-200 p-3 border-[1.5px] border-gray-400 rounded-md flex gap-2 justify-between">
@@ -75,7 +32,7 @@ const WishlistCard = ({ item, wishlistRefetch, userRefetch, carted }) => {
                 </div>
             </div>
             <div className="details flex gap-2 items-end">
-                <button onClick={handleWishlistToggle}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-2 rounded-md cursor-pointer text-gray-700 hover:text-black">
+                <button onClick={() => handleWishlistToggle(_id, type)}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-2 rounded-md cursor-pointer text-gray-700 hover:text-black">
                     <span  className="detail ">remove</span>
                     <ImHeartBroken className="size-4"/>
                 </button>
@@ -85,7 +42,7 @@ const WishlistCard = ({ item, wishlistRefetch, userRefetch, carted }) => {
                     onClick={() => {
 
                         if (inStock){
-                            handleCartToggle()
+                            handleAddToCart(_id, type)
                         } 
                     }}
 

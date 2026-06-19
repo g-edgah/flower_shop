@@ -82,7 +82,6 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
     useEffect(() => {
         //ensures page is set to bouquets when navigation is through other channels apart from button clicking such as navigating back 
         setPage("bouquets")
-        cartRefetch()
     }, [])
 
     
@@ -119,25 +118,18 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                 {data && (
                 <div className="flower-row pb-10 flex gap-5 w-full flex-wrap justify-start pl-3 items-center max-w-300">
                 
-                    {data.products.map(({ _id, name, type, price, picturePath }, index) => {
-                        const liked = wishlist?.some(item => item?._id?.toString() === _id?.toString()) || false;
-                        const carted = cart?.some(item => item._id.toString() === _id?.toString()) || false;
+                    {data.products.map((item, index) => {
+                        const liked = wishlist?.some(wishlistItem => wishlistItem?._id?.toString() === item?._id?.toString()) || false;
+                        const carted = cart?.some(cartItem => cartItem?._id?.toString() === item?._id?.toString()) || false;
                         
                         return (
                             
                             <FlowerCard
-                            id={_id}
-                            key={index} 
-                            name={name}
-                            type={type}
-                            price={price}
-                            image={picturePath}
+                            item={item}
                             liked={liked}
                             carted={carted}
-                            userRefetch={userRefetch}
                             handleAddToCart={handleAddToCart}
                             handleWishlistToggle={handleWishlistToggle}
-                            cartRefetch={cartRefetch}
                             />
                     )})}
                     

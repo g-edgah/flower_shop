@@ -3,17 +3,11 @@ import { useWishlist } from "../../hooks/user";
 
 import WishlistCard from "./wishlistCard";
 
-const Wishlist = ({ userRefetch, user }) => {
+const Wishlist = ({ cartRefetch, user, handleAddToCart, handleWishlistToggle, cart, wishlist, wishlistLoading, wishlistError }) => {
 
-    const { data, isLoading, error, refetch: wishlistRefetch } = useWishlist();
 
-    const wishlistCart = user?.cart || [];
-    console.log("user cart from wishlist: ", user.cart)
-    console.log("wishlistcart: ", wishlistCart)
     
     
-
-    const wishlist = data?.wishlist
     console.log("wishlist data: ", wishlist)
 
     return (
@@ -23,9 +17,9 @@ const Wishlist = ({ userRefetch, user }) => {
                 </div>
                 
                 <div className="cont flex flex-col gap-3">
-                {isLoading && <span>fetching wishlist</span>}
-                {error && <span>error fetching wishlist: {error.message}</span>}
-                {data && data.wishlist && (
+                {wishlistLoading && <span>fetching wishlist</span>}
+                {wishlistError && <span>error fetching wishlist: {error.message}</span>}
+                {wishlist && (
                     (wishlist.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
                             <span className="text-lg">No wishlist items found.</span>
@@ -33,16 +27,17 @@ const Wishlist = ({ userRefetch, user }) => {
                     ) : (  
                         
                         wishlist.map((item) =>{
-                            const carted = wishlistCart?.some(cartItem => cartItem.product?.toString() === item._id?.toString()) || false;
+                            const carted = cart?.some(cartItem => cartItem?._id?.toString() === item._id?.toString()) || false;
                             
                             return (
                             
                             <WishlistCard 
                                 key={item._id} 
                                 item={item} 
-                                wishlistRefetch={wishlistRefetch} 
-                                userRefetch={userRefetch}
+                                handleWishlistToggle={handleWishlistToggle}
+                                handleAddToCart={handleAddToCart}
                                 carted={carted}
+                                handle
                             />
                         )})
                     

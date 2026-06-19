@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import SearchBar from './searchBar';
 import NavDrawer from './navDrawer';    
 
-const NavBar = ({ page, setPage, userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
+const NavBar = ({ page, setPage, cart }) => {
     const navigate = useNavigate();
     const [isSearch, setIsSearch] = useState(false);
     const [isSearchBar, setIsSearchBar] = useState(false);
@@ -46,8 +46,6 @@ const NavBar = ({ page, setPage, userData, isUserLoading, userError, isUserFetch
             //console.log(page)
         }
     }
-    
-    const navCart = userData?.formattedUser?.cart || [];
 
     
     return (
@@ -107,7 +105,7 @@ const NavBar = ({ page, setPage, userData, isUserLoading, userError, isUserFetch
                         <button onClick={() => navigate('/cart')} className={`group relative cursor-pointer text-navText hover:text-navHover ${page == 'cart' ? 'text-navHover':'text-navText'}`}>
                             <IoIosBasket className={`h-6 w-6 ${page == 'cart' ? 'text-navHover':'text-navText group-hover:text-navHover'}`}   />
                             <span className={`absolute -top-1  text-white text-xs rounded-full px-2 py-0.5 ${page == 'cart' ? 'bg-navHover':'bg-navText group-hover:bg-navHover'}`}>
-                                {navCart?.length || 0}
+                                {cart?.length || 0}
                             </span>
                         </button >
                         

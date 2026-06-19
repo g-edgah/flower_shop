@@ -1,7 +1,7 @@
 import CartCard from './cartCard.jsx';
 import { Link, useNavigate } from 'react-router-dom'
 
-const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, userRefetch, cartRefetch }) => {
+const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, cartRefetch, handleAddToCart, handleMinusFromCart, handleDeleteFromCart }) => {
     const navigate = useNavigate();
     console.log('cart from cart:', cart)
 
@@ -22,25 +22,15 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                                 
                                     
                                         {cart.map(
-                                            ({
-                                                _id,
-                                                name,
-                                                type,
-                                                price,
-                                                quantity,
-                                                picturePath,
-                                            }, index) => (
+                                            (item, index) => (
                                             
                                             <CartCard 
                                                 key={index}
-                                                id={_id}
-                                                name={name}
-                                                type={type}
-                                                price={price}
-                                                quantity={quantity}
-                                                image={picturePath}
-                                                userRefetch={userRefetch}
+                                                item={item}
                                                 cartRefetch={cartRefetch}
+                                                handleAddToCart={handleAddToCart}
+                                                handleMinusFromCart={handleMinusFromCart} 
+                                                handleDeleteFromCart={handleDeleteFromCart}
                                                 
                                             />
                                         ))}

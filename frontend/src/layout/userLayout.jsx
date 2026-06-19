@@ -16,7 +16,7 @@ import Profile from '../pages/profile.jsx';
 import Login from '../components/profile/login.jsx';
 import Register from '../components/profile/register.jsx';
 
-import { useWishlist, useEditWishlist, useAddCart, useCart } from '../hooks/user.js';
+import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, useCart } from '../hooks/user.js';
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const [ page, setPage ] = useState("home")
@@ -35,10 +35,19 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         }
     }
 
-    const { mutate: editWishlist, isLoading: editWishlistLoading, error: editWishlistError } = useEditWishlist();
+    
+    //fetching wishlist
     const { data: wishlistData, isLoading: wishlistLoading, error: wishlistError, refetch: wishlistRefetch } = useWishlist();
-    const { mutate: addCart, isLoading: addCartLoading, error: addCartError } = useAddCart();
+    //editing wishlist
+    const { mutate: editWishlist, isLoading: editWishlistLoading, error: editWishlistError } = useEditWishlist();
+    //fetching cart
     const { data: cartData, isLoading: cartLoading, error: cartError, isFetching: cartFetching , refetch: cartRefetch } = useCart();
+    //adding to cart
+    const { mutate: addCart, isLoading: addCartLoading, error: addCartError } = useAddCart();
+    //minusing from cart
+    const { mutate: minusCart, isLoading: minusCartLoading, error: minusCartError } = useMinusCart();
+    //deleting from cart
+    const { mutate: deleteCart, isLoading: deleteCartLoading, error: deleteCartError } = useDeleteCart();
     
 
     useEffect(() => {
@@ -172,6 +181,26 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         localStorage.setItem('cart', JSON.stringify(workingCart));
     }
 
+    const minusFromCart = (id, type) => {
+        minusCart({
+            productId: id,
+            productModel: type === "bouquet" ? "Bouquet" : "Flower",
+            quantity: 1
+        }, 
+        {
+            onSuccess: (data) => {
+                console.log('Edit successfull!', data)
+                cartRefetch()
+                
+            },
+            onError: (error) => {
+                console.error('Edit failed: ', error)
+                alert('Edit failed. Please try again.')
+                
+            }
+        })
+    };
+
     const minusFromLocalCart = (id, type) => {
         let workingCart = cart
         const existingItem = workingCart.find(item =>
@@ -191,6 +220,25 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         localStorage.setItem('cart', JSON.stringify(workingCart));
         
     }
+        
+            
+    
+    const deleteFromCart = (id) => {
+        deleteCart({
+            productId: id
+        }, {
+                onSuccess: (data) => {
+                    console.log('Edit successfull!', data)
+                    cartRefetch()
+                    
+                },
+                onError: (error) => {
+                    console.error('Edit failed: ', error)
+                    alert('Edit failed. Please try again.')
+                    
+                }
+            })
+    };
 
     const deleteFromLocalCart = (id, type) => {
 
@@ -209,57 +257,68 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         
     }
 
-    const handleAddToCart = (id, type) => {
+    const handleAddToCart = (item) => {
         if (userData) {
-        addToCart(id, type)
+        addToCart(item._id, item.type)
 
         
         } else {
-        addToLocalCart(id, type)
+        addToLocalCart(item)
         }
     }
 
-    const handleDeleteFromCart = (id, type) => {
+    const handleMinusFromCart = (item) => {
         if (userData) {
-        deleteFromCart(id, type)
+        minusFromCart(item._id)
 
         
         } else {
-        deleteFromLocalCart(id, type)
+        minusFromLocalCart(item)
         }
     }
 
-    const handleWishlistToggle = (id, type) => {
+
+    const handleDeleteFromCart = (item) => {
         if (userData) {
-        wishlistToggle(id, type)
+        deleteFromCart(item._id)
 
         
         } else {
-        wishlistLocalToggle(id, type)
+        deleteFromLocalCart(item._id)
+        }
+    }
+
+    const handleWishlistToggle = (item) => {
+        if (userData) {
+        wishlistToggle(item._id, item.type)
+
+        
+        } else {
+        wishlistLocalToggle(item)
         }
     }
 
     return (
         <div className='flex flex-col justify-center items-center'>
             <TopBar />
-            <NavBar page={page} setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle}/>
+            <NavBar page={page} setPage={setPage} cart={cart}/>
             
             <Routes>
-                <Route index element={<Home setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
+                <Route index element={<Home setPage={setPage} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
-                <Route path='bouquets' element={<Bouquets setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} cartRefetch={cartRefetch}/>}/>
+                <Route path='bouquets' element={<Bouquets setPage={setPage} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} cartRefetch={cartRefetch}/>}/>
 
-                <Route path='flowers' element={<Flowers setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
+                <Route path='flowers' element={<Flowers setPage={setPage} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
 
-                <Route path='design' element={<Design setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
+                <Route path='design' element={<Design setPage={setPage} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
 
-                <Route path='popular' element={<Popular setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
+                <Route path='popular' element={<Popular setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
                   
-                <Route path='profile/' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
+                <Route path='profile/' element={<Profile setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
                 <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
-                <Route path='cart/*' element={<CartPage setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
+                <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
                 <Route path='login' element={<Login setPage={setPage} />}/>
 

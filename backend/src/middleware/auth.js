@@ -15,7 +15,7 @@ export const verifyToken = async (req, res, next) => {
              
         req.user = verified;
 
-        console.log("verified token for user: "+req.user)
+        //console.log("verified token for user: "+req.user)
 
         next();
 

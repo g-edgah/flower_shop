@@ -5,7 +5,6 @@ const Design = ({setPage, userData, isUserLoading, userError, isUserFetching, us
     useEffect(() => {
         //ensures page is set to occassions when navigation is through other channels apart from button clicking such as navigating back 
         setPage("design")
-        userRefetch()
     }, [])
 
     return (

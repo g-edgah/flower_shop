@@ -17,7 +17,7 @@ import Logout from '../components/profile/logout.jsx'
 import { useUser } from '../hooks/user.js'
 
 
-const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch}) => {
+const ProfilePage = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
     const { page } = useParams()
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
@@ -27,7 +27,6 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     useEffect(() => {
     
             setPage("profile")
-            userRefetch()
             //console.log("page:", page)
             if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
                 setProfilePage(page)
@@ -52,7 +51,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
     if (userError) return <div>Error: {userError.message}</div>;
 
 
-    const user = userData.formattedUser
+    const user = userData?.formattedUser
 
     
 
@@ -64,7 +63,7 @@ const ProfilePage = ({setPage, userData, isUserLoading, userError, isUserFetchin
              
                     {page === "account" && <Account userRefetch={userRefetch} user={user} />} 
                     {page === "orders" && <Orders userRefetch={userRefetch} user={user} />} 
-                    {page === "wishlist" && <Wishlist userRefetch={userRefetch} user={user} />} 
+                    {page === "wishlist" && <Wishlist userRefetch={userRefetch} user={user} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} 
                     {page === "reviews" && <Reviews userRefetch={userRefetch} user={user} />} 
                     {page === "vouchers" && <Vouchers userRefetch={userRefetch} user={user} />} 
                     {page === "management" && <Management userRefetch={userRefetch} user={user} />} 

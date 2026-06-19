@@ -8,14 +8,12 @@ import Checkout from '../components/cart/checkout.jsx';
 
 import { useCart } from '../hooks/user.js';
 
-const CartPage = ({userData, setPage, isUserLoading, userError, isUserFetching, userRefetch, cart, cartRefetch, cartLoading, cartError, subTotal, total, couponCode, setCouponCode, shippingCost, setShippingCost}) => {
+const CartPage = ({userData, setPage, cart, cartRefetch, cartLoading, cartError, subTotal, total, couponCode, setCouponCode, shippingCost, setShippingCost, handleAddToCart, handleMinusFromCart, handleDeleteFromCart }) => {
     const navigate = useNavigate();
 
 
     useEffect(() => {
         setPage("cart")
-        userRefetch()
-        cartRefetch()
     }, [])
 
     const user = userData?.formattedUser
@@ -32,8 +30,8 @@ const CartPage = ({userData, setPage, isUserLoading, userError, isUserFetching, 
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-between">
             <Routes>
-                <Route path='/' element={<Cart cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} userRefetch={userRefetch} cartRefetch={cartRefetch} />} />
-                <Route path='checkout' element={<Checkout cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} userRefetch={userRefetch} cartRefetch={cartRefetch} />} />
+                <Route path='/' element={<Cart cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} cartRefetch={cartRefetch} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart}/>} />
+                <Route path='checkout' element={<Checkout cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} user={user} cartRefetch={cartRefetch} />} />
 
             </Routes>
         </div>
