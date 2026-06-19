@@ -20,6 +20,7 @@ import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, 
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const [ page, setPage ] = useState("home")
+    const [ cart, setCart ] = useState([]);
     const [ localCart, setLocalCart ] = useState(JSON.parse(localStorage.getItem('cart')) || {
         cart: [], 
         subTotal: 0,
@@ -27,9 +28,8 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         shippingCost: 0,
         grandTotal: 0}
     )
-    const [ cart, setCart ] = useState([]);
-    const [ wishlist, setWishlist ] = useState(JSON.parse(localStorage.getItem('wishlist')) || []);
-    const [ localWishlist, setLocalWishlist ] = useState([])
+    const [ wishlist, setWishlist ] = useState([]);
+    const [ localWishlist, setLocalWishlist ] = useState(JSON.parse(localStorage.getItem('wishlist')) || [])
     const [ couponCode, setCouponCode ] = useState('');
     const [ subTotal, setSubTotal ] = useState(0);
     const [ total, setTotal ] = useState(0);
@@ -163,16 +163,17 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         )
 
         if (existingItem) {
-            workingWishlist = workingWishlist.filter(wishlistItem => !(wishlistItem._ID === item._id));
+            workingWishlist = workingWishlist.filter(wishlistItem => !(wishlistItem._id === item._id));
+            
+
         } else {
-            workingWishlist.push(item)
-
+            workingWishlist = [...workingWishlist, item];
+            
         }
-
-
-        localStorage.setItem('wishlist', JSON.stringify(workingWishlist));
-        fetch
         setLocalWishlist(workingWishlist)
+        localStorage.setItem('wishlist', JSON.stringify(workingWishlist));
+
+        
     }
 
 
@@ -375,12 +376,14 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     }
 
     const handleWishlistToggle = (item) => {
+        console.log("item to wishlist: ", item)
         if (userData) {
         wishlistToggle(item._id, item.type)
 
         
         } else {
         wishlistLocalToggle(item)
+        console.log("item to local wishlist: ", item)
         }
     }
 
