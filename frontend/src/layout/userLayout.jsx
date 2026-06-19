@@ -199,17 +199,14 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
     const addToLocalCart = (item) => {
 
-        console.log("something recieved: ", item)
 
         let workingCart = localCart
         const existingItem = workingCart.cart.find(cartItem =>
-            cartItem._id === item._id && cartItem.type === item.type
+            cartItem._id === item._id
         )
 
-        console.log("itemu xisto: ", item)
-
         if (existingItem) {
-            console.log("itemu noti existo: ", item)
+            console.log("item exists: ", item)
             if (existingItem.quantity < 98) {
                 existingItem.quantity = (existingItem.quantity) + 1
             }
@@ -217,7 +214,6 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                 existingItem.quantity = 99
             }
         } else {
-            console.log("itemu noti existo: ", item)
             workingCart.cart.push({
                 _id: item._id,
                 name: item.name,
@@ -226,17 +222,17 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                 picturePath: item.picturePath,
                 quantity: 1
             })
-
-            const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
-
-            workingCart = {
-                ...workingCart,
-                subTotal: subTotal,
-                region: region,
-                shippingCost: shippingCost,
-                grandTotal: grandTotal
-            };
         }
+
+        const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+
+        workingCart = {
+            ...workingCart,
+            subTotal: subTotal,
+            region: region,
+            shippingCost: shippingCost,
+            grandTotal: grandTotal
+        };
 
         localStorage.setItem('cart', JSON.stringify(workingCart));
         setLocalCart(workingCart)
@@ -264,7 +260,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
     const minusFromLocalCart = (item) => {
         let workingCart = localCart
-        const existingItem = workingCart.find(cartItem =>
+        const existingItem = workingCart.cart.find(cartItem =>
             cartItem._id === item._id && cartItem.type === item.type
         )
 
@@ -278,7 +274,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         
 
 
-        const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+            const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
 
             workingCart = {
                 ...workingCart,
@@ -287,10 +283,11 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                 shippingCost: shippingCost,
                 grandTotal: grandTotal
             };
-        }
+        
 
-        localStorage.setItem('cart', JSON.stringify(workingCart));
-        setLocalCart(workingCart)
+            localStorage.setItem('cart', JSON.stringify(workingCart));
+            setLocalCart(workingCart)
+        }
         
     }
         
@@ -326,23 +323,23 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         //console.log("item exists: ", existingItem)
 
         if (existingItem) {
-            const filteredCart = workingCart.cart.filter(item => !(item._id === id && item.type === type));
+            workingCart.cart = workingCart.cart.filter(item => !(item._id === id && item.type === type));
         
 
-        const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+            const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
 
-        workingCart = {
-            ...workingCart,
-            cart: filteredCart,
-            subTotal: subTotal,
-            region: region,
-            shippingCost: shippingCost,
-            grandTotal: grandTotal
-        };
+            workingCart = {
+                ...workingCart,
+                subTotal: subTotal,
+                region: region,
+                shippingCost: shippingCost,
+                grandTotal: grandTotal
+            };
+            
+
+            localStorage.setItem('cart', JSON.stringify(workingCart));
+            setLocalCart(workingCart)
         }
-
-        localStorage.setItem('cart', JSON.stringify(workingCart));
-        setLocalCart(workingCart)
     }
 
     const handleAddToCart = (item) => {
