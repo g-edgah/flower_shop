@@ -18,9 +18,6 @@ const CartPage = ({userData, setPage, cart, cartRefetch, cartLoading, cartError,
 
     const user = userData?.formattedUser
     
-
-    if (cartLoading) return <div>Loading first time...</div>;
-    if (cartError) return <div>Error: {cartError.message}</div>;
     
     
    // const populatedCart = cartData.formattedCart;

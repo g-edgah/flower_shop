@@ -20,8 +20,16 @@ import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, 
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
     const [ page, setPage ] = useState("home")
+    const [ localCart, setLocalCart ] = useState(JSON.parse(localStorage.getItem('cart')) || {
+        cart: [], 
+        subTotal: 0,
+        region: 'nairobi',
+        shippingCost: 0,
+        grandTotal: 0}
+    )
     const [ cart, setCart ] = useState([]);
-    const [ wishlist, setWishlist ] = useState([]);
+    const [ wishlist, setWishlist ] = useState(JSON.parse(localStorage.getItem('wishlist')) || []);
+    const [ localWishlist, setLocalWishlist ] = useState([])
     const [ couponCode, setCouponCode ] = useState('');
     const [ subTotal, setSubTotal ] = useState(0);
     const [ total, setTotal ] = useState(0);
@@ -62,16 +70,50 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         } else {
             console.log("user cart data not available: ")
             try {
-                const localCart = JSON.parse(localStorage.getItem('cart')) || []
-
-                setCart(localCart)
+                setCart(localCart.cart)
+                setSubTotal(localCart?.subTotal);
+                setShippingCost(localCart?.shippingCost);
+                setTotal(localCart?.grandTotal);
             } catch (error) {
                 console.error("error getting cart/wishlist from local storage: ", error)
             }
            
             
         }
-    }, [cartData])
+    }, [cartData, localCart])
+
+
+    const localCartTotals = () => {
+
+        const workingCart = localCart.cart.map( ({ 
+            price, quantity
+        }) => {
+            return { 
+                subTotal: price * quantity
+            }
+        })
+
+        //subTotal
+        const localSubTotal = workingCart.reduce((sum, item) => sum + item.subTotal, 0)
+
+        //shipping cost
+        const localRegion = "nairobi";
+
+        const localShippingCost = localRegion === 'nairobi' ? 300 : 800
+
+        //grand total
+        const localGrandTotal = localSubTotal + localShippingCost
+
+        
+        return ({
+            subTotal: localSubTotal,
+            region: localRegion,
+            shippingCost: localShippingCost,
+            grandTotal: localGrandTotal
+        })
+    }
+
+    
 
     useEffect(() => {
         if (wishlistData?.wishlist) {
@@ -80,7 +122,6 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         } else {
             console.log("user wishlist data not available: ")
             try {
-                const localWishlist = JSON.parse(localStorage.getItem('wishlist')) || []
                 setWishlist(localWishlist)
             } catch (error) {
                 console.error("error getting wishlist from local storage: ", error)
@@ -88,7 +129,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
            
             
         }
-    }, [wishlistData])
+    }, [wishlistData, localWishlist])
 
     
 
@@ -113,25 +154,25 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
 
 
-    const wishlistLocalToggle = (id, type) => {
+    const wishlistLocalToggle = (item) => {
+        console.log("layout wishlist")
 
-        let workingWishlist = wishlist
-        const existingItem = workingWishlist.find(item =>
-            item.product === id
+        let workingWishlist = localWishlist
+        const existingItem = workingWishlist.find(wishlistItem =>
+            wishlistItem._id === item._id
         )
 
         if (existingItem) {
-            workingWishlist = workingWishlist.filter(item => !(item.product === id));
+            workingWishlist = workingWishlist.filter(wishlistItem => !(wishlistItem._ID === item._id));
         } else {
-            workingWishlist.push({
-                product: id,
-                type: type
-            })
+            workingWishlist.push(item)
 
         }
 
 
         localStorage.setItem('wishlist', JSON.stringify(workingWishlist));
+        fetch
+        setLocalWishlist(workingWishlist)
     }
 
 
@@ -156,14 +197,19 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     };
 
 
-    const addToLocalCart = (id, type) => {
+    const addToLocalCart = (item) => {
 
-        let workingCart = cart
-        const existingItem = workingCart.find(item =>
-            item.product === id && item.type === type
+        console.log("something recieved: ", item)
+
+        let workingCart = localCart
+        const existingItem = workingCart.cart.find(cartItem =>
+            cartItem._id === item._id && cartItem.type === item.type
         )
 
+        console.log("itemu xisto: ", item)
+
         if (existingItem) {
+            console.log("itemu noti existo: ", item)
             if (existingItem.quantity < 98) {
                 existingItem.quantity = (existingItem.quantity) + 1
             }
@@ -171,14 +217,29 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                 existingItem.quantity = 99
             }
         } else {
-            workingCart.push({
-                product: id,
-                type: type,
+            console.log("itemu noti existo: ", item)
+            workingCart.cart.push({
+                _id: item._id,
+                name: item.name,
+                price: item.price,
+                description: item.description,
+                picturePath: item.picturePath,
                 quantity: 1
             })
+
+            const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+
+            workingCart = {
+                ...workingCart,
+                subTotal: subTotal,
+                region: region,
+                shippingCost: shippingCost,
+                grandTotal: grandTotal
+            };
         }
 
         localStorage.setItem('cart', JSON.stringify(workingCart));
+        setLocalCart(workingCart)
     }
 
     const minusFromCart = (id, type) => {
@@ -201,10 +262,10 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
         })
     };
 
-    const minusFromLocalCart = (id, type) => {
-        let workingCart = cart
-        const existingItem = workingCart.find(item =>
-            item.product === id && item.type === type
+    const minusFromLocalCart = (item) => {
+        let workingCart = localCart
+        const existingItem = workingCart.find(cartItem =>
+            cartItem._id === item._id && cartItem.type === item.type
         )
 
         if (existingItem) {
@@ -214,10 +275,22 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             if (existingItem.quantity < 1) {
                 existingItem.quantity = 1
             }
+        
+
+
+        const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+
+            workingCart = {
+                ...workingCart,
+                subTotal: subTotal,
+                region: region,
+                shippingCost: shippingCost,
+                grandTotal: grandTotal
+            };
         }
 
-
         localStorage.setItem('cart', JSON.stringify(workingCart));
+        setLocalCart(workingCart)
         
     }
         
@@ -228,7 +301,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             productId: id
         }, {
                 onSuccess: (data) => {
-                    console.log('Edit successfull!', data)
+                    console.log('deleting successfull!', data)
                     cartRefetch()
                     
                 },
@@ -241,20 +314,35 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     };
 
     const deleteFromLocalCart = (id, type) => {
+        //console.log("deleting from local cart", id, type)
 
-        let workingCart = cart
-        const existingItem = workingCart.find(item =>
-            item.product === id && item.type === type
+        let workingCart = localCart
+
+        //console.log("working cart: ", workingCart)
+        const existingItem = workingCart.cart.find(cartItem =>
+            cartItem._id === id && cartItem.type === type
         )
 
+        //console.log("item exists: ", existingItem)
+
         if (existingItem) {
-            workingCart = cart.filter(item => !(item.product === id && item.type === type));
+            const filteredCart = workingCart.cart.filter(item => !(item._id === id && item.type === type));
+        
+
+        const {subTotal, region, shippingCost, grandTotal} = localCartTotals()
+
+        workingCart = {
+            ...workingCart,
+            cart: filteredCart,
+            subTotal: subTotal,
+            region: region,
+            shippingCost: shippingCost,
+            grandTotal: grandTotal
+        };
         }
 
-
         localStorage.setItem('cart', JSON.stringify(workingCart));
-        
-        
+        setLocalCart(workingCart)
     }
 
     const handleAddToCart = (item) => {
@@ -263,6 +351,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
         
         } else {
+        console.log("adding")
         addToLocalCart(item)
         }
     }
@@ -284,7 +373,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
         
         } else {
-        deleteFromLocalCart(item._id)
+        deleteFromLocalCart(item._id, item.type)
         }
     }
 

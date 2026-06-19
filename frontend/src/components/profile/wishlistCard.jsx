@@ -32,7 +32,7 @@ const WishlistCard = ({ item, handleAddToCart, handleWishlistToggle, carted }) =
                 </div>
             </div>
             <div className="details flex gap-2 items-end">
-                <button onClick={() => handleWishlistToggle(_id, type)}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-2 rounded-md cursor-pointer text-gray-700 hover:text-black">
+                <button onClick={() => handleWishlistToggle(item)}  className="remove flex items-center gap-1 border-[1.5px] h-10 px-2 rounded-md cursor-pointer text-gray-700 hover:text-black">
                     <span  className="detail ">remove</span>
                     <ImHeartBroken className="size-4"/>
                 </button>
@@ -42,7 +42,7 @@ const WishlistCard = ({ item, handleAddToCart, handleWishlistToggle, carted }) =
                     onClick={() => {
 
                         if (inStock){
-                            handleAddToCart(_id, type)
+                            handleAddToCart(item)
                         } 
                     }}
 

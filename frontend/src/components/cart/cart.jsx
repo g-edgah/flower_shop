@@ -18,7 +18,7 @@ const Cart = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocati
                         </div>
                     ) : (
                         <div className='w-full max-w-234 flex flex-col space-y-3 md:space-y-5 items-center'>
-                            <div className="productContainer flex flex-col gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto w-full rounded-md">
+                            <div className="productContainer flex flex-col px-4 gap-2 justify-start md:gap-4 lg:space-x-12 mx-auto w-full rounded-md">
                                 
                                     
                                         {cart.map(

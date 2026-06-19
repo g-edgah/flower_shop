@@ -80,6 +80,7 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
                         return (
                             
                             <FlowerCard
+                            key={index}
                             item={item}
                             liked={liked}
                             carted={carted}
@@ -148,6 +149,7 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
                         return (
                             
                             <FlowerCard
+                            key={index}
                             item={item}
                             liked={liked}
                             carted={carted}
@@ -171,6 +173,7 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
                         return (
                             
                             <FlowerCard
+                            key={index}
                             item={item}
                             liked={liked}
                             carted={carted}

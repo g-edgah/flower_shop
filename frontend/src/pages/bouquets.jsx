@@ -125,6 +125,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
                         return (
                             
                             <FlowerCard
+                            key={index}
                             item={item}
                             liked={liked}
                             carted={carted}
