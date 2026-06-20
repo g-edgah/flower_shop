@@ -132,3 +132,109 @@ export const editWishlist = async (req, res, next) => {
         console.error(`error while adding wishlist item: ${error}`)
     }
 }
+
+export const mergeWishlists = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+ 
+        const { wishlist } = req.body
+        console.log("mergewishlist wishlist: ", wishlist)
+        
+
+        for (const item of wishlist) { 
+            const {_id, type } = item
+
+        
+            const productModel = type === "bouquet" ? "Bouquet" : "Flower"
+
+            // validate quantity
+            if (!quantity || quantity < 1 || quantity > 999) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Quantity must be between 1 and 999'
+                });
+            }   
+
+            // validate productmodel
+            if (!productModel || (productModel !== 'Bouquet' && productModel !== 'Flower')) {
+                console.log("invalid productModel:, ", productModel)
+                return res.status(500).json({
+                    success: false,
+                    message: 'weird data dude'
+                });
+            } 
+
+            
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+            //console.log("user confirmed: ",user.firstName)
+
+            // check if product already in cart
+            const existingWishlistItem = user.wishlist.findIndex(item => item.product.toString() === _id);
+
+            // console.log("existingCartItem index: ", existingCartItem)
+
+            if (existingWishlisttItem !== -1) {
+            
+                // remove item 
+                await User.findByIdAndUpdate(
+                    id,
+                    { 
+                        $pull: { wishlist: { 
+                            product: _id 
+                        } 
+                    } 
+                }
+                );
+                console.log("item removed from wishlist")
+
+
+            } else {
+                
+                //add item
+                await User.findByIdAndUpdate(
+                    id,
+                    {
+                        $push: {
+                            wishlist: {
+                                product: _id,
+                                productModel: productModel
+                            }
+                        }
+                    },
+                    {
+                        runValidators: true  // Validates against schema
+                    }
+                );
+                console.log("item added to wishlist")
+            }
+
+        }
+
+
+        res.status(200).json({
+            success: true,
+            message: 'Carts merged successfully',
+        });
+
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while merging carts: ${error}`)
+    }
+}

@@ -425,11 +425,13 @@ export const mergeCarts = async (req, res) => {
  
         const { cart } = req.body
         console.log("mergecart cart: ", cart)
+        
 
-        cart.map(({ _id, quantity, type
+        for (const item of cart) { 
+            const {_id, quantity, type } = item
 
-        }) => {
-            productModel: type === "bouquet" ? "Bouquet" : "Flower"
+        
+            const productModel = type === "bouquet" ? "Bouquet" : "Flower"
 
             // validate quantity
             if (!quantity || quantity < 1 || quantity > 999) {
@@ -449,10 +451,7 @@ export const mergeCarts = async (req, res) => {
             } 
 
             
-
-            // find user
             const user = await User.findById(id);
-
             if (!user) {
                 return res.status(404).json({
                     success: false,
@@ -512,14 +511,12 @@ export const mergeCarts = async (req, res) => {
                 );
             }
 
-        })
+        }
 
-        
-        
 
         res.status(200).json({
             success: true,
-            message: existingCartItem !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
+            message: 'Carts merged successfully',
         });
 
     } catch (error) {
@@ -527,6 +524,6 @@ export const mergeCarts = async (req, res) => {
             success: false,
             message: 'Internal server error', 
         });
-        console.error(`error while adding cart item: ${error}`)
+        console.error(`error while merging carts: ${error}`)
     }
 }
