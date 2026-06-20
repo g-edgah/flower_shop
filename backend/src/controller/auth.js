@@ -3,16 +3,20 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
 
+import { mergeCarts } from './user/cart.js'
+import { mergeWishlists } from './user/wishlist.js'
 
 //new user registration
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     //console.log('recieved'+req)
     try {
         console.log('recieved: '+req.body.firstName)
         const {
             email,
             password,
-            confirmPassword
+            confirmPassword,
+            cart,
+            wishlist
         } = req.body
 
         if (password !== confirmPassword) {
@@ -29,6 +33,11 @@ export const register = async (req, res) => {
         });
 
         const savedUser = await newUser.save()
+
+        const userId = savedUser._id
+        mergeWishlists(userId, wishlist)
+        mergeCarts(userId, cart)
+        
         res.status(201).json({message: "registration successful"}); 
         console.log("new user created: "+savedUser)
 
@@ -41,13 +50,15 @@ export const register = async (req, res) => {
 
 
 //login
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
     try {
 
         //console.log('login request recieved: '+req.body.email)
         const {
             email,
             password,
+            cart,
+            wishlist
         } = req.body;
 
         if (!email) return res.status(400).json({message: 'missing email'});
@@ -78,6 +89,10 @@ export const login = async (req, res) => {
             sameSite: 'strict', // prevent CSRF
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiry
         })
+
+        const userId = user._id
+        mergeWishlists(userId, wishlist)
+        mergeCarts(userId, cart)
 
         // Send response to client
         res.status(200).json({ 

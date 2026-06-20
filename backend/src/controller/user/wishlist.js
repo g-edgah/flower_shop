@@ -133,19 +133,8 @@ export const editWishlist = async (req, res, next) => {
     }
 }
 
-export const mergeWishlists = async (req, res) => {
+export const mergeWishlists = async (id, wishlist) => {
     try {
-        const { id } = req.user
-
-        const paramId = req.params.id
-
-        
-
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
- 
-        const { wishlist } = req.body
         console.log("mergewishlist wishlist: ", wishlist)
         
 

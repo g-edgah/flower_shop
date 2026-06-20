@@ -411,19 +411,8 @@ export const deleteCartItem = async (req, res) => {
 }
 
 
-export const mergeCarts = async (req, res) => {
+export const mergeCarts = async (id, cart) => {
     try {
-        const { id } = req.user
-
-        const paramId = req.params.id
-
-        
-
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
- 
-        const { cart } = req.body
         console.log("mergecart cart: ", cart)
         
 
