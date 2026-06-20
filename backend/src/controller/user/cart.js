@@ -373,7 +373,7 @@ export const deleteCartItem = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const user = await User.findByIdAndUpdate(id);
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({
@@ -407,5 +407,126 @@ export const deleteCartItem = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "error while deleting cart item" });
         console.error(`error while deleting cart item: ${error}`)
+    }
+}
+
+
+export const mergeCarts = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+ 
+        const { cart } = req.body
+        console.log("mergecart cart: ", cart)
+
+        cart.map(({ _id, quantity, type
+
+        }) => {
+            productModel: type === "bouquet" ? "Bouquet" : "Flower"
+
+            // validate quantity
+            if (!quantity || quantity < 1 || quantity > 999) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Quantity must be between 1 and 999'
+                });
+            }   
+
+            // validate productmodel
+            if (!productModel || (productModel !== 'Bouquet' && productModel !== 'Flower')) {
+                console.log("invalid productModel:, ", productModel)
+                return res.status(500).json({
+                    success: false,
+                    message: 'weird data dude'
+                });
+            } 
+
+            
+
+            // find user
+            const user = await User.findById(id);
+
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+            //console.log("user confirmed: ",user.firstName)
+
+            // check if product already in cart
+            const existingCartItem = user.cart.findIndex(item => item.product.toString() === _id);
+
+            // console.log("existingCartItem index: ", existingCartItem)
+
+            if (existingCartItem !== -1) {
+                const newQuantity = user.cart[existingCartItem].quantity + quantity;
+                //console.log("item already exists in cart");
+                //console.log("new quantity: "+newQuantity)   
+
+
+                if (!newQuantity || newQuantity < 1 || newQuantity > 999) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Total quantity must be between 1 and 999'
+                    });
+                }   
+                
+                await User.findOneAndUpdate(
+                    { 
+                        _id: id, 
+                        'cart.product': _id 
+                    },
+                    { 
+                        $set: { 'cart.$.quantity': newQuantity } 
+                    },
+                    { 
+                        runValidators: true // run schema validators
+                    }
+                )
+
+
+            } else {
+                //console.log("item does not exist in cart");
+                await User.findByIdAndUpdate(
+                    id,
+                    {
+                        $push: {
+                            cart: {
+                                product: _id,
+                                productModel: productModel,
+                                quantity: quantity
+                            }
+                        }
+                    },
+                    {
+                        runValidators: true  // Validates against schema
+                    }
+                );
+            }
+
+        })
+
+        
+        
+
+        res.status(200).json({
+            success: true,
+            message: existingCartItem !== -1 ? 'Cart updated successfully' : 'Item added to cart successfully',
+        });
+
+    } catch (error) {
+        res.status(500).json({            
+            success: false,
+            message: 'Internal server error', 
+        });
+        console.error(`error while adding cart item: ${error}`)
     }
 }

@@ -218,6 +218,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             workingCart.cart.push({
                 _id: item._id,
                 name: item.name,
+                type: item.type,
                 price: item.price,
                 description: item.description,
                 picturePath: item.picturePath,
@@ -376,14 +377,12 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     }
 
     const handleWishlistToggle = (item) => {
-        console.log("item to wishlist: ", item)
         if (userData) {
         wishlistToggle(item._id, item.type)
 
         
         } else {
         wishlistLocalToggle(item)
-        console.log("item to local wishlist: ", item)
         }
     }
 
