@@ -408,7 +408,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
                 <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
-                <Route path='login' element={<Login setPage={setPage} />}/>
+                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} />}/>
 
                 <Route path='register' element={<Register setPage={setPage} />}/>
 

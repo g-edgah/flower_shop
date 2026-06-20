@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { useRegister } from '../../hooks/auth.js';
 
-const Register = () => {
+const Register = ({}) => {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
@@ -98,6 +98,7 @@ const Register = () => {
 
                 // Redirect or update auth state
                 navigate('/login');
+
             },
             onError: (error) => {
                 console.error('Registration failed: ', error)

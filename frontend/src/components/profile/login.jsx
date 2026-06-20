@@ -4,10 +4,12 @@ import axios from 'axios'
 
 import { useLogin } from '../../hooks/auth.js';
 
-const Login = ({page = ''}) => {
+const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, page = ''}) => {
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
+        cart: localCart || [],
+        wishlist: localWishlist || [],
         email: '',
         password: '',
         rememberMe: false
@@ -75,6 +77,11 @@ const Login = ({page = ''}) => {
             onSuccess: (data) => {
                 console.log('Login successful:', data);
                 
+                // reset localCart and localWishlist
+                setLocalCart([])
+                setLocalWishlist([])
+
+
                 // store jwt
                 if (data.token) {
                     console.log("token: ", data.token)

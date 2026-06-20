@@ -14,9 +14,7 @@ export const register = async (req, res, next) => {
         const {
             email,
             password,
-            confirmPassword,
-            cart,
-            wishlist
+            confirmPassword
         } = req.body
 
         if (password !== confirmPassword) {
@@ -34,9 +32,6 @@ export const register = async (req, res, next) => {
 
         const savedUser = await newUser.save()
 
-        const userId = savedUser._id
-        mergeWishlists(userId, wishlist)
-        mergeCarts(userId, cart)
         
         res.status(201).json({message: "registration successful"}); 
         console.log("new user created: "+savedUser)
@@ -90,6 +85,7 @@ export const login = async (req, res, next) => {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiry
         })
 
+        // merge wishlist and cart
         const userId = user._id
         mergeWishlists(userId, wishlist)
         mergeCarts(userId, cart)
