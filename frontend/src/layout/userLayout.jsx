@@ -19,6 +19,10 @@ import Register from '../components/profile/register.jsx';
 import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, useCart } from '../hooks/user.js';
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
+
+    console.log('userRefetch type11:', typeof userRefetch);
+    console.log('userRefetch value:11', userRefetch);
+
     const [ page, setPage ] = useState("home")
     const [ cart, setCart ] = useState([]);
     const [ localCart, setLocalCart ] = useState(JSON.parse(localStorage.getItem('cart')) || {
@@ -46,14 +50,19 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     
     //fetching wishlist
     const { data: wishlistData, isLoading: wishlistLoading, error: wishlistError, refetch: wishlistRefetch } = useWishlist();
+
     //editing wishlist
     const { mutate: editWishlist, isLoading: editWishlistLoading, error: editWishlistError } = useEditWishlist();
+
     //fetching cart
     const { data: cartData, isLoading: cartLoading, error: cartError, isFetching: cartFetching , refetch: cartRefetch } = useCart();
+
     //adding to cart
     const { mutate: addCart, isLoading: addCartLoading, error: addCartError } = useAddCart();
+
     //minusing from cart
     const { mutate: minusCart, isLoading: minusCartLoading, error: minusCartError } = useMinusCart();
+    
     //deleting from cart
     const { mutate: deleteCart, isLoading: deleteCartLoading, error: deleteCartError } = useDeleteCart();
     
@@ -404,11 +413,11 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
                   
                 <Route path='profile/' element={<Profile setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
 
-                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} userRefetch={userRefetch} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
+                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} boom="boom"/>} />
 
                 <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
-                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} />}/>
+                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} userRefetch={userRefetch}/>}/>
 
                 <Route path='register' element={<Register setPage={setPage} />}/>
 

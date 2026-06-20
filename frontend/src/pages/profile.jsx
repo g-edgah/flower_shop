@@ -14,28 +14,28 @@ import Payment from '../components/profile/payment.jsx'
 import Logout from '../components/profile/logout.jsx'
 
 
-import { useUser } from '../hooks/user.js'
 
 
-const ProfilePage = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
+const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist, boom }) => {
     const { page } = useParams()
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
 
     const [ profilePage, setProfilePage ] = useState("account")
 
+
     useEffect(() => {
-    
-            setPage("profile")
-            //console.log("page:", page)
-            if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
-                setProfilePage(page)
-                //console.log("profile page:", page)
-            } else {
-                console.log("no page")
-                navigate("/profile/account")
-                setProfilePage("account")
-            }
+        
+        setPage("profile")
+        //console.log("page:", page)
+        if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
+            setProfilePage(page)
+            //console.log("profile page:", page)
+        } else {
+            console.log("no page")
+            navigate("/profile/account")
+            setProfilePage("account")
+        }
     
      }, []);
 
@@ -91,4 +91,4 @@ const ProfilePage = ({ setPage, userData, isUserLoading, userError, isUserFetchi
     )
 }
 
-export default ProfilePage
+export default Profile

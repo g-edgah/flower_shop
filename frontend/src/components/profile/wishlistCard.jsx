@@ -6,7 +6,7 @@ import { useEditWishlist, useAddCart } from "../../hooks/user";
 const WishlistCard = ({ item, handleAddToCart, handleWishlistToggle, carted }) => {
     //console.log("order: ", order)
     const { _id, name, description, inStock, price, type, picturePath } = item;
-    console.log("wishlist item: ", item)
+    // console.log("wishlist item: ", item)
 
 
     return (

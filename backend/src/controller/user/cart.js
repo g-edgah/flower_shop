@@ -503,16 +503,17 @@ export const mergeCarts = async (id, cart) => {
         }
 
 
-        res.status(200).json({
+        return ({
             success: true,
             message: 'Carts merged successfully',
         });
 
     } catch (error) {
-        res.status(500).json({            
+        console.error(`error while merging cartsyy: ${error}`)
+        return ({            
             success: false,
             message: 'Internal server error', 
         });
-        console.error(`error while merging carts: ${error}`)
+        
     }
 }

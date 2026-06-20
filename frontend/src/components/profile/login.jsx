@@ -4,11 +4,11 @@ import axios from 'axios'
 
 import { useLogin } from '../../hooks/auth.js';
 
-const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, page = ''}) => {
+const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRefetch, page = ''}) => {
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
-        cart: localCart || [],
+        cart: localCart.cart || [],
         wishlist: localWishlist || [],
         email: '',
         password: '',
@@ -78,8 +78,9 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, page =
                 console.log('Login successful:', data);
                 
                 // reset localCart and localWishlist
-                setLocalCart([])
-                setLocalWishlist([])
+                localStorage.removeItem('cart');
+                localStorage.removeItem('wishlist');
+                
 
 
                 // store jwt
@@ -100,8 +101,10 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, page =
                     }
                 }
 
+                // refetch user data
+                userRefetch()
                 
-                // redirect
+                // redirect to previous page
                 navigate(`/${page}`);
                 // Or window.location.href = '/dashboard';
             },

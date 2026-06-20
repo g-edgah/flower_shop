@@ -73,7 +73,7 @@ const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, 
         console.log(colors)
     }   
 
-    console.log("wishlist from bouquet:", wishlist)
+    console.log("bouquets")
 
     const handlePriceRange = () => {
         setPriceRange({ min: inputMin, max: inputMax });

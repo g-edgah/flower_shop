@@ -144,13 +144,7 @@ export const mergeWishlists = async (id, wishlist) => {
         
             const productModel = type === "bouquet" ? "Bouquet" : "Flower"
 
-            // validate quantity
-            if (!quantity || quantity < 1 || quantity > 999) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Quantity must be between 1 and 999'
-                });
-            }   
+            
 
             // validate productmodel
             if (!productModel || (productModel !== 'Bouquet' && productModel !== 'Flower')) {
@@ -176,7 +170,7 @@ export const mergeWishlists = async (id, wishlist) => {
 
             // console.log("existingCartItem index: ", existingCartItem)
 
-            if (existingWishlisttItem !== -1) {
+            if (existingWishlistItem !== -1) {
             
                 // remove item 
                 await User.findByIdAndUpdate(
@@ -214,16 +208,16 @@ export const mergeWishlists = async (id, wishlist) => {
         }
 
 
-        res.status(200).json({
+        return ({
             success: true,
-            message: 'Carts merged successfully',
+            message: 'Wishlists merged successfully',
         });
 
     } catch (error) {
-        res.status(500).json({            
+        console.error(`error while merging wishlist: ${error}`)
+        return ({            
             success: false,
             message: 'Internal server error', 
         });
-        console.error(`error while merging carts: ${error}`)
     }
 }

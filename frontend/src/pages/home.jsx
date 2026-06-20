@@ -35,9 +35,9 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
     useEffect(() => {
 
         setPage("home")
-        console.log("home")
-
     }, []);
+
+    console.log("home")
 
 
     const { data, isLoading, error, isFetching, refetch } = useHome();
@@ -47,9 +47,9 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
     if (error) return <div>Error: {error.message}</div>;
 
     const { banners, categories, floristPicks, popularProducts, newProducts, featuredBouquets, featuredFlowers, stats } = data.data;
-    console.log("home data: ",data)
-    console.log("home wishlist: ", wishlist)
-    console.log("home cart: ", cart)
+    // console.log("home data: ",data)
+    // console.log("home wishlist: ", wishlist)
+    // console.log("home cart: ", cart)
 
     return (
         <div className="home w-screen flex flex-col space-y-10 md:space-y-15 ">
