@@ -20,10 +20,10 @@ import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, 
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
 
-    console.log('userRefetch type11:', typeof userRefetch);
-    console.log('userRefetch value:11', userRefetch);
+    console.log('userRefetch type from layout: ', typeof userRefetch);
+    console.log('userRefetch value from layout: ', userRefetch);
 
-    const [ page, setPage ] = useState("home")
+    const [ page, setPage ] = useState("")
     const [ cart, setCart ] = useState([]);
     const [ localCart, setLocalCart ] = useState(JSON.parse(localStorage.getItem('cart')) || {
         cart: [], 
@@ -66,8 +66,8 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     //deleting from cart
     const { mutate: deleteCart, isLoading: deleteCartLoading, error: deleteCartError } = useDeleteCart();
     
-
-    useEffect(() => {
+    const refreshCart = () => {
+        console.log("refreshing cart")
         if (cartData?.formattedCart) {
             console.log("user cart data available: ", cartData?.formattedCart)
             setCart(cartData?.formattedCart)
@@ -89,6 +89,11 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
            
             
         }
+    }
+
+
+    useEffect(() => {
+        refreshCart ()
     }, [cartData, localCart])
 
 
@@ -123,8 +128,9 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     }
 
     
-
-    useEffect(() => {
+    const refreshWishlist = () => {
+        console.log("refreshing wishlist")
+        wishlistRefetch()
         if (wishlistData?.wishlist) {
             console.log("user wishlist data available: ", wishlistData)
             setWishlist(wishlistData?.wishlist)
@@ -138,6 +144,12 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
            
             
         }
+    }
+
+
+    useEffect(() => {
+        refreshWishlist()
+        
     }, [wishlistData, localWishlist])
 
     
@@ -411,13 +423,13 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
                 <Route path='popular' element={<Popular setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
                   
-                <Route path='profile/' element={<Profile setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
+                <Route path='profile/' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} />
 
-                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} boom="boom"/>} />
+                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} />
 
                 <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
-                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} userRefetch={userRefetch}/>}/>
+                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} userRefetch={userRefetch} page={page}/>}/>
 
                 <Route path='register' element={<Register setPage={setPage} />}/>
 

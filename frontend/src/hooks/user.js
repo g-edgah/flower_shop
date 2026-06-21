@@ -20,6 +20,7 @@ export const useUser = () => {
         refetchOnReconnect: false,   // don't refetch on network reconnection
         retry: 1,                    // dnly retry failed requests once
         retryDelay: 1000,
+        enabled: !!userId
     });
 };
 
@@ -28,7 +29,8 @@ export const useEditUser = (formData) => {
     console.log(`editing user`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.patch(`/user/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.patch(`/user/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -40,7 +42,8 @@ export const useCart = () => {
 
     return useQuery({ 
         queryKey: ['cart', userId],
-        queryFn: () => api.get(`/user/cart/${userId}`).then(res => res.data)
+        queryFn: () => api.get(`/user/cart/${userId}`).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -52,7 +55,8 @@ export const useAddCart = (formData) => {
     console.log(`adding to cart`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -63,7 +67,8 @@ export const useMinusCart = (formData) => {
     console.log(`minusing from cart`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.patch(`/user/cart/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.patch(`/user/cart/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -74,7 +79,8 @@ export const useDeleteCart = () => {
     console.log(`deleting from cart`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.delete(`/user/cart/${userId}/${formData.productId}`).then(res => res.data)
+        mutationFn: (formData) => api.delete(`/user/cart/${userId}/${formData.productId}`).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -85,7 +91,8 @@ export const useWishlist = () => {
 
     return useQuery({ 
         queryKey: ['wishlist', userId],
-        queryFn: () => api.get(`/user/wishlist/${userId}`).then(res => res.data)
+        queryFn: () => api.get(`/user/wishlist/${userId}`).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -95,7 +102,8 @@ export const useEditWishlist = () => {
     console.log(`editting the wishlist`) 
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data)
+        mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
     });
     
 };
@@ -105,7 +113,8 @@ export const useCreateOrder = () => {
     console.log(`creating order`) 
 
     return useMutation({
-        mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data)
+        mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data),
+        enabled: !!userId
     });
 };
 
@@ -115,7 +124,8 @@ export const useOrders = () => {
 
     return useQuery({ 
         queryKey: ['orders', userId],
-        queryFn: () => api.get(`/user/orders/${userId}`).then(res => res.data)
+        queryFn: () => api.get(`/user/orders/${userId}`).then(res => res.data),
+        enabled: !!userId
     });
     
 };

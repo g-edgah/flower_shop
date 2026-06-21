@@ -7,7 +7,7 @@ import { mergeCarts } from './user/cart.js'
 import { mergeWishlists } from './user/wishlist.js'
 
 //new user registration
-export const register = async (req, res, next) => {
+export const register = async (req, res) => {
     //console.log('recieved'+req)
     try {
         console.log('recieved: '+req.body.firstName)
@@ -45,7 +45,7 @@ export const register = async (req, res, next) => {
 
 
 //login
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
     try {
 
         //console.log('login request recieved: '+req.body.email)
@@ -104,7 +104,8 @@ export const login = async (req, res, next) => {
 
 }
 
-export const logout = async (req, res, next) => {
+export const logout = async (req, res) => {
+    console.log("logout request recieved")
         try {
         // clear the HttpOnly cookie
         res.clearCookie('token', {
@@ -118,6 +119,7 @@ export const logout = async (req, res, next) => {
             success: true, 
             message: 'Logged out successfully' 
         });
+
     } catch (error) {
         console.error('Logout error:', error);
         res.status(500).json({ 

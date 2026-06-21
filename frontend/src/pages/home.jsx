@@ -34,7 +34,7 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
     
     useEffect(() => {
 
-        setPage("home")
+        setPage("")
     }, []);
 
     console.log("home")

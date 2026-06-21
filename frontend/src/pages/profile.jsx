@@ -16,18 +16,30 @@ import Logout from '../components/profile/logout.jsx'
 
 
 
-const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist, boom }) => {
+const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist,  setCart, setWishlist, refreshCart, refreshWishlist }) => {
+    // console.log('userRefetch type from profile: ', typeof userRefetch);
+    // console.log('userRefetch value from profile: ', userRefetch);
+
     const { page } = useParams()
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
 
     const [ profilePage, setProfilePage ] = useState("account")
+    
+    
+    console.log("page from profile11:", page)
 
-
+        
     useEffect(() => {
+
+        userRefetch()
+
+        if (!userData && !isUserLoading) {
+            navigate('/login')
+        }
         
         setPage("profile")
-        //console.log("page:", page)
+        console.log("page from profile:", page)
         if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
             setProfilePage(page)
             //console.log("profile page:", page)
@@ -37,7 +49,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
             setProfilePage("account")
         }
     
-     }, []);
+    }, []);
 
     const handleProfilePage = (profilePage) => {
         
@@ -48,7 +60,11 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
     }
      
     if (isUserLoading) return <div>Loading...</div>;
-    if (userError) return <div>Error: {userError.message}</div>;
+    if (userError?.status === 404) {
+        navigate('/login')
+    } else if (userError) {
+        return (<div>Error: {userError?.message}</div>)
+    }
 
 
     const user = userData?.formattedUser
@@ -68,7 +84,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
                     {page === "vouchers" && <Vouchers userRefetch={userRefetch} user={user} />} 
                     {page === "management" && <Management userRefetch={userRefetch} user={user} />} 
                     {page === "payment" && <Payment userRefetch={userRefetch} user={user} />} 
-                    {page === "logout" && <Logout userRefetch={userRefetch} user={user} />} 
+                    {page === "logout" && <Logout userRefetch={userRefetch} user={user} setCart={setCart} setWishlist={setWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} 
                 
             </div>
             {/* <div className="min-h-screen">

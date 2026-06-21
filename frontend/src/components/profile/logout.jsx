@@ -1,13 +1,41 @@
+import { useLogout } from '../../hooks/auth.js'
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 
-const Logout = () => {
+const Logout = ({userData, userRefetch }) => {
+    // console.log('userRefetch type from logout: ', typeof userRefetch);
+    // console.log('userRefetch value from logout: ', userRefetch);
+
+    const navigate = useNavigate()
+    const queryClient = useQueryClient();
+
+    const { mutate: logout, isLoading, error: logoutError } = useLogout();
+
+    const userId = localStorage.getItem('userId')
 
     const handleLogout = () => {
-        console.log("logging out")
-        localStorage.removeItem('rememberMe');
-        localStorage.removeItem('userId');
-        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        logout(userId, {
+            onSuccess: (data) => {
+                //console.log('Logout successful:', data);
+ 
+                localStorage.removeItem('rememberMe');
+                localStorage.removeItem('userId');
+                
+                //clear all cached data
+                queryClient.clear();
+
+                // redirect out of profile
+                navigate('/');
+                
+                
+            },
+            onError: (error) => {
+                console.error('Logout failed:', error);
+            }
+        });
+        
     }
 
     return (

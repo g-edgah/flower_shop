@@ -21,3 +21,16 @@ export const useLogin = (formData) => {
     });
     
 };
+
+//getting userId
+const userId = localStorage.getItem('userId');
+
+// logout
+export const useLogout = () => {
+    //console.log('logout mutation') 
+
+    return useMutation({ 
+        mutationFn: () => api.get(`/auth/logout/${userId}`).then(res => res.data)
+    });
+    
+};
