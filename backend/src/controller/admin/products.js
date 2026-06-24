@@ -585,3 +585,4 @@ export const getAllProductsAdmin = async (req, res) => {
         });
     }
 };
+

@@ -142,3 +142,14 @@ export const useOrders = () => {
     });
     
 };
+
+// reviewing/rating orders
+export const useReview = () => {
+    console.log(`reviewing/rating request`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}

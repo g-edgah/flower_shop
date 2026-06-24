@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useOrders } from "../../hooks/user";
+import { useOrders, useReview } from "../../hooks/user";
 import ReviewCard from "./reviewCard";
+import ExpandedReviewCard from './reviewCardExpanded.jsx'
 
 import { FaArrowLeft } from "react-icons/fa6";
-import { HiStar, HiOutlineStar } from "react-icons/hi2";
+
 
 const Reviews = ({ refetch, user }) => {
     const [ reviewsType, setReviewsType ] = useState("notReviewed")
@@ -14,14 +15,19 @@ const Reviews = ({ refetch, user }) => {
     const [productRating, setProductRating] = useState(reviewItemDetails?.productRating);
     const [serviceRating, setServiceRating] = useState(reviewItemDetails?.serviceRating);
     const [comment, setComment] = useState(reviewItemDetails?.review);
-    const [hover, setHover] = useState(0);
+    const [productStar, setProductStar] = useState(0);
+    const [serviceStar, setServiceStar] = useState(0);
+    const [productHover, setProductHover] = useState(0);
+    const [serviceHover, setServiceHover] = useState(0);
     
 
-    const { data, isLoading, error, userdata } = useOrders();
+    const { data, isLoading, error, orderdata, refetch: ordersRefetch } = useOrders();
 
-    if (data) {
-        console.log("orders data: ", data)
-    }
+    const { mutate: editReview, isLoading: reviewLoading, error: reviewError } = useReview();
+
+    // if (data) {
+    //     console.log("orders data: ", data)
+    // }
    
     //console.log("order user: ", user)
     
@@ -42,22 +48,59 @@ const Reviews = ({ refetch, user }) => {
         setReviewState(state)
     }
 
-    const handleClick = (selectedRating) => {
-        if (disabled || readOnly) return;
+    const handleRating = (starValue, reviewStatus, type) => {
+        if (reviewStatus === 'reviewed') return;
+        
+        if (type === 'product') {
+            setProductStar(starValue);
+        } else if (type === 'service') {
+            setServiceStar(starValue)
+        }
+    }
+
+
+
+    const handleSubmitReview = (productRating, serviceRating, comment, productId, orderId, reviewStatus) => {
+        if (reviewStatus === 'reviewed') return;
         setRating(selectedRating);
-        if (onRatingChange) {
-            onRatingChange(selectedRating);
+        editReview ({
+            productRating: productRating, 
+            serviceRating: serviceRating, 
+            comment: comment, 
+            productId: productId, 
+            orderId: orderId 
+        }, {
+            onSuccess: (data) => {
+                console.log('Edit successfull!', data)
+                wishlistRefetch()
+                
+            },
+            onError: (error) => {
+                console.error('Edit failed: ', error)
+                alert('Edit failed. Please try again.')
+                
+            }
+        })
+    };
+
+    const handleMouseEnter = (starValue, reviewStatus, type) => {
+        if (reviewStatus === 'reviewed') return;
+        
+        if (type === 'product') {
+            setProductHover(starValue);
+        } else if (type === 'service') {
+            setServiceHover(starValue)
         }
     };
 
-    const handleMouseEnter = (starValue) => {
-        if (disabled || readOnly) return;
-        setHover(starValue);
-    };
-
-    const handleMouseLeave = () => {
-        if (disabled || readOnly) return;
-        setHover(0);
+    const handleMouseLeave = (reviewStatus, type) => {
+        if (reviewStatus === 'reviewed') return;
+        
+        if (type === 'product') {
+            setProductHover(0);
+        } else if (type === 'service') {
+            setServiceHover(0)
+        }
     };
 
 
@@ -88,12 +131,20 @@ const Reviews = ({ refetch, user }) => {
                 {data && data.orders && reviewsType === "notReviewed" && (
                     (deliveredOrders.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
-                            <span className="text-lg">No pending reviews found.</span>
+                            <span className="text-lg">You have no pending reviews</span>
                         </div>
                     ) : (   
                     deliveredOrders.map((order) => (
                         order.items.filter((item) => item.reviewStatus === 'notReviewed' ).map(item => 
-                            <ReviewCard key={item._id} order={order} item={item} status={order.status} deliveryDate={order.deliveryDate} orderDate={order.orderDate} trackingNo={order.trackingNumber} handleReviewDetails={handleReviewDetails} />
+                            <ReviewCard 
+                                key={item._id} 
+                                order={order} 
+                                item={item} 
+                                status={order.status} 
+                                deliveryDate={order.deliveryDate} 
+                                orderDate={order.orderDate} 
+                                trackingNo={order.trackingNumber} 
+                                handleReviewDetails={handleReviewDetails} />
                         
                         ))
                     )
@@ -108,7 +159,12 @@ const Reviews = ({ refetch, user }) => {
                     ) : (   
                     deliveredOrders.map((order) => (
                         order.items.filter((item) => item.reviewStatus === 'reviewed' ).map(item => 
-                            <ReviewCard key={item._id} order={order} item={item} status={order.status} deliveryDate={order.deliveryDate} orderDate={order.orderDate} trackingNo={order.trackingNumber} handleReviewDetails={handleReviewDetails} />
+                            <ReviewCard 
+                            key={item._id} 
+                            order={order} 
+                            item={item} 
+                            status={order.status} 
+                            deliveryDate={order.deliveryDate} orderDate={order.orderDate} trackingNo={order.trackingNumber} handleReviewDetails={handleReviewDetails} />
                         
                         ))
                     )
@@ -125,51 +181,19 @@ const Reviews = ({ refetch, user }) => {
                 </div>
 
 
-                <div className="details flex flex-col gap-2 border-[1.5px] border-gray-400 rounded-md p-3 bg-gray-200">
-                    <span className="number font-bold mb-2 pt-2">Order NO {reviewOrderDetails?.trackingNumber}</span>
-                    <span className="status">Status: {reviewOrderDetails?.status}</span>
-                    <span className="orderDate">Order Date: {new Date(reviewOrderDetails?.orderDate).toLocaleDateString()}</span>
-                    <span className="deliveryDate">Delivery Date: {new Date(reviewOrderDetails?.deliveryDate).toLocaleDateString()}</span>
-                    <span className="itemsTitle font-semibold text-md mt-3">Items: {reviewOrderDetails?.items?.length || 0}</span>
-                </div>
+                <ExpandedReviewCard 
+                    reviewOrderDetails={reviewOrderDetails}
+                    reviewItemDetails={reviewItemDetails} 
+                    handleRating={handleRating}
+                    handleSubmitReview={handleSubmitReview} 
+                    handleMouseEnter={handleMouseEnter} 
+                    handleMouseLeave={handleMouseLeave}
+                    serviceHover={serviceHover}
+                    productHover={productHover}
+                    serviceStar={serviceStar}
+                    productStar={productStar}
 
-                <div className="items flex flex-col gap-3">
-                        <div  className="item flex gap-5 items-center border-[1.5px] border-gray-400 rounded-md p-3 bg-gray-200">
-                            <div className="img size-32">
-                                <img
-                                    src={`/${reviewItemDetails.product.picturePath}`}
-                                    alt={`${reviewItemDetails.name}`}
-                                    className="rounded-md w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.target.src = '/default-product.png';
-                                    }}
-                                />
-                            </div>
-                            <div className="info flex flex-col gap-5 text-[15px] text-gray-800 ">
-                                <span className="name font-semibold text-lg text-black">{reviewItemDetails.name}</span>
-                                <span className="quantity">rate this product</span>
-                                <div className="stars flex">
-                                    {[1, 2, 3, 4, 5 ].map((star) => (
-                                        <button 
-                                            onClick={() => handleClick(star)}
-                                            onMouseEnter={() => handleMouseEnter(star)}
-                                            onMouseLeave={handleMouseLeave}
-                                            
-                                            className="5 flex">
-                                                <HiStar className="size-7 hover:text-summaryButtons"/>
-                                        </button> 
-                                    ))} 
-        
-                                </div>
-                                <span className="price">Rate the service delivery</span>
-                            </div>
-                        </div>
-                    
-                </div>
-                <button className="detail flex bg-summaryButtons rounded-md p-2 text-white items-center justify-center">
-                    <span>submit</span>
-                    
-                </button>
+                />
 
 
                 

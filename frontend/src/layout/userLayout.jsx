@@ -162,17 +162,17 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
             productId: id,
             productModel: type === "bouquet" ? "Bouquet" : "Flower"
         }, {
-                onSuccess: (data) => {
-                    console.log('Edit successfull!', data)
-                    wishlistRefetch()
-                    
-                },
-                onError: (error) => {
-                    console.error('Edit failed: ', error)
-                    alert('Edit failed. Please try again.')
-                    
-                }
-            })
+            onSuccess: (data) => {
+                console.log('Edit successfull!', data)
+                wishlistRefetch()
+                
+            },
+            onError: (error) => {
+                console.error('Edit failed: ', error)
+                alert('Edit failed. Please try again.')
+                
+            }
+        })
     };
 
 
