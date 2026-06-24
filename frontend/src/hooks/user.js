@@ -3,11 +3,15 @@ import api from '../setup/axios';
 
 
 //getting userId
-const userId = localStorage.getItem('userId');
-
+const getUserId = () => {
+    const userId = localStorage.getItem('userId');
+    return userId
+}
 
 // hook for home data
 export const useUser = () => {
+    const userId = getUserId()
+
     console.log(`fetching user data for userId: ${userId}`)
 
     return useQuery({
@@ -27,6 +31,7 @@ export const useUser = () => {
 // user details editing
 export const useEditUser = (formData) => {
     console.log(`editing user`) 
+    const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.patch(`/user/${userId}`, formData).then(res => res.data),
@@ -38,6 +43,7 @@ export const useEditUser = (formData) => {
 
 // getting cart
 export const useCart = () => {
+    const userId = getUserId()
     console.log(`fetching cart for userId: ${userId}`) 
 
     return useQuery({ 
@@ -53,6 +59,7 @@ export const useCart = () => {
 // user cart editing
 export const useAddCart = (formData) => {
     console.log(`adding to cart`) 
+    const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.post(`/user/cart/${userId}`, formData).then(res => res.data),
@@ -65,6 +72,7 @@ export const useAddCart = (formData) => {
 // user cart editing
 export const useMinusCart = (formData) => {
     console.log(`minusing from cart`) 
+    const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.patch(`/user/cart/${userId}`, formData).then(res => res.data),
@@ -77,6 +85,7 @@ export const useMinusCart = (formData) => {
 // user cart editing
 export const useDeleteCart = () => {
     console.log(`deleting from cart`) 
+    const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.delete(`/user/cart/${userId}/${formData.productId}`).then(res => res.data),
@@ -88,6 +97,7 @@ export const useDeleteCart = () => {
 // getting wishlist
 export const useWishlist = () => {
     console.log(`getting the wishlist`) 
+    const userId = getUserId()    
 
     return useQuery({ 
         queryKey: ['wishlist', userId],
@@ -100,6 +110,7 @@ export const useWishlist = () => {
 // user wishlist editing
 export const useEditWishlist = () => {
     console.log(`editting the wishlist`) 
+    const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data),
@@ -111,6 +122,7 @@ export const useEditWishlist = () => {
 // creating order 
 export const useCreateOrder = () => {
     console.log(`creating order`) 
+    const userId = getUserId()
 
     return useMutation({
         mutationFn: (orderData) => api.post(`/user/orders/${userId}`, orderData).then(res => res.data),
@@ -121,6 +133,7 @@ export const useCreateOrder = () => {
 // getting orders
 export const useOrders = () => {
     console.log(`getting them orders`) 
+    const userId = getUserId()
 
     return useQuery({ 
         queryKey: ['orders', userId],

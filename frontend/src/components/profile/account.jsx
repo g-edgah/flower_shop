@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BiSolidEdit } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import axios from 'axios'
@@ -6,24 +6,23 @@ import axios from 'axios'
 import { useEditUser } from '../../hooks/user.js';
 
 
-const Account = ({refetch, user}) => {
+const Account = ({userRefetch, user}) => {
     const [ accountEdit, setAccountEdit ] = useState(false)
     const [ addressEdit, setAddressEdit ] = useState(false)
     const [errors, setErrors] = useState({})
 
 
     const [formData, setFormData] = useState({
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
         address: {
-            country: user.address.country,
-            region: user.address.region,
-            city: user.address.city,
-            address: user.address.address,
-            info: user.address.info,
-            mobile: user.address.mobile
+            country: user?.address.country,
+            region: user?.address.region,
+            city: user?.address.city,
+            address: user?.address.address,
+            info: user?.address.info,
+            mobile: user?.address.mobile
         }
-
     });
 
 
@@ -158,7 +157,7 @@ const Account = ({refetch, user}) => {
                         <form onSubmit={(e) => handleSubmit(e, 'account')} className="edit relative h-full py-4 flex flex-col gap-2 w-full">
                             <div className="address h-10 flex items-center px-4 gap-2">
                                 <span className="text font-semibold">Email: </span>
-                                <span className="text ">{user.email}</span> 
+                                <span className="text ">{user?.email}</span> 
                             </div>
                             
                             <div className="address flex flex-col items-start px-4 gap-2">
@@ -173,7 +172,7 @@ const Account = ({refetch, user}) => {
                                         name='firstName'
                                         value={formData.firstName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.firstName}
+                                        placeholder={user?.firstName}
                                     />
                                     {errors.firstName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
@@ -186,7 +185,7 @@ const Account = ({refetch, user}) => {
                                         name='lastName'
                                         value={formData.lastName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.lastName}
+                                        placeholder={user?.lastName}
                                     />
                                     {errors.lastName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
@@ -220,11 +219,11 @@ const Account = ({refetch, user}) => {
                         <div className="flex flex-col">
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Email: </span>
-                                <span className="text font-semibold">{user.email}</span> 
+                                <span className="text font-semibold">{user?.email}</span> 
                             </div>
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Name: </span>
-                                <span className="text font-semibold">{user.firstName} {user.lastName}</span> 
+                                <span className="text font-semibold">{user?.firstName} {user?.lastName}</span> 
                             </div>
                         </div>
                     }
@@ -253,7 +252,7 @@ const Account = ({refetch, user}) => {
                                         name='firstName'
                                         value={formData.firstName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.firstName}
+                                        placeholder={user?.firstName}
                                     />
                                     {errors.firstName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
@@ -266,7 +265,7 @@ const Account = ({refetch, user}) => {
                                         name='lastName'
                                         value={formData.lastName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.lastName}
+                                        placeholder={user?.lastName}
                                     />
                                     {errors.lastName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
@@ -283,7 +282,7 @@ const Account = ({refetch, user}) => {
                                     name='address.region'
                                     value={formData.address.region}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.region}
+                                    placeholder={user?.address.region}
                                 />
                                 {errors.region && (
                                 <p className="mt-1 text-sm text-red-500">{errors.region}</p>
@@ -298,7 +297,7 @@ const Account = ({refetch, user}) => {
                                     name='address.city'
                                     value={formData.address.city}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.city}
+                                    placeholder={user?.address.city}
                                 />
                                 {errors.city && (
                                 <p className="mt-1 text-sm text-red-500">{errors.city}</p>
@@ -313,7 +312,7 @@ const Account = ({refetch, user}) => {
                                     name='address.address'
                                     value={formData.address.address}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.address}
+                                    placeholder={user?.address.address}
                                 />
                                 {errors.address && (
                                 <p className="mt-1 text-sm text-red-500">{errors.address}</p>
@@ -329,7 +328,7 @@ const Account = ({refetch, user}) => {
                                     name='address.info'
                                     value={formData.address.info}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.info}
+                                    placeholder={user?.address.info}
                                 />
                                 {errors.info && (
                                 <p className="mt-1 text-sm text-red-500">{errors.info}</p>
@@ -344,7 +343,7 @@ const Account = ({refetch, user}) => {
                                     name='address.mobile'
                                     value={formData.address.mobile}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.mobile}
+                                    placeholder={user?.address.mobile}
                                 />
                                 {errors.mobile && (
                                 <p className="mt-1 text-sm text-red-500">{errors.mobile}</p>
@@ -375,27 +374,27 @@ const Account = ({refetch, user}) => {
                         <div className="flex flex-col">
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Name: </span>
-                                <span className="text font-semibold">{user.firstName} {user.lastName}</span> 
+                                <span className="text font-semibold">{user?.firstName} {user?.lastName}</span> 
                             </div>
                             <div className="region h-10 flex items-center p-4 gap-2">
                                 <span className="text">Region:</span> 
-                                <span className="text font-semibold">{user.address.region}</span> 
+                                <span className="text font-semibold">{user?.address.region}</span> 
                             </div>
                             <div className="city h-10 flex items-center p-4 gap-2">
                                 <span className="text">City:</span> 
-                                <span className="text font-semibold">{user.address.city}</span> 
+                                <span className="text font-semibold">{user?.address.city}</span> 
                             </div>
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Address: </span>
-                                <span className="text font-semibold">{user.address.address}</span> 
+                                <span className="text font-semibold">{user?.address.address}</span> 
                             </div>
                             <div className="info h-10 flex items-center p-4 gap-2">
                                 <span className="text">Additional info:</span>
-                                <span className="text font-semibold">{user.address.info}</span> 
+                                <span className="text font-semibold">{user?.address.info}</span> 
                             </div>
                             <div className="phone h-10 flex items-center p-4 gap-2">
                                 <span className="text">Phone:</span>
-                                <span className="text font-semibold">{user.address.mobile}</span> 
+                                <span className="text font-semibold">{user?.address.mobile}</span> 
                             </div>
                         </div>
 

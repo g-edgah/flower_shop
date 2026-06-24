@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
 
 import HomePage from './pages/home.jsx';
 import CartPage from './pages/cart.jsx';
@@ -12,9 +13,8 @@ import { useUser } from './hooks/user.js';
 
 function App() {
   const { data: userData, isLoading: isUserLoading, error: userError, isFetching: isUserFetching, refetch: userRefetch } = useUser();
-
-
   
+
   // if (userData) {
   //   console.log("user at app: ",userData)
   //   const userCart = userData.formattedUser.cart

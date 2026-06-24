@@ -25,9 +25,12 @@ const Logout = ({userData, userRefetch }) => {
                 
                 //clear all cached data
                 queryClient.clear();
+                userRefetch()
+                
 
                 // redirect out of profile
                 navigate('/');
+                
                 
                 
             },

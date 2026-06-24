@@ -20,8 +20,8 @@ import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, 
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
 
-    console.log('userRefetch type from layout: ', typeof userRefetch);
-    console.log('userRefetch value from layout: ', userRefetch);
+    // console.log('userRefetch type from layout: ', typeof userRefetch);
+    // console.log('userRefetch value from layout: ', userRefetch);
 
     const [ page, setPage ] = useState("")
     const [ cart, setCart ] = useState([]);
@@ -68,6 +68,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     
     const refreshCart = () => {
         console.log("refreshing cart")
+        cartRefetch()
         if (cartData?.formattedCart) {
             console.log("user cart data available: ", cartData?.formattedCart)
             setCart(cartData?.formattedCart)
@@ -129,6 +130,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
     
     const refreshWishlist = () => {
+        wishlistRefetch()
         console.log("refreshing wishlist")
         wishlistRefetch()
         if (wishlistData?.wishlist) {
@@ -367,43 +369,43 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
     const handleAddToCart = (item) => {
         if (userData) {
-        addToCart(item._id, item.type)
+            addToCart(item._id, item.type)
 
-        
         } else {
-        console.log("adding")
-        addToLocalCart(item)
+            console.log("adding")
+            addToLocalCart(item)
         }
     }
 
     const handleMinusFromCart = (item) => {
         if (userData) {
-        minusFromCart(item._id)
-
+            minusFromCart(item._id)
         
         } else {
-        minusFromLocalCart(item)
+            minusFromLocalCart(item)
         }
     }
 
 
     const handleDeleteFromCart = (item) => {
         if (userData) {
-        deleteFromCart(item._id)
+            deleteFromCart(item._id)
 
-        
         } else {
-        deleteFromLocalCart(item._id, item.type)
+            deleteFromLocalCart(item._id, item.type)
         }
     }
 
     const handleWishlistToggle = (item) => {
-        if (userData) {
-        wishlistToggle(item._id, item.type)
 
+        //userRefetch()
+        if (userData) {
+            wishlistToggle(item._id, item.type)
+            console.log("userdata wishlist innit: ", userData)
         
         } else {
-        wishlistLocalToggle(item)
+            wishlistLocalToggle(item)
+            console.log("localdata wishlist innit")
         }
     }
 
@@ -429,7 +431,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
                 <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
-                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} userRefetch={userRefetch} page={page}/>}/>
+                <Route path='login' element={<Login setPage={setPage} localCart={localCart} setLocalCart={setLocalCart} localWishlist={localWishlist} setLocalWishlist={setLocalWishlist} userRefetch={userRefetch} page={page} cartRefetch={cartRefetch} wishlistRefetch={wishlistRefetch}/>}/>
 
                 <Route path='register' element={<Register setPage={setPage} />}/>
 

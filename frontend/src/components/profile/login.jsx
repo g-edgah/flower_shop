@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { useLogin } from '../../hooks/auth.js';
 
-const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRefetch, page = ''}) => {
+const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRefetch, cartRefetch, wishlistRefetch, page = ''}) => {
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
@@ -83,9 +83,10 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                     subTotal: 0,
                     region: 'nairobi',
                     shippingCost: 0,
-                    grandTotal: 0}));
+                    grandTotal: 0
+                }));
 
-                localStorage.setItem('wishlist', []);
+                localStorage.setItem('wishlist', JSON.stringify([]));
                 
 
 
@@ -106,13 +107,18 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                         localStorage.setItem('rememberMe', 'true');
                     }
                 }
-
+                
                 // refetch user data
                 userRefetch()
+                cartRefetch()
+                wishlistRefetch()
+                
                 
                 // redirect to previous page
                 navigate(`/${page}`);
                 // Or window.location.href = '/dashboard';
+
+                
             },
             onError: (error) => {
                 console.error('Login failed:', error);
