@@ -85,7 +85,7 @@ const Reviews = ({ refetch, user }) => {
 
     const handleMouseEnter = (starValue, reviewStatus, type) => {
         if (reviewStatus === 'reviewed') return;
-        
+        console.log("handling mouse enter: ", starValue, reviewStatus, type)
         if (type === 'product') {
             setProductHover(starValue);
         } else if (type === 'service') {
@@ -95,17 +95,15 @@ const Reviews = ({ refetch, user }) => {
 
     const handleMouseLeave = (reviewStatus, type) => {
         if (reviewStatus === 'reviewed') return;
-        
+        console.log("handling mouse leave: ", reviewStatus, type) 
         if (type === 'product') {
-            setProductHover(0);
+            setProductHover(productStar);
         } else if (type === 'service') {
-            setServiceHover(0)
+            setServiceHover(serviceStar)
         }
     };
 
 
-
-    console.log("review type: ", reviewsType)
 
     //console.log("orderState: ", orderState)
     return (

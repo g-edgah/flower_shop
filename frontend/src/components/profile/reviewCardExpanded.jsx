@@ -2,10 +2,10 @@
 import { HiStar, HiOutlineStar } from "react-icons/hi2";
 
 
-const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRating, handleSubmitReview , handleMouseEnter, handleMouseLeave,serviceHover, productHover, serviceStar, roductStar }) => {
+const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRating, handleSubmitReview , handleMouseEnter, handleMouseLeave,serviceHover, productHover, serviceStar, productStar }) => {
 
-    console.log("review item expanded: ", reviewItemDetails)
-    console.log("review order expanded: ", reviewOrderDetails)
+    // console.log("review item expanded: ", reviewItemDetails)
+    // console.log("review order expanded: ", reviewOrderDetails)
 
     return (
         <div className="w-full flex flex-col gap-5">
@@ -38,10 +38,12 @@ const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRatin
                                         key={index}
                                         onClick={() => handleRating(star, reviewItemDetails?.reviewStatus, 'product')}
                                         onMouseEnter={() => handleMouseEnter(star, reviewItemDetails?.reviewStatus, 'product')}
-                                        onMouseLeave={handleMouseLeave}
+                                        onMouseLeave={() => {handleMouseLeave(reviewItemDetails?.reviewStatus, 'product')}}
                                         
-                                        className={`5 flex`}>
-                                            <HiStar className={`size-7 ${currentProductStar >= star ? 'hover:text-summaryButtons}': ''} `}/>
+                                        className={`flex cursor-pointer`}>
+                                            <HiStar className={`size-7 
+                                                ${(productStar >= star )? 'text-summaryButtons': ''} 
+                                                ${(productHover >= star) ? 'text-summaryButtons': ''} `}/>
                                     </button> 
                                 ))} 
 
@@ -51,12 +53,14 @@ const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRatin
                                 {[1, 2, 3, 4, 5 ].map((star, index) => (
                                     <button 
                                         key={index}
-                                        onClick={() => handleServiceRating(star, reviewItemDetails?.reviewStatus)}
-                                        onMouseEnter={() => handleMouseEnter(star, reviewItemDetails?.reviewStatus)}
-                                        onMouseLeave={handleMouseLeave}
+                                        onClick={() => handleRating(star, reviewItemDetails?.reviewStatus, 'service')}
+                                        onMouseEnter={() => handleMouseEnter(star, reviewItemDetails?.reviewStatus, 'service')}
+                                        onMouseLeave={() => {handleMouseLeave(reviewItemDetails?.reviewStatus, 'service')}}
                                         
-                                        className="5 flex">
-                                            <HiStar className="size-7 hover:text-summaryButtons"/>
+                                        className={`5 flex cursor-pointer`}>
+                                            <HiStar className={`size-7 
+                                                ${(serviceStar >= star )? 'text-summaryButtons': ''} 
+                                                ${(serviceHover >= star) ? 'text-summaryButtons': ''} `}/>
                                     </button> 
                                 ))} 
 
