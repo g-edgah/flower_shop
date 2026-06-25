@@ -50,7 +50,7 @@ app.use('/api/products', productRouter)
 app.use('/api/admin', adminRouter)
 
 //404
-app.get('/w', (req, res) => {
+app.get('', (req, res) => {
     res.status(404).json({message: "page not found"})
 })
 

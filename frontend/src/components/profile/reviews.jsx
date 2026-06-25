@@ -4,9 +4,12 @@ import ReviewCard from "./reviewCard";
 import ExpandedReviewCard from './reviewCardExpanded.jsx'
 
 import { FaArrowLeft } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 
 const Reviews = ({ refetch, user }) => {
+    const navigate = useNavigate()
+
     const [ reviewsType, setReviewsType ] = useState("notReviewed")
     const [reviewState, setReviewState] = useState("reviews")
     const [ reviewOrderDetails, setReviewOrderDetails ] = useState(null)
@@ -19,6 +22,7 @@ const Reviews = ({ refetch, user }) => {
     const [serviceStar, setServiceStar] = useState(0);
     const [productHover, setProductHover] = useState(0);
     const [serviceHover, setServiceHover] = useState(0);
+    const [errors, setErrors] = useState({})
     
 
     const { data, isLoading, error, orderdata, refetch: ordersRefetch } = useOrders();
@@ -58,21 +62,48 @@ const Reviews = ({ refetch, user }) => {
         }
     }
 
+     
+
+    // validate form
+    const validateForm = () => {
+        const newErrors = {};
+        
+        
+        // if (formData.firstName.length < 1) {
+        // newErrors.newPassword = 'Password must be at least 6 characters';
+        // }
+        
+
+        // if (formData.email) {
+        // !/\S+@\S+\.\S+/.test(formData.email)
+        // newErrors.email = 'Email is invalid';
+        // }
+           
+        
+        return newErrors;
+    };
 
 
-    const handleSubmitReview = (productRating, serviceRating, comment, productId, orderId, reviewStatus) => {
+    const handleSubmitReview = (productId, orderId, reviewStatus) => {
         if (reviewStatus === 'reviewed') return;
-        setRating(selectedRating);
+
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+        
         editReview ({
-            productRating: productRating, 
-            serviceRating: serviceRating, 
+            productRating: productStar, 
+            serviceRating: serviceStar, 
             comment: comment, 
             productId: productId, 
             orderId: orderId 
         }, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-                wishlistRefetch()
+                ordersRefetch()
+                navigate("profile/reviews")
                 
             },
             onError: (error) => {
@@ -85,7 +116,7 @@ const Reviews = ({ refetch, user }) => {
 
     const handleMouseEnter = (starValue, reviewStatus, type) => {
         if (reviewStatus === 'reviewed') return;
-        console.log("handling mouse enter: ", starValue, reviewStatus, type)
+        //console.log("handling mouse enter: ", starValue, reviewStatus, type)
         if (type === 'product') {
             setProductHover(starValue);
         } else if (type === 'service') {
@@ -95,13 +126,17 @@ const Reviews = ({ refetch, user }) => {
 
     const handleMouseLeave = (reviewStatus, type) => {
         if (reviewStatus === 'reviewed') return;
-        console.log("handling mouse leave: ", reviewStatus, type) 
+        //console.log("handling mouse leave: ", reviewStatus, type) 
         if (type === 'product') {
             setProductHover(productStar);
         } else if (type === 'service') {
             setServiceHover(serviceStar)
         }
     };
+
+    const handleComment = (e) => {
+        setComment(e.target.value)
+    }
 
 
 
@@ -190,7 +225,9 @@ const Reviews = ({ refetch, user }) => {
                     productHover={productHover}
                     serviceStar={serviceStar}
                     productStar={productStar}
-
+                    comment={comment}
+                    handleComment={handleComment}
+                    errors={errors}
                 />
 
 

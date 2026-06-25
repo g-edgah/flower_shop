@@ -149,7 +149,7 @@ export const useReview = () => {
     const userId = getUserId()
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`/user/wishlist/${userId}`, formData).then(res => res.data),
+        mutationFn: (formData) => api.post(`user/orders/reviews/${userId}`, formData).then(res => res.data),
         enabled: !!userId
     });
 }

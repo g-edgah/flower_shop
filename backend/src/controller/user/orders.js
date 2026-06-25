@@ -315,6 +315,7 @@ export const cancelOrder = async (req, res) => {
 
 // add review/ratings
 export const addOrderReview = async ( req, res) => {
+    console.log("adding review")
     try {
         const { id } = req.user
         const { productRating, serviceRating, comment, productId, orderId } = req.body
@@ -352,10 +353,31 @@ export const addOrderReview = async ( req, res) => {
         }
 
         // check if order can be reviewed/rated
-        if (order.status !== 'delivered' ) {
+        if (order.status !== 'Delivered' ) {
             return res.status(400).json({ 
                 success: false,
                 message: `Cannot rate undelivered order}` 
+            });
+        }
+
+        // check if order can be reviewed/rated
+        // find the specific item in the order
+        const itemIndex = order.items.findIndex(
+            item => item.product.toString() === productId
+        );
+
+        if (itemIndex === -1) {
+            return res.status(404).json({ 
+                error: 'Product not found in this order' 
+            });
+        }
+
+        const item = order.items[itemIndex];
+
+        // check if item is already reviewed
+        if (item.reviewStatus === 'reviewed') {
+            return res.status(400).json({ 
+                error: 'This item has already been reviewed. You cannot review it again.' 
             });
         }
 
@@ -369,16 +391,19 @@ export const addOrderReview = async ( req, res) => {
         if (serviceRating !== undefined) {
             updateFields['items.$.serviceRating'] = serviceRating;
         }
+
+        updateFields['items.$.reviewStatus'] = "reviewed";
         
-        if (review !== undefined) {
-            updateFields['items.$.review'] = review;
+        
+        if (comment !== undefined) {
+            updateFields['items.$.review'] = comment;
         }
 
         const updateOrder = await Order.findOneAndUpdate(
             { 
                 '_id': orderId, 
                 'user': id, 
-                'items._id': productId
+                'items.product': productId
             },
             {
                 $set: updateFields 
@@ -388,9 +413,17 @@ export const addOrderReview = async ( req, res) => {
             }
         );
 
+        console.log("review added", item)
+
+        res.status(200).json({
+            success: true,
+            message: "Order reviewed successfully",
+            order: order
+        });
+
 
     } catch (error) {
-        console.error("Error cancelling order:", error);
+        console.error("Error reviewing order:", error);
         res.status(500).json({ 
             success: false,
             message: "Failed to cancel order", 
