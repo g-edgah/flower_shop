@@ -103,7 +103,12 @@ const Reviews = ({ refetch, user }) => {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
                 ordersRefetch()
-                navigate("profile/reviews")
+                setProductStar(0)
+                setProductHover(0)
+                setServiceStar(0)
+                setServiceHover(0)
+                setComment("")
+                setReviewState("reviews")
                 
             },
             onError: (error) => {

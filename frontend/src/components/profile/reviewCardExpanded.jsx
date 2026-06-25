@@ -44,8 +44,7 @@ const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRatin
                                         onMouseLeave={() => {handleMouseLeave(reviewItemDetails?.reviewStatus, 'product')}}
                                         
                                         className={`flex cursor-pointer`}>
-                                            <HiStar className={`size-6 
-                                                ${(productStar >= star )? 'text-summaryButtons': 'text-gray-400'} 
+                                            <HiStar className={`size-6  
                                                 ${(productHover >= star) ? 'text-summaryButtons': 'text-gray-400'} `}/>
                                     </button> 
                                 ))} 
@@ -62,7 +61,6 @@ const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRatin
                                         
                                         className={`5 flex cursor-pointer`}>
                                             <HiStar className={`size-6 
-                                                ${(serviceStar >= star )? 'text-summaryButtons': 'text-gray-400'} 
                                                 ${(serviceHover >= star) ? 'text-summaryButtons': 'text-gray-400'} `}/>
                                     </button> 
                                 ))} 
