@@ -34,7 +34,7 @@ const ExpandedReviewCard = ({ reviewOrderDetails, reviewItemDetails, handleRatin
                         </div>
                         <div className="info w-[calc(100%-172px)] flex flex-col gap-3 text-[15px] text-gray-800 ">
                             <span className="name font-semibold text-lg text-black mt-2">{reviewItemDetails.name}</span>
-                            <span className="quantity">rate this product</span>
+                            <span className="quantity">Rate this product</span>
                             <div className="stars flex">
                                 {[1, 2, 3, 4, 5 ].map((star, index) => (
                                     <button 

@@ -16,7 +16,7 @@ import Logout from '../components/profile/logout.jsx'
 
 
 
-const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist,  setCart, setWishlist, refreshCart, refreshWishlist }) => {
+const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist,  setCart, setWishlist, refreshCart, refreshWishlist, profilePage, setProfilePage }) => {
     // console.log('userRefetch type from profile: ', typeof userRefetch);
     // console.log('userRefetch value from profile: ', userRefetch);
 
@@ -24,10 +24,10 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId')
 
-    const [ profilePage, setProfilePage ] = useState("account")
     
     
-    console.log("page from profile11:", page)
+    
+    console.log("page from profile:", page)
 
         
     useEffect(() => {
@@ -40,6 +40,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
         
         setPage("profile")
         console.log("page from profile:", page)
+
         if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
             setProfilePage(page)
             //console.log("profile page:", page)
@@ -49,7 +50,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
             setProfilePage("account")
         }
     
-    }, []);
+    }, [page]);
 
     const handleProfilePage = (profilePage) => {
         

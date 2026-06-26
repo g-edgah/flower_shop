@@ -38,7 +38,9 @@ const Reviews = ({ refetch, user }) => {
     const deliveredOrders = data?.orders.filter(order => order.status === "Delivered");
     //console.log("ongoing orders: ", ongoingOrders)
 
-    const unreviewedOrders = data?.orders.filter(order => order.status === "Delivered");
+    const pendingReviews = deliveredOrders?.some(order => 
+    order.items.some(item => item.reviewStatus === 'notReviewed')
+    )
 
     const handleReviewsType = (type) => {
         if (type) {
@@ -152,14 +154,14 @@ const Reviews = ({ refetch, user }) => {
             {reviewState === "reviews" && (
             <div className='p-3'>
                 <div className="title border-b border-gray-300 w-10/10 p-3">
-                    <span className="title text-xl font-bold ">Reviews</span>
+                    <span className="title text-xl font-bold ">Pending Reviews</span>
                 </div>
                 
                 <div className="top text-lg flex gap-5 px-2 py-5">
                     
-                    <span onClick={() => handleReviewsType("notReviewed")} className={`font-semibold cursor-pointer ${reviewsType === "notReviewed" ? "text-summaryButtons" : ""}`}>Not Reviewed</span>
+                    {/* <span onClick={() => handleReviewsType("notReviewed")} className={`font-semibold cursor-pointer ${reviewsType === "notReviewed" ? "text-summaryButtons" : ""}`}>Not Reviewed</span> */}
                     
-                    <span onClick={() => handleReviewsType("reviewed")}  className={`font-semibold cursor-pointer ${reviewsType === "reviewed" ? "text-summaryButtons" : ""}`}>Reviewed</span>
+                    {/* <span onClick={() => handleReviewsType("reviewed")}  className={`font-semibold cursor-pointer ${reviewsType === "reviewed" ? "text-summaryButtons" : ""}`}>Reviewed</span> */}
                 </div>
                 
 
@@ -167,7 +169,7 @@ const Reviews = ({ refetch, user }) => {
                 {isLoading && <span>fetching orders</span>}
                 {error && <span>error fetching orders: {error.message}</span>}
                 {data && data.orders && reviewsType === "notReviewed" && (
-                    (deliveredOrders.length === 0) ? (
+                    (deliveredOrders.length === 0)||(!pendingReviews) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
                             <span className="text-lg">You have no pending reviews</span>
                         </div>
@@ -189,7 +191,7 @@ const Reviews = ({ refetch, user }) => {
                     )
                 )}
 
-                {data && data.orders && reviewsType === "reviewed" && (
+                {/* {data && data.orders && reviewsType === "reviewed" && (
                     (deliveredOrders.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
                             <span className="text-lg">No cancelled or returned orders found.</span>
@@ -207,7 +209,7 @@ const Reviews = ({ refetch, user }) => {
                         ))
                     )
                     )
-                )}
+                )} */}
                 </div>
             </div>
             )}

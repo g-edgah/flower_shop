@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import SearchBar from './searchBar';
 import NavDrawer from './navDrawer';    
 
-const NavBar = ({ page, setPage, cart }) => {
+const NavBar = ({ page, setPage, cart, profilePage }) => {
     const navigate = useNavigate();
     const [isSearch, setIsSearch] = useState(false);
     const [isSearchBar, setIsSearchBar] = useState(false);
@@ -99,7 +99,7 @@ const NavBar = ({ page, setPage, cart }) => {
                                 </button>
                             )}
                         </div>
-                        <Link to='/profile' className={` hover:text-navHover ${page == 'profile' ? 'text-navHover':'text-navText'}`}>
+                        <Link to={`/profile/${profilePage}`} className={` hover:text-navHover ${page == 'profile' ? 'text-navHover':'text-navText'}`}>
                             <HiUser className="h-6 w-6"/>
                         </Link>
                         <button onClick={() => navigate('/cart')} className={`group relative cursor-pointer text-navText hover:text-navHover ${page == 'cart' ? 'text-navHover':'text-navText'}`}>

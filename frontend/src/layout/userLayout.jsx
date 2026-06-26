@@ -24,6 +24,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     // console.log('userRefetch value from layout: ', userRefetch);
 
     const [ page, setPage ] = useState("")
+    const [ profilePage, setProfilePage ] = useState("account")
     const [ cart, setCart ] = useState([]);
     const [ localCart, setLocalCart ] = useState(JSON.parse(localStorage.getItem('cart')) || {
         cart: [], 
@@ -412,7 +413,7 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
     return (
         <div className='flex flex-col justify-center items-center'>
             <TopBar />
-            <NavBar page={page} setPage={setPage} cart={cart}/>
+            <NavBar page={page} setPage={setPage} cart={cart} profilePage={profilePage} />
             
             <Routes>
                 <Route index element={<Home setPage={setPage} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />} />
@@ -425,9 +426,9 @@ const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRe
 
                 <Route path='popular' element={<Popular setPage={setPage}  handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} />}/>
                   
-                <Route path='profile/' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} />
+                {/* <Route path='profile/' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} profilePage={profilePage} setProfilePage={setProfilePage}/>} /> */}
 
-                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} />
+                <Route path='profile/:page' element={<Profile setPage={setPage} userData={userData} isUserLoading={isUserLoading} userError={userError} isUserFetching={isUserFetching} handleAddToCart={handleAddToCart} handleWishlistToggle={handleWishlistToggle} cart={cart} wishlist={wishlist} userRefetch={userRefetch} setCart={setLocalCart} setWishlist={setLocalWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} profilePage={profilePage} setProfilePage={setProfilePage}/>} />
 
                 <Route path='cart/*' element={<CartPage setPage={setPage} handleAddToCart={handleAddToCart} handleMinusFromCart={handleMinusFromCart} handleDeleteFromCart={handleDeleteFromCart} cart={cart} subTotal={subTotal} total={total} couponCode={couponCode} setCouponCode={setCouponCode} shippingCost={shippingCost} setShippingCost={setShippingCost} cartRefetch={cartRefetch} cartIsLoading={cartLoading} cartError={cartError}/>}/>
 
