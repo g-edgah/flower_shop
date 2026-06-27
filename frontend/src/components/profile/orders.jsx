@@ -4,7 +4,7 @@ import OrderCard from "./orderCard";
 
 import { FaArrowLeft } from "react-icons/fa6";
 
-const Orders = ({ refetch, user }) => {
+const Orders = ({ userRefetch, user }) => {
     const [ ordersType, setOrdersType ] = useState("ongoing")
     const [orderState, setOrderState] = useState("orders")
     const [ orderDetails, setOrderDetails ] = useState(null)

@@ -107,7 +107,7 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                         localStorage.setItem('rememberMe', 'true');
                     }
                 }
-                
+
                 // refetch user data
                 userRefetch()
                 cartRefetch()
@@ -115,7 +115,11 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                 
                 
                 // redirect to previous page
-                navigate(`/${page}`);
+                if (page === 'profile') {
+                    navigate(`/${page}/account`);
+                } else {
+                    navigate(`/${page}`);
+                }
                 // Or window.location.href = '/dashboard';
 
                 

@@ -21,7 +21,10 @@ import { useUser, useCart, useWishlist, useEditWishlist } from '../hooks/user.js
 
 
 
+
 const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {
+
+   
 
     const [content, setContent] = useState([
         {title: "graduation", text: "those unforgateable milestones", image: 'bg-[url(/src/assets/graduation/grad-7.jpeg)]'},
@@ -33,7 +36,7 @@ const HomePage = ({setPage, handleAddToCart, handleWishlistToggle, cart, wishlis
     //ensures page is set to home when navigation is through other channels apart from button clicking such as navigating back 
     
     useEffect(() => {
-
+        
         setPage("")
     }, []);
 

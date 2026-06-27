@@ -7,7 +7,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 
 
-const Reviews = ({ refetch, user }) => {
+const Reviews = ({ userRefetch, user }) => {
     const navigate = useNavigate()
 
     const [ reviewsType, setReviewsType ] = useState("notReviewed")

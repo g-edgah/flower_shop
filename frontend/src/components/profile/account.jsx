@@ -111,7 +111,7 @@ const Account = ({userRefetch, user}) => {
         editUser(formData, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-                refetch()
+                userRefetch()
                 
             },
             onError: (error) => {
