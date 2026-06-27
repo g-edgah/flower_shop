@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 
 import cartItemSchema from './cartItemSchema.js'
 import wishlistItemSchema from './wishlistItemSchema.js'
+import voucherItemSchema from './voucherItemSchema.js'
 import addressSchema from './addressSchema.js'
 
 
@@ -63,13 +64,6 @@ const userSchema = new mongoose.Schema({
         },
     },
     cart: [cartItemSchema],
-    
-    // when a user puts items in cart before logging in then checks out those items. this way we can checkout only items they wanted to checkout instead of all items they had added to cart earlier
-    sessionCart: [cartItemSchema],
-    orders: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order'   
-    }],
     wishlist: [wishlistItemSchema],
     role: {
         type: String,
