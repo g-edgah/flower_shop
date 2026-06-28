@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 
 import cartItemSchema from './cartItemSchema.js'
 import wishlistItemSchema from './wishlistItemSchema.js'
-import voucherItemSchema from './voucherItemSchema.js'
+import voucherItemSchema from './voucher.js'
 import addressSchema from './addressSchema.js'
 
 

@@ -4,6 +4,7 @@ import { getUser, editUser } from '../controller/user/user.js'
 import { getUserCart, editCartItem, addCartItem, minusCartItem, deleteCartItem } from '../controller/user/cart.js'
 import { getUserWishlist, editWishlist } from '../controller/user/wishlist.js'
 import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controller/user/orders.js'
+import { getUserVouchers } from '../controller/user/vouchers.js'
 import { verifyToken } from '../middleware/auth.js'
 
 
@@ -30,6 +31,8 @@ userRouter.post('/orders/reviews/:id', verifyToken, addOrderReview)
 userRouter.get('/orders/:id', verifyToken, getUserOrders)
 userRouter.get('/orders/:id/:orderId', verifyToken, getOrderById)
 
+//vouchers
+userRouter.get('/vouchers/:id', verifyToken, getUserVouchers)
 
 
 export default userRouter

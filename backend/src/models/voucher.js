@@ -17,7 +17,7 @@ const voucherSchema = new mongoose.Schema({
         trim: true
     },
     
-    // Discount: percentage or fixed amount
+    // discount: percentage or fixed amount
     discountType: {
         type: String,
         enum: ['percentage', 'fixed', 'free_shipping'],
@@ -29,7 +29,7 @@ const voucherSchema = new mongoose.Schema({
         min: 0
     },
     
-    // Restrictions
+    // restrictions
     minimumOrderAmount: {
         type: Number,
         default: 0
@@ -39,7 +39,7 @@ const voucherSchema = new mongoose.Schema({
         default: null
     },
     
-    // Usage limits
+    // usage limits
     usageLimit: {
         type: Number,
         default: 1
@@ -53,7 +53,7 @@ const voucherSchema = new mongoose.Schema({
         default: 1
     },
     
-    // Date range
+    // date range
     startDate: {
         type: Date,
         default: Date.now
@@ -63,13 +63,13 @@ const voucherSchema = new mongoose.Schema({
         required: true
     },
     
-    // Status
+    // status
     isActive: {
         type: Boolean,
         default: true
     },
 
-        // User Restrictions
+        // user restrictions
     applicableTo: {
         type: String,
         enum: ['all', 'new_users', 'existing_users', 'specific_users'],
@@ -81,7 +81,7 @@ const voucherSchema = new mongoose.Schema({
     }],
 
     
-    // Track usage
+    // track usage
     usedBy: [{
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -103,7 +103,7 @@ const voucherSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Methods
+// methods
 voucherSchema.methods.isValid = function() {
     const now = new Date();
     return this.isActive && 
