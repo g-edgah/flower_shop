@@ -1,10 +1,10 @@
 import express from 'express'
 
-import { getUser, editUser } from '../controller/user/user.js'
-import { getUserCart, editCartItem, addCartItem, minusCartItem, deleteCartItem } from '../controller/user/cart.js'
-import { getUserWishlist, editWishlist } from '../controller/user/wishlist.js'
-import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controller/user/orders.js'
-import { getUserVouchers } from '../controller/user/vouchers.js'
+import { getUser, editUser } from '../controllerS/user/user.js'
+import { getUserCart, editCartItem, addCartItem, minusCartItem, deleteCartItem } from '../controllerS/user/cart.js'
+import { getUserWishlist, editWishlist } from '../controllerS/user/wishlist.js'
+import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controllerS/user/orders.js'
+import { getUserVouchers } from '../controllerS/user/vouchers.js'
 import { verifyToken } from '../middleware/auth.js'
 
 

@@ -12,9 +12,9 @@ import {
     toggleFloristPick,
     toggleNewProduct,
     getAllProductsAdmin
-} from '../controller/admin/products.js';
+} from '../controllerS/admin/products.js';
 
-import { updateOrderStatus } from '../controller/admin/orders.js';
+import { updateOrderStatus } from '../controllerS/admin/orders.js';
 
 
 const adminRouter = express.Router();
