@@ -2,7 +2,7 @@ import express from 'express';
 
 const authRouter = express.Router();
 
-import { register, login, logout } from '../controller/auth.js'
+import { register, login, logout } from '../controllers/auth.js'
 import { verifyToken } from '../middleware/auth.js'
 
 

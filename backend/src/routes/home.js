@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getHomeData } from '../controller/user/home.js'
+import { getHomeData } from '../controllers/user/home.js'
 import { verifyToken } from '../middleware/auth.js'
 
 
