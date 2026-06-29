@@ -3,20 +3,20 @@ import { Routes, Route } from 'react-router-dom';
 
 import Header from '../components/user/common/header.js';
 import Footer from '../components/user/common/footer.js';
-import Home from '../pages/home.jsx';
-import Bouquets from '../pages/bouquets.jsx';
-import Flowers from '../pages/flowers.jsx';
-import Design from '../pages/design.jsx';
-import Colors from '../pages/colors.jsx';
-import Popular from '../pages/popular.jsx';
-import CartPage from '../pages/cart.jsx';
+import Home from '../pages/user/home.jsx';
+import Bouquets from '../pages/user/bouquets.jsx';
+import Flowers from '../pages/user/flowers.jsx';
+import Design from '../pages/user/design.jsx';
+import Colors from '../pages/user/colors.jsx';
+import Popular from '../pages/user/popular.jsx';
+import CartPage from '../pages/user/cart.jsx';
 import TopBar from '../components/user/common/topBar.js'
 import NavBar from '../components/user/common/navBar.jsx';
-import Profile from '../pages/profile.jsx';
+import Profile from '../pages/user/profile.jsx';
 import Login from '../pages/login.jsx';
 import Register from '../pages/register.jsx';
 
-import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, useCart } from '../hooks/user.js';
+import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, useCart } from '../hooks/user/user.js';
 
 const UserLayout = ({ userData, isUserLoading, userError, isUserFetching, userRefetch }) => {
 

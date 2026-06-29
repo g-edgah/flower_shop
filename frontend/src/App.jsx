@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
-import HomePage from './pages/home.jsx';
-import CartPage from './pages/cart.jsx';
+import HomePage from './pages/user/home.jsx';
+import CartPage from './pages/user/cart.jsx';
 
 import UserLayout from './layout/userLayout.jsx'
 import AdminLayout from './layout/adminLayout.jsx'
 
-import { useUser } from './hooks/user.js';
+import { useUser } from './hooks/user/user.js';
 
 
 

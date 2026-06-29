@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import api from '../setup/axios';
+import api from '../../setup/axios';
 
 // hook for home data
 export const useHome = () => {

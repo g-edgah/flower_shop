@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, Routes, Route } from 'react-router-dom';
 
-import CartHeader from '../components/user/cart/cartHeader.jsx';
-import Footer from '../components/user/common/footer.js';
-import Cart from '../components/user/cart/cart.jsx';
-import Checkout from '../components/user/cart/checkout.js';
+import CartHeader from '../../components/user/cart/cartHeader.jsx';
+import Footer from '../../components/user/common/footer.jsx';
+import Cart from '../../components/user/cart/cart.jsx';
+import Checkout from '../../components/user/cart/checkout.jsx';
 
-import { useCart } from '../hooks/user.js';
+import { useCart } from '../../hooks/user/user.js';
 
 const CartPage = ({userData, setPage, cart, cartRefetch, cartLoading, cartError, subTotal, total, couponCode, setCouponCode, shippingCost, setShippingCost, handleAddToCart, handleMinusFromCart, handleDeleteFromCart }) => {
     const navigate = useNavigate();

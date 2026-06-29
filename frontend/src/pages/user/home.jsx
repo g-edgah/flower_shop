@@ -10,13 +10,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import FlowerCard from '../components/user/common/flowerCard.jsx'
-import OccassionCard from '../components/user/home/occassionCard.jsx'
-import DiscountCard from '../components/user/home/discountCard.js'
-import DiscountSlider from '../components/user/home/discount.js'
+import FlowerCard from '../../components/user/common/flowerCard.jsx'
+import OccassionCard from '../../components/user/home/occassionCard.jsx'
+import DiscountCard from '../../components/user/home/discountCard.jsx'
+import DiscountSlider from '../../components/user/home/discount.jsx'
 
-import { useHome } from '../hooks/products.js';
-import { useUser, useCart, useWishlist, useEditWishlist } from '../hooks/user.js';
+import { useHome } from '../../hooks/user/products.js';
+import { useUser, useCart, useWishlist, useEditWishlist } from '../../hooks/user/user.js';
 
 
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
-import FlowerCard from '../components/user/common/flowerCard.jsx'
+import FlowerCard from '../../components/user/common/flowerCard.jsx'
 
-import { usePopular } from '../hooks/products.js';
+import { usePopular } from '../../hooks/user/products.js';
 import { use } from "react";
 
 const Popular = ({ setPage, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist }) => {

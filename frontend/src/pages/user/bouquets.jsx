@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
-import SideBar from '../components/user/bouquets/boquetSideBar.jsx'
-import FlowerCard from '../components/user/common/flowerCard.jsx'
-import Filter from '../components/user/common/filter.js'
+import SideBar from '../../components/user/bouquets/boquetSideBar.jsx'
+import FlowerCard from '../../components/user/common/flowerCard.jsx'
+import Filter from '../../components/user/common/filter.jsx'
 
-import { useBouquets } from '../hooks/products.js';
+import { useBouquets } from '../../hooks/user/products.js';
 import { use } from "react";
 
 const Bouquets = ({setPage, userData, isUserLoading, userError, isUserFetching, userRefetch, handleAddToCart, handleWishlistToggle, cart, wishlist, cartRefetch }) => {

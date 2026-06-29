@@ -1,6 +1,6 @@
 import { FaRegTrashCan } from "react-icons/fa6";
 
-import { useAddCart, useMinusCart, useDeleteCart } from "../../../hooks/user";
+import { useAddCart, useMinusCart, useDeleteCart } from "../../../hooks/user/user";
 
 
 const CartCard = ({ item, cartRefetch, handleAddToCart, handleMinusFromCart, handleDeleteFromCart }) => {  

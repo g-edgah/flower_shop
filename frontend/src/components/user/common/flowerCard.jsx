@@ -1,7 +1,7 @@
 import { ImHeart } from "react-icons/im";
 import { IoIosBasket } from "react-icons/io";
 
-import { useEditWishlist, useAddCart } from "../../../hooks/user";
+import { useEditWishlist, useAddCart } from "../../../hooks/user/user";
 
 const FlowerCard = ({item, liked, carted, userRefetch, handleAddToCart, handleWishlistToggle, cartRefetch }) => {
 
