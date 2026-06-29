@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useWishlist } from "../../../hooks/user";
+import { useWishlist } from "../../../../hooks/user/user";
 
 import WishlistCard from "./wishlistCard";
 

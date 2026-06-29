@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useVouchers } from "../../../hooks/user";
+import { useVouchers } from "../../../../hooks/user/user";
 
 const Vouchers = ({  }) => {
 

@@ -1,4 +1,4 @@
-import { useLogout } from '../../hooks/auth.js'
+import { useLogout } from '../../../../hooks/user/auth.js'
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 

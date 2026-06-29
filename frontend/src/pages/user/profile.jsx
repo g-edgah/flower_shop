@@ -11,7 +11,7 @@ import Reviews from '../../components/user/profile/reviews/reviews.jsx'
 import Vouchers from '../../components/user/profile/vouchers/vouchers.jsx'
 import Management from '../../components/user/profile/management/management.jsx'
 import Payment from '../../components/user/profile/payment/payment.jsx'
-import Logout from '../components/user/profile/logout.js'
+import Logout from '../../components/user/profile/logout/logout.jsx'
 
 
 

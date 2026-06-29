@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
-import { useEditUser, useCreateOrder } from '../../hooks/user.js';
+import { useEditUser, useCreateOrder } from '../../../hooks/user/user.js';
 
 const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, refetch }) => {
     const navigate = useNavigate();

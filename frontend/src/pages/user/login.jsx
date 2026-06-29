@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
-import { useLogin } from '../hooks/auth.js';
+import { useLogin } from '../../hooks/user/auth.js';
 
 const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRefetch, cartRefetch, wishlistRefetch, page = ''}) => {
     const navigate = useNavigate()

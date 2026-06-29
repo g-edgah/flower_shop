@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
-import { useRegister } from '../hooks/auth.js';
+import { useRegister } from '../../hooks/user/auth.js';
 
 const Register = ({}) => {
     const navigate = useNavigate()

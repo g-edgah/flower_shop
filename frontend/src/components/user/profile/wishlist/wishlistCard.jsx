@@ -1,7 +1,7 @@
 import { IoIosBasket } from "react-icons/io";
 import { ImHeartBroken } from "react-icons/im";
 
-import { useEditWishlist, useAddCart } from "../../../hooks/user";
+import { useEditWishlist, useAddCart } from "../../../../hooks/user/user";
 
 const WishlistCard = ({ item, handleAddToCart, handleWishlistToggle, carted }) => {
     //console.log("order: ", order)
