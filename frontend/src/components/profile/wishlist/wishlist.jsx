@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useWishlist } from "../../hooks/user";
+import { useWishlist } from "../../../hooks/user";
 
 import WishlistCard from "./wishlistCard";
 
@@ -21,8 +21,8 @@ const Wishlist = ({ cartRefetch, user, handleAddToCart, handleWishlistToggle, ca
                 {wishlistError && <span>error fetching wishlist: {error.message}</span>}
                 {wishlist && (
                     (wishlist.length === 0) ? (
-                        <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
-                            <span className="text-lg">No wishlist items found.</span>
+                        <div className="w-full h-45 flex flex-col items-center justify-center gap-3">
+                            <span className="text-lg">Your wishlist is empty</span>
                         </div>
                     ) : (  
                         

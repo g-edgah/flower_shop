@@ -13,8 +13,8 @@ import CartPage from '../pages/cart.jsx';
 import TopBar from '../components/common/topBar.jsx'
 import NavBar from '../components/common/navBar.jsx';
 import Profile from '../pages/profile.jsx';
-import Login from '../components/profile/login.jsx';
-import Register from '../components/profile/register.jsx';
+import Login from '../pages/login.jsx';
+import Register from '../pages/register.jsx';
 
 import { useWishlist, useEditWishlist, useAddCart, useMinusCart, useDeleteCart, useCart } from '../hooks/user.js';
 

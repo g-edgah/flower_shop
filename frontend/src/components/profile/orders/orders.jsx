@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOrders } from "../../hooks/user";
+import { useOrders } from "../../../hooks/user";
 import OrderCard from "./orderCard";
 
 import { FaArrowLeft } from "react-icons/fa6";
@@ -58,7 +58,7 @@ const Orders = ({ userRefetch, user }) => {
                 {data && data.orders && ordersType === "ongoing" && (
                     (ongoingOrders.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
-                            <span className="text-lg">No ongoing or delivered orders found.</span>
+                            <span className="text-lg">No ongoing or delivered orders found</span>
                         </div>
                     ) : (   
                     ongoingOrders.map((order) => (
@@ -72,7 +72,7 @@ const Orders = ({ userRefetch, user }) => {
                 {data && data.orders && ordersType === "cancelled" && (
                     (cancelledOrders.length === 0) ? (
                         <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
-                            <span className="text-lg">No cancelled or returned orders found.</span>
+                            <span className="text-lg">No cancelled or returned orders found</span>
                         </div>
                     ) : (
                     cancelledOrders.map((order) => (

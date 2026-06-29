@@ -3,14 +3,14 @@ import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 
 import Header from '../components/common/header.jsx';
 import Footer from '../components/common/footer.jsx';
-import SideBar from '../components/profile/sidebar.jsx'
-import Account from '../components/profile/account.jsx'
-import Orders from '../components/profile/orders.jsx'
-import Wishlist from '../components/profile/wishlist.jsx'
-import Reviews from '../components/profile/reviews.jsx'
-import Vouchers from '../components/profile/vouchers.jsx'
-import Management from '../components/profile/management.jsx'
-import Payment from '../components/profile/payment.jsx'
+import SideBar from '../components/profile/sidebar/sidebar.jsx'
+import Account from '../components/profile/account/account.jsx'
+import Orders from '../components/profile/orders/orders.jsx'
+import Wishlist from '../components/profile/wishlist/wishlist.jsx'
+import Reviews from '../components/profile/reviews/reviews.jsx'
+import Vouchers from '../components/profile/vouchers/vouchers.jsx'
+import Management from '../components/profile/management/management.jsx'
+import Payment from '../components/profile/payment/payment.jsx'
 import Logout from '../components/profile/logout.jsx'
 
 

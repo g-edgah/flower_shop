@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useOrders, useReview } from "../../hooks/user";
-import ReviewCard from "./reviewCard";
+import { useOrders, useReview } from "../../../hooks/user.js";
+import ReviewCard from "./reviewCard.jsx";
 import ExpandedReviewCard from './reviewCardExpanded.jsx'
 
 import { FaArrowLeft } from "react-icons/fa6";
@@ -152,17 +152,17 @@ const Reviews = ({ userRefetch, user }) => {
        
         <div className="orders">
             {reviewState === "reviews" && (
-            <div className='p-3'>
+            <div className='p-3 flex flex-col gap-5'>
                 <div className="title border-b border-gray-300 w-10/10 p-3">
                     <span className="title text-xl font-bold ">Pending Reviews</span>
                 </div>
                 
-                <div className="top text-lg flex gap-5 px-2 py-5">
+                {/* <div className="top text-lg flex gap-5 px-2 py-5">
                     
-                    {/* <span onClick={() => handleReviewsType("notReviewed")} className={`font-semibold cursor-pointer ${reviewsType === "notReviewed" ? "text-summaryButtons" : ""}`}>Not Reviewed</span> */}
+                    <span onClick={() => handleReviewsType("notReviewed")} className={`font-semibold cursor-pointer ${reviewsType === "notReviewed" ? "text-summaryButtons" : ""}`}>Not Reviewed</span>
                     
-                    {/* <span onClick={() => handleReviewsType("reviewed")}  className={`font-semibold cursor-pointer ${reviewsType === "reviewed" ? "text-summaryButtons" : ""}`}>Reviewed</span> */}
-                </div>
+                    <span onClick={() => handleReviewsType("reviewed")}  className={`font-semibold cursor-pointer ${reviewsType === "reviewed" ? "text-summaryButtons" : ""}`}>Reviewed</span>
+                </div> */}
                 
 
                 <div className="cont flex flex-col gap-3">
@@ -170,7 +170,7 @@ const Reviews = ({ userRefetch, user }) => {
                 {error && <span>error fetching orders: {error.message}</span>}
                 {data && data.orders && reviewsType === "notReviewed" && (
                     (deliveredOrders.length === 0)||(!pendingReviews) ? (
-                        <div className="w-full h-40 flex flex-col items-center justify-center gap-3">
+                        <div className="w-full h-45 flex flex-col items-center justify-center gap-3">
                             <span className="text-lg">You have no pending reviews</span>
                         </div>
                     ) : (   

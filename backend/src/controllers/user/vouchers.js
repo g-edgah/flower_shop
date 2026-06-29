@@ -4,72 +4,165 @@ import Order from "../../models/order.js";
 import Bouquet from "../../models/bouquet.js";
 import Flower from "../../models/flower.js";
 
+import mongoose from 'mongoose';
 
-// @desc    Get all valid vouchers for a user
+// @desc    Get all valid vouchers for a user (OPTIMIZED)
 // @route   GET /api/vouchers
 // @access  Private
 export const getUserVouchers = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const id = req.user.id;
         const { orderTotal = 0 } = req.query;
-
         const now = new Date();
 
-        // Find all valid vouchers
-        const vouchers = await Voucher.find({
-            isActive: true,
-            startDate: { $lte: now },
-            endDate: { $gte: now },
-            $or: [
-                { usageLimit: null },
-                { usedCount: { $lt: '$usageLimit' } }
-            ]
-        });
-
-        // Filter vouchers based on user eligibility
-        const eligibleVouchers = vouchers.filter(voucher => {
-            // Check if user is eligible
-            if (voucher.applicableTo === 'specific_users') {
-                if (!voucher.applicableUsers.includes(userId)) {
-                    return false;
+        // using aggregation pipeline for efficient filtering
+        const vouchers = await Voucher.aggregate([
+            // stage 1: match basic criteria (uses indexes)
+            {
+                $match: {
+                    isActive: true,
+                    isDeleted: { $ne: true },
+                    startDate: { $lte: now },
+                    endDate: { $gte: now },
+                    $or: [
+                        { usageLimit: null },
+                        { $expr: { $lt: ['$usedCount', '$usageLimit'] } }
+                    ]
+                }
+            },
+            // stage 2: filter by user eligibility
+            {
+                $match: {
+                    $or: [
+                        { applicableTo: { $ne: 'specific_users' } },
+                        { 
+                            $and: [
+                                { applicableTo: 'specific_users' },
+                                { applicableUsers: { $in: [new mongoose.Types.ObjectId(id)] } }
+                            ]
+                        }
+                    ]
+                }
+            },
+            // stage 3: calculate user usage count
+            {
+                $addFields: {
+                    userUsageCount: {
+                        $size: {
+                            $filter: {
+                                input: '$usedBy',
+                                as: 'usage',
+                                cond: { 
+                                    $eq: ['$$usage.id', new mongoose.Types.ObjectId(id)] 
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            // stage 4: filter by per-user limit
+            {
+                $match: {
+                    $expr: { 
+                        $lt: ['$userUsageCount', '$perUserLimit'] 
+                    }
+                }
+            },
+            // Stage 5: Filter by minimum order amount
+            {
+                $match: {
+                    minimumOrderAmount: { $lte: Number(orderTotal) || 0 }
+                }
+            },
+            // stage 6: calculate potential savings
+            {
+                $addFields: {
+                    potentialSavings: {
+                        $cond: [
+                            { $eq: ['$discountType', 'percentage'] },
+                            { 
+                                $multiply: [
+                                    Number(orderTotal) || 0,
+                                    { $divide: ['$discountValue', 100] }
+                                ]
+                            },
+                            '$discountValue'
+                        ]
+                    },
+                    isExpiringSoon: {
+                        $lte: [
+                            '$endDate',
+                            new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+                        ]
+                    }
+                }
+            },
+            // stage 7: limit potential savings by max discount
+            {
+                $addFields: {
+                    potentialSavings: {
+                        $cond: [
+                            { 
+                                $and: [
+                                    { $ne: ['$maxDiscountAmount', null] },
+                                    { $gt: ['$potentialSavings', '$maxDiscountAmount'] }
+                                ]
+                            },
+                            '$maxDiscountAmount',
+                            '$potentialSavings'
+                        ]
+                    }
+                }
+            },
+            // stage 8: project only needed fields
+            {
+                $project: {
+                    _id: 1,
+                    code: 1,
+                    name: 1,
+                    description: 1,
+                    discountType: 1,
+                    discountValue: 1,
+                    minimumOrderAmount: 1,
+                    maxDiscountAmount: 1,
+                    startDate: 1,
+                    endDate: 1,
+                    usedCount: 1,
+                    perUserLimit: 1,
+                    userUsageCount: 1,
+                    potentialSavings: 1,
+                    isExpiringSoon: 1,
+                    remainingUses: {
+                        $cond: [
+                            { $eq: ['$usageLimit', null] },
+                            null,
+                            { $subtract: ['$usageLimit', '$usedCount'] }
+                        ]
+                    },
+                    remainingUserUses: {
+                        $subtract: ['$perUserLimit', '$userUsageCount']
+                    }
+                }
+            },
+            // stage 9: sort by potential savings (highest first)
+            {
+                $sort: { 
+                    potentialSavings: -1,
+                    endDate: 1 // Expiring soon first
                 }
             }
+        ]);
 
-            // Check if user has reached per-user limit
-            const userUsage = voucher.usedBy.filter(
-                entry => entry.userId.toString() === userId.toString()
-            );
-            if (userUsage.length >= voucher.perUserLimit) {
-                return false;
-            }
-
-            // Check minimum order amount
-            if (orderTotal < voucher.minimumOrderAmount) {
-                return false;
-            }
-
-            return true;
-        });
-
-        // Format vouchers for response
-        const formattedVouchers = eligibleVouchers.map(voucher => ({
-            id: voucher._id,
-            code: voucher.code,
-            name: voucher.name,
-            description: voucher.description,
-            discountType: voucher.discountType,
-            discountValue: voucher.discountValue,
-            minimumOrderAmount: voucher.minimumOrderAmount,
-            maxDiscountAmount: voucher.maxDiscountAmount,
-            validUntil: voucher.endDate,
-            isExpiringSoon: isExpiringSoon(voucher.endDate),
-            savings: voucher.calculateDiscount(Number(orderTotal))
-        }));
+        console.log(`vouchers for user ${id} : ${vouchers}`)
 
         res.status(200).json({
             success: true,
-            count: formattedVouchers.length,
-            vouchers: formattedVouchers
+            count: vouchers.length,
+            vouchers,
+            summary: {
+                totalAvailable: vouchers.length,
+                bestDiscount: vouchers.length > 0 ? vouchers[0].potentialSavings : 0
+            }
         });
 
     } catch (error) {
@@ -82,76 +175,159 @@ export const getUserVouchers = async (req, res) => {
     }
 };
 
-// // @desc    Get voucher by code
+// // @desc    Get voucher by code (OPTIMIZED with single query)
 // // @route   GET /api/vouchers/:code
 // // @access  Private
 // export const getVoucherByCode = async (req, res) => {
 //     try {
 //         const { code } = req.params;
-//         const userId = req.user.id;
+//         const id = req.user.id;
+//         const { orderTotal = 0 } = req.query;
 
-//         const voucher = await Voucher.findOne({ 
-//             code: code.toUpperCase(),
-//             isActive: true
-//         });
+//         // Single efficient query with user validation
+//         const voucher = await Voucher.aggregate([
+//             // Stage 1: Find by code
+//             {
+//                 $match: {
+//                     code: code.toUpperCase(),
+//                     isActive: true,
+//                     isDeleted: { $ne: true }
+//                 }
+//             },
+//             // Stage 2: Check dates
+//             {
+//                 $match: {
+//                     startDate: { $lte: new Date() },
+//                     endDate: { $gte: new Date() }
+//                 }
+//             },
+//             // Stage 3: Check usage limits
+//             {
+//                 $match: {
+//                     $or: [
+//                         { usageLimit: null },
+//                         { $expr: { $lt: ['$usedCount', '$usageLimit'] } }
+//                     ]
+//                 }
+//             },
+//             // Stage 4: Check user eligibility
+//             {
+//                 $match: {
+//                     $or: [
+//                         { applicableTo: { $ne: 'specific_users' } },
+//                         { 
+//                             $and: [
+//                                 { applicableTo: 'specific_users' },
+//                                 { applicableUsers: { $in: [new mongoose.Types.ObjectId(id)] } }
+//                             ]
+//                         }
+//                     ]
+//                 }
+//             },
+//             // Stage 5: Calculate user usage
+//             {
+//                 $addFields: {
+//                     userUsageCount: {
+//                         $size: {
+//                             $filter: {
+//                                 input: '$usedBy',
+//                                 as: 'usage',
+//                                 cond: { 
+//                                     $eq: ['$$usage.id', new mongoose.Types.ObjectId(id)] 
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             },
+//             // Stage 6: Check per-user limit
+//             {
+//                 $match: {
+//                     $expr: { 
+//                         $lt: ['$userUsageCount', '$perUserLimit'] 
+//                     }
+//                 }
+//             },
+//             // Stage 7: Check minimum order
+//             {
+//                 $match: {
+//                     minimumOrderAmount: { $lte: Number(orderTotal) || 0 }
+//                 }
+//             },
+//             // Stage 8: Calculate discount
+//             {
+//                 $addFields: {
+//                     calculatedDiscount: {
+//                         $cond: [
+//                             { $eq: ['$discountType', 'percentage'] },
+//                             { 
+//                                 $multiply: [
+//                                     Number(orderTotal) || 0,
+//                                     { $divide: ['$discountValue', 100] }
+//                                 ]
+//                             },
+//                             '$discountValue'
+//                         ]
+//                     }
+//                 }
+//             },
+//             // Stage 9: Apply max discount cap
+//             {
+//                 $addFields: {
+//                     calculatedDiscount: {
+//                         $cond: [
+//                             { 
+//                                 $and: [
+//                                     { $ne: ['$maxDiscountAmount', null] },
+//                                     { $gt: ['$calculatedDiscount', '$maxDiscountAmount'] }
+//                                 ]
+//                             },
+//                             '$maxDiscountAmount',
+//                             '$calculatedDiscount'
+//                         ]
+//                     }
+//                 }
+//             },
+//             // Stage 10: Project final fields
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     code: 1,
+//                     name: 1,
+//                     description: 1,
+//                     discountType: 1,
+//                     discountValue: 1,
+//                     minimumOrderAmount: 1,
+//                     maxDiscountAmount: 1,
+//                     startDate: 1,
+//                     endDate: 1,
+//                     calculatedDiscount: 1,
+//                     userUsageCount: 1,
+//                     perUserLimit: 1,
+//                     remainingUses: {
+//                         $cond: [
+//                             { $eq: ['$usageLimit', null] },
+//                             null,
+//                             { $subtract: ['$usageLimit', '$usedCount'] }
+//                         ]
+//                     },
+//                     remainingUserUses: {
+//                         $subtract: ['$perUserLimit', '$userUsageCount']
+//                     }
+//                 }
+//             }
+//         ]);
 
-//         if (!voucher) {
+//         if (!voucher || voucher.length === 0) {
 //             return res.status(404).json({
 //                 success: false,
-//                 message: 'Voucher not found or inactive'
-//             });
-//         }
-
-//         // Check if voucher is valid
-//         const now = new Date();
-//         if (voucher.startDate > now) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Voucher is not yet active'
-//             });
-//         }
-
-//         if (voucher.endDate < now) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Voucher has expired'
-//             });
-//         }
-
-//         // Check user eligibility
-//         if (voucher.applicableTo === 'specific_users') {
-//             if (!voucher.applicableUsers.includes(userId)) {
-//                 return res.status(403).json({
-//                     success: false,
-//                     message: 'Voucher is not applicable to this user'
-//                 });
-//             }
-//         }
-
-//         // Check per-user limit
-//         const userUsage = voucher.usedBy.filter(
-//             entry => entry.userId.toString() === userId.toString()
-//         );
-//         if (userUsage.length >= voucher.perUserLimit) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'You have already used this voucher the maximum number of times'
+//                 message: 'Voucher not found or not applicable'
 //             });
 //         }
 
 //         res.status(200).json({
 //             success: true,
-//             voucher: {
-//                 id: voucher._id,
-//                 code: voucher.code,
-//                 name: voucher.name,
-//                 description: voucher.description,
-//                 discountType: voucher.discountType,
-//                 discountValue: voucher.discountValue,
-//                 minimumOrderAmount: voucher.minimumOrderAmount,
-//                 maxDiscountAmount: voucher.maxDiscountAmount,
-//                 validUntil: voucher.endDate
-//             }
+//             voucher: voucher[0]
 //         });
 
 //     } catch (error) {
@@ -164,324 +340,258 @@ export const getUserVouchers = async (req, res) => {
 //     }
 // };
 
-// // @desc    Apply voucher to cart/order
-// // @route   POST /api/vouchers/apply
+// // @desc    Get available vouchers for user with caching
+// // @route   GET /api/vouchers/available
 // // @access  Private
-// export const applyVoucher = async (req, res) => {
+// export const getAvailableVouchers = async (req, res) => {
 //     try {
-//         const { code, orderTotal, cartItems, shippingCost = 0 } = req.body;
-//         const userId = req.user.id;
+//         const id = req.user.id;
+//         const { orderTotal = 0 } = req.query;
+//         const now = new Date();
 
-//         if (!code) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Voucher code is required'
-//             });
-//         }
-
-//         // Find the voucher
-//         const voucher = await Voucher.findOne({ 
-//             code: code.toUpperCase(),
-//             isActive: true
-//         });
-
-//         if (!voucher) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: 'Invalid voucher code'
-//             });
-//         }
-
-//         // Validate voucher
-//         const validationResult = await validateVoucher(voucher, userId, orderTotal, cartItems);
-//         if (!validationResult.valid) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: validationResult.message
-//             });
-//         }
-
-//         // Calculate discount
-//         let discount = 0;
-//         if (voucher.discountType === 'free_shipping') {
-//             discount = shippingCost;
-//         } else {
-//             discount = voucher.calculateDiscount(orderTotal);
-//         }
-
-//         // Calculate final total
-//         const finalTotal = orderTotal + shippingCost - discount;
-
-//         res.status(200).json({
-//             success: true,
-//             data: {
-//                 voucher: {
-//                     id: voucher._id,
-//                     code: voucher.code,
-//                     name: voucher.name,
-//                     discountType: voucher.discountType,
-//                     discountValue: voucher.discountValue
-//                 },
-//                 discount: {
-//                     amount: discount,
-//                     type: voucher.discountType,
-//                     details: voucher.discountType === 'free_shipping' 
-//                         ? 'Free shipping applied' 
-//                         : `${voucher.discountValue}${voucher.discountType === 'percentage' ? '%' : ' fixed'} discount`
-//                 },
-//                 breakdown: {
-//                     subtotal: orderTotal,
-//                     shipping: shippingCost,
-//                     discount: discount,
-//                     total: finalTotal
+//         // Use MongoDB's aggregation with pipeline optimization
+//         const vouchers = await Voucher.aggregate([
+//             // Stage 1: Index-optimized match
+//             {
+//                 $match: {
+//                     isActive: true,
+//                     isDeleted: { $ne: true },
+//                     startDate: { $lte: now },
+//                     endDate: { $gte: now }
+//                 }
+//             },
+//             // Stage 2: Join with user eligibility (more efficient than $in)
+//             {
+//                 $match: {
+//                     $expr: {
+//                         $or: [
+//                             { $ne: ['$applicableTo', 'specific_users'] },
+//                             {
+//                                 $and: [
+//                                     { $eq: ['$applicableTo', 'specific_users'] },
+//                                     { $in: [new mongoose.Types.ObjectId(id), '$applicableUsers'] }
+//                                 ]
+//                             }
+//                         ]
+//                     }
+//                 }
+//             },
+//             // Stage 3: Usage limit check (using expression)
+//             {
+//                 $match: {
+//                     $expr: {
+//                         $or: [
+//                             { $eq: ['$usageLimit', null] },
+//                             { $lt: ['$usedCount', '$usageLimit'] }
+//                         ]
+//                     }
+//                 }
+//             },
+//             // Stage 4: Calculate user usage efficiently
+//             {
+//                 $addFields: {
+//                     userUsageCount: {
+//                         $size: {
+//                             $filter: {
+//                                 input: '$usedBy',
+//                                 as: 'usage',
+//                                 cond: { 
+//                                     $eq: ['$$usage.id', new mongoose.Types.ObjectId(id)] 
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             },
+//             // Stage 5: Filter by per-user limit
+//             {
+//                 $match: {
+//                     $expr: { $lt: ['$userUsageCount', '$perUserLimit'] }
+//                 }
+//             },
+//             // Stage 6: Filter by order amount
+//             {
+//                 $match: {
+//                     $expr: {
+//                         $lte: ['$minimumOrderAmount', Number(orderTotal) || 0]
+//                     }
+//                 }
+//             },
+//             // Stage 7: Add computed fields
+//             {
+//                 $addFields: {
+//                     discountAmount: {
+//                         $cond: [
+//                             { $eq: ['$discountType', 'percentage'] },
+//                             { 
+//                                 $min: [
+//                                     { 
+//                                         $multiply: [
+//                                             Number(orderTotal) || 0,
+//                                             { $divide: ['$discountValue', 100] }
+//                                         ]
+//                                     },
+//                                     { $ifNull: ['$maxDiscountAmount', Infinity] }
+//                                 ]
+//                             },
+//                             { $min: ['$discountValue', Number(orderTotal) || 0] }
+//                         ]
+//                     },
+//                     isExpiringSoon: {
+//                         $lte: [
+//                             '$endDate',
+//                             new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+//                         ]
+//                     }
+//                 }
+//             },
+//             // Stage 8: Sort for best user experience
+//             {
+//                 $sort: {
+//                     discountAmount: -1,
+//                     isExpiringSoon: -1,
+//                     endDate: 1
+//                 }
+//             },
+//             // Stage 9: Limit results for performance
+//             {
+//                 $limit: 50
+//             },
+//             // Stage 10: Final projection
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     code: 1,
+//                     name: 1,
+//                     description: 1,
+//                     discountType: 1,
+//                     discountValue: 1,
+//                     minimumOrderAmount: 1,
+//                     maxDiscountAmount: 1,
+//                     endDate: 1,
+//                     discountAmount: 1,
+//                     isExpiringSoon: 1,
+//                     usageLeft: {
+//                         $cond: [
+//                             { $eq: ['$usageLimit', null] },
+//                             null,
+//                             { $subtract: ['$usageLimit', '$usedCount'] }
+//                         ]
+//                     },
+//                     userUsesLeft: {
+//                         $subtract: ['$perUserLimit', '$userUsageCount']
+//                     }
 //                 }
 //             }
+//         ]);
+
+//         res.status(200).json({
+//             success: true,
+//             count: vouchers.length,
+//             vouchers,
+//             stats: {
+//                 totalAvailable: vouchers.length,
+//                 bestDiscount: vouchers.length > 0 ? vouchers[0].discountAmount : 0,
+//                 expiringSoon: vouchers.filter(v => v.isExpiringSoon).length
+//             }
 //         });
 
 //     } catch (error) {
-//         console.error('Error applying voucher:', error);
+//         console.error('Error fetching available vouchers:', error);
 //         res.status(500).json({
 //             success: false,
-//             message: 'Failed to apply voucher',
+//             message: 'Failed to fetch available vouchers',
 //             error: error.message
 //         });
 //     }
 // };
 
-// // @desc    Remove applied voucher
-// // @route   DELETE /api/vouchers/apply
-// // @access  Private
-// export const removeVoucher = async (req, res) => {
+// // @desc    Get vouchers with pagination for admin
+// // @route   GET /api/vouchers/admin
+// // @access  Private/Admin
+// export const getVouchersAdmin = async (req, res) => {
 //     try {
-//         // In a stateless API, you'd typically store the applied voucher in session or cart
-//         // For now, we'll just return success
-//         res.status(200).json({
-//             success: true,
-//             message: 'Voucher removed successfully'
-//         });
-//     } catch (error) {
-//         console.error('Error removing voucher:', error);
-//         res.status(500).json({
-//             success: false,
-//             message: 'Failed to remove voucher'
-//         });
-//     }
-// };
+//         const page = parseInt(req.query.page) || 1;
+//         const limit = parseInt(req.query.limit) || 20;
+//         const skip = (page - 1) * limit;
+//         const { search, status, discountType } = req.query;
 
-// // @desc    Use voucher (called during checkout)
-// // @route   POST /api/vouchers/use
-// // @access  Private
-// export const useVoucher = async (req, res) => {
-//     try {
-//         const { code, orderId, orderTotal } = req.body;
-//         const userId = req.user.id;
-
-//         if (!code || !orderId) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Voucher code and order ID are required'
-//             });
+//         // Build filter
+//         const filter = {};
+//         if (search) {
+//             filter.$or = [
+//                 { code: { $regex: search, $options: 'i' } },
+//                 { name: { $regex: search, $options: 'i' } }
+//             ];
 //         }
+//         if (status === 'active') filter.isActive = true;
+//         if (status === 'inactive') filter.isActive = false;
+//         if (discountType) filter.discountType = discountType;
 
-//         const voucher = await Voucher.findOne({ 
-//             code: code.toUpperCase(),
-//             isActive: true
-//         });
-
-//         if (!voucher) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: 'Voucher not found'
-//             });
-//         }
-
-//         // Re-validate before using
-//         const validationResult = await validateVoucher(voucher, userId, orderTotal);
-//         if (!validationResult.valid) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: validationResult.message
-//             });
-//         }
-
-//         // Calculate discount
-//         let discount = 0;
-//         if (voucher.discountType === 'free_shipping') {
-//             // Get shipping cost from order
-//             const order = await Order.findById(orderId);
-//             if (!order) {
-//                 return res.status(404).json({
-//                     success: false,
-//                     message: 'Order not found'
-//                 });
-//             }
-//             discount = order.shippingCost || 0;
-//         } else {
-//             discount = voucher.calculateDiscount(orderTotal);
-//         }
-
-//         // Record usage
-//         await voucher.incrementUsage(userId, orderId, discount, orderTotal);
-
-//         // Update the order with voucher information
-//         await Order.findByIdAndUpdate(orderId, {
-//             voucherApplied: {
-//                 code: voucher.code,
-//                 discount: discount,
-//                 voucherId: voucher._id
-//             }
-//         });
+//         const [vouchers, total] = await Promise.all([
+//             Voucher.find(filter)
+//                 .sort({ createdAt: -1 })
+//                 .skip(skip)
+//                 .limit(limit)
+//                 .populate('createdBy', 'name email'),
+//             Voucher.countDocuments(filter)
+//         ]);
 
 //         res.status(200).json({
 //             success: true,
-//             message: 'Voucher applied successfully',
-//             data: {
-//                 voucher: {
-//                     code: voucher.code,
-//                     name: voucher.name
-//                 },
-//                 discount: discount,
-//                 remainingUses: voucher.usageLimit ? voucher.usageLimit - voucher.usedCount : null
+//             vouchers,
+//             pagination: {
+//                 page,
+//                 limit,
+//                 total,
+//                 pages: Math.ceil(total / limit)
 //             }
 //         });
 
 //     } catch (error) {
-//         console.error('Error using voucher:', error);
+//         console.error('Error fetching admin vouchers:', error);
 //         res.status(500).json({
 //             success: false,
-//             message: 'Failed to use voucher',
+//             message: 'Failed to fetch vouchers',
 //             error: error.message
 //         });
 //     }
 // };
 
-// // @desc    Check voucher validity
-// // @route   POST /api/vouchers/validate
-// // @access  Private
-// export const validateVoucherCode = async (req, res) => {
+// // Helper function to get user eligible vouchers count (for caching)
+// export const getUserVoucherCount = async (req, res) => {
 //     try {
-//         const { code, orderTotal = 0, cartItems = [] } = req.body;
-//         const userId = req.user.id;
-
-//         if (!code) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: 'Voucher code is required'
-//             });
-//         }
-
-//         const voucher = await Voucher.findOne({ 
-//             code: code.toUpperCase(),
-//             isActive: true
-//         });
-
-//         if (!voucher) {
-//             return res.status(404).json({
-//                 success: false,
-//                 valid: false,
-//                 message: 'Invalid voucher code'
-//             });
-//         }
-
-//         const validationResult = await validateVoucher(voucher, userId, orderTotal, cartItems);
+//         const id = req.user.id;
         
-//         if (!validationResult.valid) {
-//             return res.status(400).json({
-//                 success: false,
-//                 valid: false,
-//                 message: validationResult.message
-//             });
-//         }
-
-//         const potentialDiscount = voucher.discountType === 'free_shipping' 
-//             ? 0 
-//             : voucher.calculateDiscount(orderTotal);
+//         const count = await Voucher.countDocuments({
+//             isActive: true,
+//             startDate: { $lte: new Date() },
+//             endDate: { $gte: new Date() },
+//             $or: [
+//                 { usageLimit: null },
+//                 { $expr: { $lt: ['$usedCount', '$usageLimit'] } }
+//             ],
+//             $or: [
+//                 { applicableTo: { $ne: 'specific_users' } },
+//                 { 
+//                     $and: [
+//                         { applicableTo: 'specific_users' },
+//                         { applicableUsers: id }
+//                     ]
+//                 }
+//             ]
+//         });
 
 //         res.status(200).json({
 //             success: true,
-//             valid: true,
-//             data: {
-//                 code: voucher.code,
-//                 name: voucher.name,
-//                 description: voucher.description,
-//                 discountType: voucher.discountType,
-//                 discountValue: voucher.discountValue,
-//                 potentialDiscount: potentialDiscount,
-//                 minimumOrderAmount: voucher.minimumOrderAmount,
-//                 maxDiscountAmount: voucher.maxDiscountAmount
-//             }
+//             count
 //         });
 
 //     } catch (error) {
-//         console.error('Error validating voucher:', error);
 //         res.status(500).json({
 //             success: false,
-//             message: 'Failed to validate voucher',
+//             message: 'Failed to get voucher count',
 //             error: error.message
 //         });
 //     }
 // };
-
-// // Helper Functions
-
-// // Validate voucher
-// async function validateVoucher(voucher, userId, orderTotal, cartItems = []) {
-//     const now = new Date();
-
-//     // Check if voucher is active
-//     if (!voucher.isActive) {
-//         return { valid: false, message: 'Voucher is not active' };
-//     }
-
-//     // Check date range
-//     if (voucher.startDate > now) {
-//         return { valid: false, message: 'Voucher is not yet active' };
-//     }
-
-//     if (voucher.endDate < now) {
-//         return { valid: false, message: 'Voucher has expired' };
-//     }
-
-//     // Check usage limit
-//     if (voucher.usageLimit !== null && voucher.usedCount >= voucher.usageLimit) {
-//         return { valid: false, message: 'Voucher usage limit has been reached' };
-//     }
-
-//     // Check user eligibility
-//     if (voucher.applicableTo === 'specific_users') {
-//         if (!voucher.applicableUsers.includes(userId)) {
-//             return { valid: false, message: 'Voucher is not applicable to this user' };
-//         }
-//     }
-
-//     // Check per-user limit
-//     const userUsage = voucher.usedBy.filter(
-//         entry => entry.userId.toString() === userId.toString()
-//     );
-//     if (userUsage.length >= voucher.perUserLimit) {
-//         return { valid: false, message: 'You have already used this voucher the maximum number of times' };
-//     }
-
-//     // Check minimum order amount
-//     if (orderTotal < voucher.minimumOrderAmount) {
-//         return { 
-//             valid: false, 
-//             message: `Minimum order amount of ${voucher.minimumOrderAmount} required` 
-//         };
-//     }
-
-//     // If free shipping, no further validation needed
-//     if (voucher.discountType === 'free_shipping') {
-//         return { valid: true };
-//     }
-
-//     return { valid: true };
-// }
-
-// // Helper: Check if voucher is expiring soon (within 3 days)
-// function isExpiringSoon(endDate) {
-//     const now = new Date();
-//     const threeDaysFromNow = new Date();
-//     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
-//     return endDate <= threeDaysFromNow && endDate >= now;
-// }

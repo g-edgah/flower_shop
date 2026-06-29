@@ -153,3 +153,16 @@ export const useReview = () => {
         enabled: !!userId
     });
 }
+
+// getting orders
+export const useVouchers = () => {
+    console.log(`getting them vouchers`) 
+    const userId = getUserId()
+
+    return useQuery({ 
+        queryKey: ['vouchers', userId],
+        queryFn: () => api.get(`/user/vouchers/${userId}`).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
