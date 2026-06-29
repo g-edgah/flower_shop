@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate, Routes, Route } from 'react-router-dom';
 
-import CartHeader from '../components/cart/cartHeader.jsx';
-import Footer from '../components/common/footer.jsx';
-import Cart from '../components/cart/cart.jsx';
-import Checkout from '../components/cart/checkout.jsx';
+import CartHeader from '../components/user/cart/cartHeader.jsx';
+import Footer from '../components/user/common/footer.js';
+import Cart from '../components/user/cart/cart.jsx';
+import Checkout from '../components/user/cart/checkout.js';
 
 import { useCart } from '../hooks/user.js';
 

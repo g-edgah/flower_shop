@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
-import SideBar from '../components/flowers/flowerSideBar.jsx'
-import FlowerCard from '../components/common/flowerCard.jsx'
-import Filter from '../components/common/filter.jsx'
+import SideBar from '../components/user/flowers/flowerSideBar.jsx'
+import FlowerCard from '../components/user/common/flowerCard.jsx'
+import Filter from '../components/user/common/filter.js'
 
 import { useFlowers } from '../hooks/products.js';
 import { use } from "react";

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 
-import Header from '../components/common/header.jsx';
-import Footer from '../components/common/footer.jsx';
-import SideBar from '../components/profile/sidebar/sidebar.jsx'
-import Account from '../components/profile/account/account.jsx'
-import Orders from '../components/profile/orders/orders.jsx'
-import Wishlist from '../components/profile/wishlist/wishlist.jsx'
-import Reviews from '../components/profile/reviews/reviews.jsx'
-import Vouchers from '../components/profile/vouchers/vouchers.jsx'
-import Management from '../components/profile/management/management.jsx'
-import Payment from '../components/profile/payment/payment.jsx'
-import Logout from '../components/profile/logout.jsx'
+import Header from '../components/user/common/header.js';
+import Footer from '../components/user/common/footer.js';
+import SideBar from '../components/user/profile/sidebar/sidebar.js'
+import Account from '../components/user/profile/account/account.js'
+import Orders from '../components/user/profile/orders/orders.jsx'
+import Wishlist from '../components/user/profile/wishlist/wishlist.js'
+import Reviews from '../components/user/profile/reviews/reviews.js'
+import Vouchers from '../components/user/profile/vouchers/vouchers.js'
+import Management from '../components/user/profile/management/management.js'
+import Payment from '../components/user/profile/payment/payment.js'
+import Logout from '../components/user/profile/logout.js'
 
 
 
