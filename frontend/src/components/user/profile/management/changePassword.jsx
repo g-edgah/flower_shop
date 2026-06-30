@@ -16,14 +16,12 @@ const ChangePassword = ({user, userRefetch}) => {
         if (name === 'currentPassword') {
             setCurrentPassword(value)
 
-        } else if (name === 'passwordOne') {
+        } else if (name === 'newPasswordOne') {
             setNewPasswordOne(value)
 
-        } else if (name === 'passwordTwo') {
+        } else if (name === 'newPasswordTwo') {
             setNewPasswordTwo(value)
 
-        } else if (name === 'email') {
-            setEmail(value)
         }
     }
 
@@ -31,81 +29,79 @@ const ChangePassword = ({user, userRefetch}) => {
     const validatePasswordChange = () => {
         const newErrors = {};
 
-        //confirm user has provided current password
-        if (!currentPassword) {
-        newErrors.currentPassword = 'Please provide the current password';
-        newErrors.newPasswordTwo = '';
-        newErrors.newPasswordOne = ''
+
+        if (newPasswordOne !== newPasswordTwo) {
+            newErrors.newPasswordOne = 'Passwords do not match';
+            newErrors.newPasswordTwo = 'Passwords do not match';
         } 
 
-        //confirm user has provided new password
-        if (!newPasswordOne) {
-        newErrors.newPasswordOne = 'Password is required';
-        newErrors.currentPassword = '';
-        newErrors.newPasswordTwo = '';
+        if (!newPasswordTwo) {
+            newErrors.newPasswordTwo = 'Password is required';
+            newErrors.currentPassword = '';
+            newErrors.newPasswordOne = '';
         } 
         
-        if (!newPasswordTwo) {
-        newErrors.newPasswordTwo = 'Password is required';
-        newErrors.currentPassword = '';
-        newErrors.newPasswordOne = '';
+        if (!newPasswordTwo && newPasswordOne) {
+            newErrors.confirmPassword = 'Please confirm password';
+            newErrors.password = '';
         } 
 
         if (newPasswordOne.length < 6) {
-        newErrors.newPasswordOne = 'Password must be at least 6 characters';
-        newErrors.currentPassword = '';
-        newErrors.newPasswordTwo = '';
+            newErrors.newPasswordOne = 'Password must be at least 6 characters';
+            newErrors.currentPassword = '';
+            newErrors.newPasswordTwo = '';
         }
 
-        if (newPasswordOne !== newPasswordTwo) {
-        newErrors.newPasswordOne = 'Passwords do not match';
-        newErrors.newPasswordTwo = 'Passwords do not match';
+        // confirm user has provided new password
+        if (!newPasswordOne) {
+            newErrors.newPasswordOne = 'Password is required';
+            newErrors.newPasswordTwo = '';
         } 
 
-        
-        if (!newPasswordTwo && newPasswordOne) {
-        newErrors.confirmPassword = 'Please confirm password';
-        newErrors.password = '';
+        //confirm user has provided current password
+        if (!currentPassword) {
+            newErrors.currentPassword = 'Please provide the current password';
+            newErrors.newPasswordTwo = '';
+            newErrors.newPasswordOne = ''
         } 
 
-        if (!formData.email) {
-        newErrors.email = 'Email is required';
-        newErrors.confirmPassword = '';
-        newErrors.password = '';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Email is invalid';
-        newErrors.confirmPassword = '';
-        newErrors.password = '';
-        }
+
            
-        
         return newErrors;
     };
 
     const handleSubmit = (e) => {
+        
 
+        const validationErrors = validatePasswordChange();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            console.log("errors: ", errors)
+            return;
+        }
+        //console.log("submitted change password")
     }
 
 
 
     return (
         <div className="password">
-            <form onSubmit={(e) => handleSubmit(e, 'account')} className="edit relative h-full py-4 flex flex-col gap-4 w-full">
+            <div className="edit relative h-full py-4 flex flex-col gap-4 w-full">
                 
                 
                 <div className="address flex flex-col items-start px-4 gap-2">
                     <span className="text font-semibold">Current Password: </span>
 
-                    <div className="flex relative justify-between w-full max-w-70 gap-4">
+                    <div className="flex flex-col relative justify-between w-full max-w-70 gap-1">
 
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.currentPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors.currentPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
                             type={showCurrentPassword ? 'text' : 'password'}
                             id='currentPassword' 
                             name='currentPassword'
                             value={currentPassword}
                             onChange={(e) => {handleChange(e)}}
-                            placeholder="currentPassword"
+                            placeholder="********"
                         />
 
                         <button
@@ -126,8 +122,8 @@ const ChangePassword = ({user, userRefetch}) => {
                         </button>
 
 
-                        {errors?.newPasswordOne && (
-                        <p className="mt-1 text-sm text-red-500">{errors.newPasswordOne}</p>
+                        {errors?.currentPassword && (
+                        <p className="mt-1 text-sm text-red-500">{errors.currentPassword}</p>
                         )} 
 
                         
@@ -137,7 +133,7 @@ const ChangePassword = ({user, userRefetch}) => {
                 <div className="address flex flex-col items-start px-4 gap-2 mt-5">
                     <span className="text font-semibold">New Password: </span>
 
-                    <div className="relative flex justify-between w-full max-w-70 gap-4">
+                    <div className="relative flex flex-col justify-between w-full max-w-70 gap-1">
 
                         <input 
                             className={`w-full pl-4 pr-2 py-1.5 border ${errors.newPasswordOne ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
@@ -146,7 +142,7 @@ const ChangePassword = ({user, userRefetch}) => {
                             name='newPasswordOne'
                             value={newPasswordOne}
                             onChange={(e) => {handleChange(e)}}
-                            placeholder="New Password"
+                            placeholder="********"
                         />
 
                         <button
@@ -176,7 +172,7 @@ const ChangePassword = ({user, userRefetch}) => {
                 <div className="address flex flex-col items-start px-4 gap-2">
                     <span className="text font-semibold">Confirm New Password: </span>
 
-                    <div className="relative flex justify-between w-full max-w-70 gap-4">
+                    <div className="relative flex flex-col justify-between w-full max-w-70 gap-1">
 
                         <input 
                             className={`w-full pl-4 pr-2 py-1.5 border ${errors.newPasswordTwo ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
@@ -185,7 +181,7 @@ const ChangePassword = ({user, userRefetch}) => {
                             name='newPasswordTwo'
                             value={newPasswordTwo}
                             onChange={(e) => {handleChange(e)}}
-                            placeholder="Confirm Password"
+                            placeholder="********"
                         />
 
                         <button
@@ -212,9 +208,9 @@ const ChangePassword = ({user, userRefetch}) => {
                     </div>
                 </div>
 
-                <div className="w-full bottom-2 flex justify-center">
+                <div className="w-full mt-5 flex justify-center">
                     <button
-                        type="submit"
+                         onClick={(e) => handleSubmit(e)}
                         // disabled={isLoading}
                         className="w-30 mt-3 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >
@@ -232,7 +228,7 @@ const ChangePassword = ({user, userRefetch}) => {
                         )} */}
                     </button>
                 </div>
-            </form>
+            </div>
 
         </div>   
 

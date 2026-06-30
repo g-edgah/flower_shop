@@ -84,7 +84,7 @@ const Register = ({}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("submitting")
+        //console.log("submitting")
         
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {

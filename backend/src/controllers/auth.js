@@ -22,6 +22,14 @@ export const register = async (req, res) => {
             return
         }
 
+        // password strength validation
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(newPasswordOne)) {
+            return res.status(400).json({ 
+                error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 
+            });
+        }
+
         // const salt = await bcrypt.genSalt(10);
         // const passwordHash = await bcrypt.hash(password, salt);
 
