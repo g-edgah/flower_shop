@@ -109,20 +109,25 @@ export const editUserPassword = async (req, res) => {
         }
 
         const { 
-            password: currentPassword, 
-            newPassword: newPasswordOne, 
-            confirmPassword: newPasswordTwo 
+            currentPassword, 
+            newPasswordOne, 
+            newPasswordTwo 
         } = req.body;
 
+        const password = currentPassword.trim()
+        const passwordOne = newPasswordOne.trim()
+        const passwordTwo = newPasswordTwo.trim()
+
+
         // validate that all password fields are provided
-        if (!currentPassword || !newPasswordOne || !newPasswordTwo) {
+        if (!password || !passwordOne || !passwordTwo) {
             return res.status(400).json({ 
                 error: "All password fields are required" 
             });
         }
 
         // check if new passwords match
-        if (newPasswordOne !== newPasswordTwo) {
+        if (passwordOne !== passwordTwo) {
             return res.status(400).json({ 
                 error: "New passwords do not match" 
             });
@@ -130,7 +135,7 @@ export const editUserPassword = async (req, res) => {
 
         // password strength validation
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!passwordRegex.test(newPasswordOne)) {
+        if (!passwordRegex.test(passwordOne)) {
             return res.status(400).json({ 
                 error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 
             });
@@ -144,7 +149,7 @@ export const editUserPassword = async (req, res) => {
         }
 
         // check if current password matches
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ 
                 error: "Current password is incorrect" 
@@ -152,7 +157,7 @@ export const editUserPassword = async (req, res) => {
         }
 
         // prevent reusing the same password
-        const isSamePassword = await bcrypt.compare(newPasswordOne, user.password);
+        const isSamePassword = await bcrypt.compare(passwordOne, user.password);
         if (isSamePassword) {
             return res.status(400).json({ 
                 error: "New password cannot be the same as current password" 
@@ -161,7 +166,7 @@ export const editUserPassword = async (req, res) => {
 
         // hash the new password before saving
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPasswordOne, salt);
+        const hashedPassword = await bcrypt.hash(passwordOne, salt);
 
         // update user's password
         user.password = hashedPassword;
@@ -196,8 +201,11 @@ export const editUserEmail = async (req, res) => {
 
         const { email, password } = req.body;
 
+        const emailTrimmed = email?.trim()
+        const passTrimmed = password.trim()
+
         // validate that both fields are provided
-        if (!email || !password) {
+        if (!emailTrimmed || !password) {
             return res.status(400).json({ 
                 error: "Email and password are required" 
             });
@@ -205,7 +213,7 @@ export const editUserEmail = async (req, res) => {
 
         // validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(newEmail)) {
+        if (!emailRegex.test(emailTrimmed)) {
             return res.status(400).json({ 
                 error: "Please provide a valid email address" 
             });
@@ -219,7 +227,7 @@ export const editUserEmail = async (req, res) => {
 
         // check if the new email is already in use by another user
         const existingUser = await User.findOne({ 
-            email: newEmail.toLowerCase(),
+            email: emailTrimmed.toLowerCase(),
             _id: { $ne: id } // exclude current user
         });
         
@@ -231,14 +239,14 @@ export const editUserEmail = async (req, res) => {
         }
 
         // Check if the new email is the same as the current one
-        if (user.email.toLowerCase() === newEmail.toLowerCase()) {
+        if (user.email.toLowerCase() === emailTrimmed.toLowerCase()) {
             return res.status(400).json({ 
                 error: "New email is the same as the current email" 
             });
         }
 
         // Verify current password
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        const isPasswordValid = await bcrypt.compare(passTrimmed, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ 
                 error: "Incorrect password" 
@@ -246,8 +254,8 @@ export const editUserEmail = async (req, res) => {
         }
 
         // Update the email
-        user.email = newEmail.toLowerCase(); // Normalize to lowercase
-        user.emailUpdatedAt = new Date(); // Optional: track when email was updated
+        user.email = emailTrimmed.toLowerCase(); // Normalize to lowercase
+        // user.emailUpdatedAt = new Date(); // Optional: track when email was updated
         
         // If you want to require email verification again
         // user.isEmailVerified = false;

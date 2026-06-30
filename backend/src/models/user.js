@@ -5,6 +5,8 @@ import cartItemSchema from './cartItemSchema.js'
 import wishlistItemSchema from './wishlistItemSchema.js'
 import voucherItemSchema from './voucher.js'
 import addressSchema from './addressSchema.js'
+import emailItemSchema from './emailItemSchema.js'
+import passwordItemSchema from './passwordItemSchema.js'
 
 
 const userSchema = new mongoose.Schema({
@@ -29,20 +31,11 @@ const userSchema = new mongoose.Schema({
         minLength: 2,
         maxLength: 30,
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "invalid email format"],
-        maxLength: 30,
-    },
-    password: {
-        type: String,
-        required: true,
-        minLength: 8,
-        maxLength: 128,
-    },
+    email: emailItemSchema,
+
+    //array to keep password history to prevent password reuse
+    password: [passwordItemSchema],
+    
     picturePath: {
         type: String,
         default: '',
