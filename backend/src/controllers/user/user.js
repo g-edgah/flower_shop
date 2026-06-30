@@ -98,7 +98,7 @@ export const editUser = async (req, res) => {
 
 
 // edit sensitive user details
-export const editSensitiveUser = async (req, res) => {
+export const editUserPassword = async (req, res) => {
     try {
         const { id } = req.user
 
@@ -179,3 +179,95 @@ export const editSensitiveUser = async (req, res) => {
         console.error(`error while updating user details: ${error}`)
     }
 }
+
+
+//edit user email
+export const editUserEmail = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const paramId = req.params.id;
+
+        // Verify user is editing their own email
+        if (paramId !== id) {
+            return res.status(403).json({ 
+                error: "You are not authorized to edit this user's email" 
+            });
+        }
+
+        const { email, password } = req.body;
+
+        // validate that both fields are provided
+        if (!email || !password) {
+            return res.status(400).json({ 
+                error: "Email and password are required" 
+            });
+        }
+
+        // validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newEmail)) {
+            return res.status(400).json({ 
+                error: "Please provide a valid email address" 
+            });
+        }
+
+        // find user
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // check if the new email is already in use by another user
+        const existingUser = await User.findOne({ 
+            email: newEmail.toLowerCase(),
+            _id: { $ne: id } // exclude current user
+        });
+        
+        // note this allows for email enumeration. take steps such as daily limits or blocking devices/ips that attempt enumeration to prevent enumeration
+        if (existingUser) {
+            return res.status(409).json({ 
+                error: "Email is already registered to another account" 
+            });
+        }
+
+        // Check if the new email is the same as the current one
+        if (user.email.toLowerCase() === newEmail.toLowerCase()) {
+            return res.status(400).json({ 
+                error: "New email is the same as the current email" 
+            });
+        }
+
+        // Verify current password
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ 
+                error: "Incorrect password" 
+            });
+        }
+
+        // Update the email
+        user.email = newEmail.toLowerCase(); // Normalize to lowercase
+        user.emailUpdatedAt = new Date(); // Optional: track when email was updated
+        
+        // If you want to require email verification again
+        // user.isEmailVerified = false;
+        // user.emailVerificationToken = crypto.randomBytes(32).toString('hex');
+        // user.emailVerificationTokenExpiry = Date.now() + 3600000; // 1 hour
+
+        await user.save();
+
+        // Optional: Send confirmation email to old and/or new address
+        // await sendEmailNotification(user.email, 'Email changed successfully');
+
+        return res.status(200).json({ 
+            message: "Email updated successfully",
+            email: user.email
+        });
+
+    } catch (error) {
+        console.error("Error updating email:", error);
+        return res.status(500).json({ 
+            error: "Internal server error" 
+        });
+    }
+};
