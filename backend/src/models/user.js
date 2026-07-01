@@ -31,11 +31,11 @@ const userSchema = new mongoose.Schema({
         minLength: 2,
         maxLength: 30,
     },
+    
     email: emailItemSchema,
 
-    //array to keep password history to prevent password reuse
-    password: [passwordItemSchema],
-    
+    password: passwordItemSchema,
+
     picturePath: {
         type: String,
         default: '',

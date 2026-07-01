@@ -1,4 +1,6 @@
-// models/PasswordItem.js or inside user model
+import mongoose from 'mongoose';
+
+
 const passwordItemSchema = new mongoose.Schema({
     password: {
         type: String,
@@ -20,7 +22,8 @@ const passwordItemSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
-    // Password strength metrics
+
+    // password strength metrics
     strength: {
         score: {
             type: Number,
@@ -31,7 +34,8 @@ const passwordItemSchema = new mongoose.Schema({
             type: String
         }
     },
-    // For audit trail
+
+    // for audit trail
     changedFrom: {
         type: String, // hash of previous password
         default: null
@@ -49,7 +53,12 @@ const passwordItemSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    // For password history tracking
+
+    // for password history tracking
+    oldPasswords: {
+        type: Array,
+        default: []
+    },
     isCompromised: {
         type: Boolean,
         default: false
@@ -58,6 +67,7 @@ const passwordItemSchema = new mongoose.Schema({
         type: Date,
         default: null
     }
+    
 }, {
     timestamps: true,
     strict: true

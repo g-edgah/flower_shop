@@ -225,6 +225,14 @@ export const editUserEmail = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
+        // Verify current password
+        const isPasswordValid = await bcrypt.compare(passTrimmed, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ 
+                error: "Incorrect password" 
+            });
+        }
+
         // check if the new email is already in use by another user
         const existingUser = await User.findOne({ 
             email: emailTrimmed.toLowerCase(),
@@ -245,13 +253,7 @@ export const editUserEmail = async (req, res) => {
             });
         }
 
-        // Verify current password
-        const isPasswordValid = await bcrypt.compare(passTrimmed, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ 
-                error: "Incorrect password" 
-            });
-        }
+        
 
         // Update the email
         user.email = emailTrimmed.toLowerCase(); // Normalize to lowercase

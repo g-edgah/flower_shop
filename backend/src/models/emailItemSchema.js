@@ -1,4 +1,6 @@
-// models/EmailItem.js or inside user model
+import mongoose from 'mongoose';
+
+
 const emailItemSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -8,6 +10,17 @@ const emailItemSchema = new mongoose.Schema({
         unique: true,
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address']
     },
+
+    //to be reset after the new email is verified
+    previousEmail: {
+        type: String,
+        required: [true, 'Email is required'],
+        trim: true,
+        lowercase: true,
+        unique: true,
+        match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address']
+    },
+
     isVerified: {
         type: Boolean,
         default: false
