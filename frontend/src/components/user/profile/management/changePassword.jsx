@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useEditPassword } from '../../../../hooks/user/auth.js'
 
-const ChangePassword = ({user, userRefetch, handleState}) => {
+const ChangePassword = ({user, userRefetch, handleState, state}) => {
     const [ errors, setErrors ] = useState({})
     const [ currentPassword, setCurrentPassword ] = useState("")
     const [ showCurrentPassword, setShowCurrentPassword ] = useState(false)   
@@ -10,6 +10,13 @@ const ChangePassword = ({user, userRefetch, handleState}) => {
     const [ showNewPasswordOne, setShowNewPasswordOne ] = useState(false)
     const [ newPasswordTwo, setNewPasswordTwo ] = useState("")
     const [ showNewPasswordTwo, setShowNewPasswordTwo ] = useState(false)
+
+    useEffect(() => {
+        setCurrentPassword("")
+        setNewPasswordOne("")
+        setNewPasswordTwo("")
+        setErrors({})
+    }, [state])
 
     const handleChange = (e) => {
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { FaArrowLeft } from "react-icons/fa6";
 
@@ -10,6 +10,9 @@ import DeleteAccount from './deleteAccount.jsx'
 const Management = ({ userRefetch, user }) => {
     const [ state, setState ] = useState("none")
     
+    useEffect(() => {
+        setState("none")
+    }, [])
 
     const handleState = (currentState) => {
         setState(currentState)
@@ -76,7 +79,7 @@ const Management = ({ userRefetch, user }) => {
                         <span className="title text-xl font-bold ">Change Password</span>
                 
                     </div>
-                    <ChangePassword user={user} userRefetch={userRefetch} handleState={handleState} />
+                    <ChangePassword user={user} userRefetch={userRefetch} handleState={handleState} state={state} />
                 </div>
             )}
             {state === 'email' && (
@@ -87,17 +90,17 @@ const Management = ({ userRefetch, user }) => {
                 
                     </div>
                 
-                    <ChangeEmail user={user} userRefetch={userRefetch} handleState={handleState} />
+                    <ChangeEmail user={user} userRefetch={userRefetch} handleState={handleState} state={state}/>
                 </div>
             )}
             {state === 'delete' && (
                 <div className="p-3 flex flex-col gap-5">
                     <div className="title flex gap-5 items-center border-b border-gray-300 w-full p-3">
                         <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setState("none")} />
-                        <span className="title text-xl font-bold ">Delete Acccount</span>
+                        <span className="title text-xl font-bold ">Delete Account</span>
                 
                     </div>
-                    <DeleteAccount user={user} userRefetch={userRefetch} handleState={handleState} />
+                    <DeleteAccount user={user} userRefetch={userRefetch} handleState={handleState} state={state} />
                 </div>
             )}
             
