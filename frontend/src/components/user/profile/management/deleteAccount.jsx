@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const DeleteAccount = ({user, userRefetch}) => {
+const DeleteAccount = ({ user, userRefetch, handleState }) => {
     const [ errors, setErrors ] = useState({})
 
 }

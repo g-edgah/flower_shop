@@ -2,20 +2,20 @@ import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
     country: { 
-        type: String, 
-        required: true 
+        type: String,
+        required: false  
     }, 
     region: { 
         type: String, 
-        required: true 
+        required: false
     },
     city: { 
         type: String, 
-        required: true 
+        required: false 
     },
     address: { 
         type: String, 
-        required: true 
+        required: false 
     },
     info: { 
         type: String, 
@@ -23,7 +23,7 @@ const addressSchema = new mongoose.Schema({
     },
     mobile: { 
         type: String, 
-        required: true 
+        required: false  
     },
     state: { 
         type: String, 

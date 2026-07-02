@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
-const ChangePassword = ({user, userRefetch}) => {
+import { useEditPassword } from '../../../../hooks/user/auth.js'
+
+const ChangePassword = ({user, userRefetch, handleState}) => {
     const [ errors, setErrors ] = useState({})
     const [ currentPassword, setCurrentPassword ] = useState("")
     const [ showCurrentPassword, setShowCurrentPassword ] = useState(false)   
@@ -47,7 +49,7 @@ const ChangePassword = ({user, userRefetch}) => {
             newErrors.newPasswordOne = '';
         } 
 
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
         if (!passwordRegex.test(newPasswordOne)) {
             newErrors.newPasswordOne = 'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character';
             newErrors.newPasswordTwo = '';
@@ -71,6 +73,8 @@ const ChangePassword = ({user, userRefetch}) => {
         return newErrors;
     };
 
+    const { mutate: editPassword, isLoading, error } = useEditPassword();
+
     const handleSubmit = (e) => {
         
 
@@ -81,6 +85,39 @@ const ChangePassword = ({user, userRefetch}) => {
             return;
         }
         //console.log("submitted change password")
+        
+        
+        // api call
+        editPassword({
+            currentPassword: currentPassword,
+            newPasswordOne: newPasswordOne,
+            newPasswordTwo: newPasswordTwo
+        }, {
+            onSuccess: (data) => {
+                console.log('Password change successful:', data);
+                
+
+                // store jwt
+                if (data.token) {
+                    console.log("token: ", data.token)
+                    localStorage.setItem('token', data.token);
+                    if (formData.rememberMe) {
+                        localStorage.setItem('rememberMe', 'true');
+                    }
+                }
+
+                handleState("none")
+
+                
+            },
+            onError: (error) => {
+                console.error('Password change failed:', error);
+                // Handle specific error messages from API
+                
+                setErrors({ general: 'Password change failed. Please try again.' });
+                
+            }
+        });
     }
 
 

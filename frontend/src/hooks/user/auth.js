@@ -2,6 +2,14 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '../../setup/axios';
 
 
+
+//getting userId
+const getUserId = () => {
+    const userId = localStorage.getItem('userId');
+    return userId
+}
+
+
 // registration
 export const useRegister = (formData) => {
     //console.log(`formdata: ${JSON.stringify(formData)}`) 
@@ -31,6 +39,31 @@ export const useLogout = () => {
 
     return useMutation({ 
         mutationFn: () => api.get(`/auth/logout/${userId}`).then(res => res.data)
+    });
+    
+};
+
+// user password editing
+export const useEditPassword = (formData) => {
+    console.log(`editing password`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/auth/password/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
+
+
+// user email editing
+export const useEditEmail = (formData) => {
+    console.log(`editing email`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/auth/email/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
     });
     
 };

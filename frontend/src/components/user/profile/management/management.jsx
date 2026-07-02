@@ -76,7 +76,7 @@ const Management = ({ userRefetch, user }) => {
                         <span className="title text-xl font-bold ">Change Password</span>
                 
                     </div>
-                    <ChangePassword user={user} userRefetch={userRefetch}/>
+                    <ChangePassword user={user} userRefetch={userRefetch} handleState={handleState} />
                 </div>
             )}
             {state === 'email' && (
@@ -87,7 +87,7 @@ const Management = ({ userRefetch, user }) => {
                 
                     </div>
                 
-                    <ChangeEmail user={user} userRefetch={userRefetch}/>
+                    <ChangeEmail user={user} userRefetch={userRefetch} handleState={handleState} />
                 </div>
             )}
             {state === 'delete' && (
@@ -97,7 +97,7 @@ const Management = ({ userRefetch, user }) => {
                         <span className="title text-xl font-bold ">Delete Acccount</span>
                 
                     </div>
-                    <DeleteAccount user={user} userRefetch={userRefetch}/>
+                    <DeleteAccount user={user} userRefetch={userRefetch} handleState={handleState} />
                 </div>
             )}
             

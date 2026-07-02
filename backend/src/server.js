@@ -40,7 +40,7 @@ app.use(express.json());
 app.use(cookieparser())
 
 //assests
-app.use('/assets', express.static(path.join(__dirname, 'assets/')))
+// app.use('/assets', express.static(path.join(__dirname, 'assets/')))
 
 //routes
 app.use('/api/home', homeRouter)
@@ -50,7 +50,7 @@ app.use('/api/products', productRouter)
 app.use('/api/admin', adminRouter)
 
 //404
-app.get('', (req, res) => {
+app.use((req, res) => {
     res.status(404).json({message: "page not found"})
 })
 
