@@ -17,25 +17,35 @@ export const register = async (req, res) => {
             confirmPassword
         } = req.body
 
+        // console.log('register req: ', req.body)
+
+        if (!email || !password || !confirmPassword) {
+            return res.status(400).json({ error: "Missing required field(s)" });
+        }
+
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            return res.status(400).json({ error: "Invalid email format" });
+        }
+
         if (password !== confirmPassword) {
-            res.status(400).json({error: "passwords do not match"})
-            return
+            return res.status(400).json({ error: "Passwords do not match" });
         }
 
         // password strength validation
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!passwordRegex.test(newPasswordOne)) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
             return res.status(400).json({ 
                 error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 
             });
         }
 
-        // const salt = await bcrypt.genSalt(10);
-        // const passwordHash = await bcrypt.hash(password, salt);
-
+        
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+        console.log('here')
         const newUser = new User({
-            email,
-            password: passwordHash,
+            email: {email: email},
+            password: { password: passwordHash },
         });
 
         const savedUser = await newUser.save()
@@ -64,18 +74,29 @@ export const login = async (req, res) => {
             wishlist
         } = req.body;
 
+        console.log('login req: ', req.body)
+
         if (!email) return res.status(400).json({message: 'missing email'});
         if (!password) return res.status(400).json({message: 'missing password'});
 
         //generic error message to prevent enumeration. subtle time differences might still allow enumeration
-        const user = await User.findOne({ email: email });
-        if (!user) return res.status(400).json({ message: 'wrong email or password' });
+        
+        const user = await User.findOne({ "email.email": email });
+        if (!user) {
+            // console.log("wrong email. provided email: ", email )
+            return res.status(400).json({ message: 'wrong email or password' });
 
-        const passwdMatch = await bcrypt.compare(password, user.password);
-        if (!passwdMatch) return res.status(400).json({ message: 'wrong email or password' });
-        // if (passwdMatch) {
-        //     console.log("user logged in: "+user.firstName)
-        // }
+        }
+
+        const passwdMatch = await bcrypt.compare(password, user.password.password);
+        if (!passwdMatch) {
+            return res.status(400).json({ message: 'wrong email or password' });
+        }
+
+
+        if (passwdMatch) {
+            console.log("user logged in: "+user.firstName)
+        }
 
         const token = jwt.sign(
             { id : user._id, role: user.role }, 

@@ -11,10 +11,9 @@ const emailItemSchema = new mongoose.Schema({
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address']
     },
 
-    //to be reset after the new email is verified
+    //to maybe be reset after the new email is verified
     previousEmail: {
         type: String,
-        required: [true, 'Email is required'],
         trim: true,
         lowercase: true,
         unique: true,
@@ -37,10 +36,10 @@ const emailItemSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
-    isPrimary: {
-        type: Boolean,
-        default: true
-    },
+    // isPrimary: {
+    //     type: Boolean,
+    //     default: true
+    // },
     createdAt: {
         type: Date,
         default: Date.now
@@ -49,12 +48,12 @@ const emailItemSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    // For audit trail
-    changedFrom: {
-        type: String,
-        trim: true,
-        lowercase: true
-    },
+    // // For audit trail
+    // changedFrom: {
+    //     type: String,
+    //     trim: true,
+    //     lowercase: true
+    // },
     changedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -69,9 +68,9 @@ const emailItemSchema = new mongoose.Schema({
     strict: true
 });
 
-// Index for faster lookups
-emailItemSchema.index({ email: 1 });
-emailItemSchema.index({ verificationToken: 1 });
-emailItemSchema.index({ isPrimary: 1 });
+// // Index for faster lookups
+// emailItemSchema.index({ email: 1 });
+// emailItemSchema.index({ verificationToken: 1 });
+// emailItemSchema.index({ isPrimary: 1 });
 
 export default emailItemSchema

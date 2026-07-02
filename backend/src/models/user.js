@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         minLength: 2,
         maxLength: 30,
     },
-    
+
     email: emailItemSchema,
 
     password: passwordItemSchema,
@@ -72,30 +72,30 @@ const userSchema = new mongoose.Schema({
 
 
 
- // password hashing middleware
- userSchema.pre('save', async function(next) {
+//  // password hashing middleware
+//  userSchema.pre('save', async function(next) {
     
-    if (!this.isModified('password')) {
-        console.log("unmodified")
-        return next()
-    }
+//     if (!this.isModified('password')) {
+//         console.log("unmodified")
+//         return next()
+//     }
 
-    try {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
+//     try {
+//         const salt = await bcrypt.genSalt(10)
+//         this.password = await bcrypt.hash(this.password, salt)
 
-    } catch (error) {
-        throw new Error(`password hashing error: ${error.message}`);
-        console.log(`spassword hashing error: ${error}`)
-    }
- })
+//     } catch (error) {
+//         throw new Error(`password hashing error: ${error.message}`);
+//         console.log(`spassword hashing error: ${error}`)
+//     }
+//  })
 
 
 
- // matching password to hashed pashword
- userSchema.methods.matchPassword = async function(enteredPassword) {
-        return await bcrypt.compare(enteredPassword, this.password)
-    }
+//  // matching password to hashed pashword
+//  userSchema.methods.matchPassword = async function(enteredPassword) {
+//         return await bcrypt.compare(enteredPassword, this.password)
+//     }
 
  // method to get user's complete order history
  userSchema.methods.getOrderHistory = async function() {

@@ -20,29 +20,27 @@ const Register = ({}) => {
     const validateForm = () => {
         const newErrors = {};
         
-        
-        if (formData.password.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters';
-        }
-        if (formData.password.length < 6) {
-        newErrors.confirmPassword = 'Password must be at least 6 characters';
-        }
-
 
         if (formData.password !== formData.confirmPassword) {
         newErrors.password = 'Passwords do not match';
         newErrors.confirmPassword = 'Passwords do not match';
         } 
 
+        if (!formData.confirmPassword && formData.password) {
+        newErrors.confirmPassword = 'Please confirm password';
+        newErrors.password = '';
+        } 
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
+        if (!passwordRegex.test(formData.password)) {
+            newErrors.password = 'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character';
+
+        }
 
         if (!formData.password) {
         newErrors.password = 'Password is required';
         newErrors.confirmPassword = '';
 
-        } 
-        if (!formData.confirmPassword && formData.password) {
-        newErrors.confirmPassword = 'Please confirm password';
-        newErrors.password = '';
         } 
 
         if (!formData.email) {
@@ -229,9 +227,9 @@ const Register = ({}) => {
                 
 
             </form>
-            <div className="flex gap-4 items-center">
+            <div className="flex items-center">
                 <span className="text-lg">Already have an account?</span>
-                <Link to='/profile/login' className="w-30 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium text-center">Sign In</Link>
+                <Link to='/login' className=" cursor-pointer text-active py-2 px-4 rounded-lg hover:text-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium">Sign In</Link>
             </div>
 
         </div>

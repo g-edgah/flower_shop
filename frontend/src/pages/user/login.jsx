@@ -225,9 +225,9 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                 
 
             </form>
-            <div className="flex gap-4 items-center">
+            <div className="flex items-center">
                 <span className="text-lg">Don't have an account?</span>
-                <Link to='/profile/register' className="w-30 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium text-center">Sign Up</Link>
+                <Link to='/register' className=" cursor-pointer text-active py-2 px-4 rounded-lg hover:text-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium">Sign Up</Link>
             </div>
 
         </div>

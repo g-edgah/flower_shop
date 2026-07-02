@@ -30,27 +30,29 @@ const ChangePassword = ({user, userRefetch}) => {
         const newErrors = {};
 
 
+
         if (newPasswordOne !== newPasswordTwo) {
             newErrors.newPasswordOne = 'Passwords do not match';
             newErrors.newPasswordTwo = 'Passwords do not match';
         } 
 
-        if (!newPasswordTwo) {
+        if (!newPasswordOne) {
             newErrors.newPasswordTwo = 'Password is required';
             newErrors.currentPassword = '';
             newErrors.newPasswordOne = '';
         } 
         
         if (!newPasswordTwo && newPasswordOne) {
-            newErrors.confirmPassword = 'Please confirm password';
-            newErrors.password = '';
+            newErrors.newPasswordTwo = 'Please confirm password';
+            newErrors.newPasswordOne = '';
         } 
 
-        if (newPasswordOne.length < 6) {
-            newErrors.newPasswordOne = 'Password must be at least 6 characters';
-            newErrors.currentPassword = '';
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(newPasswordOne)) {
+            newErrors.newPasswordOne = 'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character';
             newErrors.newPasswordTwo = '';
         }
+
 
         // confirm user has provided new password
         if (!newPasswordOne) {
@@ -64,7 +66,6 @@ const ChangePassword = ({user, userRefetch}) => {
             newErrors.newPasswordTwo = '';
             newErrors.newPasswordOne = ''
         } 
-
 
            
         return newErrors;

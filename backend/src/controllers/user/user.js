@@ -134,7 +134,7 @@ export const editUserPassword = async (req, res) => {
         }
 
         // password strength validation
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
         if (!passwordRegex.test(passwordOne)) {
             return res.status(400).json({ 
                 error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 

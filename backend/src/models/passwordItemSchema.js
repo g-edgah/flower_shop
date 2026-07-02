@@ -18,28 +18,28 @@ const passwordItemSchema = new mongoose.Schema({
         type: Date,
         default: null // null means never expires
     },
-    lastUsedAt: {
-        type: Date,
-        default: null
-    },
+    // lastUsedAt: {
+    //     type: Date,
+    //     default: null
+    // },
 
-    // password strength metrics
-    strength: {
-        score: {
-            type: Number,
-            min: 0,
-            max: 4
-        },
-        feedback: {
-            type: String
-        }
-    },
+    // // password strength metrics
+    // strength: {
+    //     score: {
+    //         type: Number,
+    //         min: 0,
+    //         max: 4
+    //     },
+    //     feedback: {
+    //         type: String
+    //     }
+    // },
 
-    // for audit trail
-    changedFrom: {
-        type: String, // hash of previous password
-        default: null
-    },
+    // // for audit trail
+    // changedFrom: {
+    //     type: String, // hash of previous password
+    //     default: null
+    // },
     changedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -67,7 +67,7 @@ const passwordItemSchema = new mongoose.Schema({
         type: Date,
         default: null
     }
-    
+
 }, {
     timestamps: true,
     strict: true
