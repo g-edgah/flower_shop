@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify';
 
 import { useEditEmail } from '../../../../hooks/user/auth.js'
 
@@ -76,10 +77,22 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
                     }
                 }
 
-                setpassword("")
+                setPassword("")
                 setEmail("")
 
                 setErrors({})
+
+                toast('Email changed successfully!', {
+                    // position: "top-right",
+                    // autoClose: 5000,
+                    // hideProgressBar: false,
+                    // closeOnClick: false,
+                    // pauseOnHover: true,
+                    // draggable: true,
+                    // progress: undefined,
+                    // theme: "light",
+                    // transition: Bounce,
+                });
 
                 handleState("none")
 
@@ -88,6 +101,18 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
             onError: (error) => {
                 console.error('Email change failed:', error);
                 // Handle specific error messages from API
+
+                toast('Email change failed!', {
+                    // position: "top-right",
+                    // autoClose: 5000,
+                    // hideProgressBar: false,
+                    // closeOnClick: false,
+                    // pauseOnHover: true,
+                    // draggable: true,
+                    // progress: undefined,
+                    // theme: "light",
+                    // transition: Bounce,
+                });
                 
                 setErrors({ general: 'Email change failed. Please try again.' });
                 

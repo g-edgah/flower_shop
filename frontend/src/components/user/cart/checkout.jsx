@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useEditUser, useCreateOrder } from '../../../hooks/user/user.js';
 
-const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, refetch }) => {
+const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, cartRefetch }) => {
     const navigate = useNavigate();
     const [ addressEdit, setAddressEdit ] = useState(false)
     const [errors, setErrors] = useState({})
@@ -15,7 +15,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
 
     useEffect(() => {
         userRefetch()
-        refetch()
+        cartRefetch()
 
         if (cart.length === 0) {
             navigate('/cart')
@@ -200,7 +200,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                         name='firstName'
                                         value={formData.firstName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.firstName}
+                                        placeholder={user?.firstName}
                                     />
                                     {errors.firstName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
@@ -213,7 +213,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                         name='lastName'
                                         value={formData.lastName}
                                         onChange={(e) => {handleChange(e)}}
-                                        placeholder={user.lastName}
+                                        placeholder={user?.lastName}
                                     />
                                     {errors.lastName && (
                                     <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
@@ -230,7 +230,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                     name='address.region'
                                     value={formData.address.region}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.region}
+                                    placeholder={user?.address?.region}
                                 />
                                 {errors.region && (
                                 <p className="mt-1 text-sm text-red-500">{errors.region}</p>
@@ -245,7 +245,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                     name='address.city'
                                     value={formData.address.city}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.city}
+                                    placeholder={user?.address?.city}
                                 />
                                 {errors.city && (
                                 <p className="mt-1 text-sm text-red-500">{errors.city}</p>
@@ -260,7 +260,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                     name='address.address'
                                     value={formData.address.address}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.address}
+                                    placeholder={user?.address?.address}
                                 />
                                 {errors.address && (
                                 <p className="mt-1 text-sm text-red-500">{errors.address}</p>
@@ -276,7 +276,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                     name='address.info'
                                     value={formData.address.info}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.info}
+                                    placeholder={user?.address?.info}
                                 />
                                 {errors.info && (
                                 <p className="mt-1 text-sm text-red-500">{errors.info}</p>
@@ -291,7 +291,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                                     name='address.mobile'
                                     value={formData.address.mobile}
                                     onChange={(e) => {handleChange(e)}}
-                                    placeholder={user.address.mobile}
+                                    placeholder={user?.address?.mobile}
                                 />
                                 {errors.mobile && (
                                 <p className="mt-1 text-sm text-red-500">{errors.mobile}</p>
@@ -326,23 +326,23 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                             </div>
                             <div className="region h-10 flex items-center p-4 gap-2">
                                 <span className="text">Region:</span> 
-                                <span className="text font-bold">{user?.address.region}</span> 
+                                <span className="text font-bold">{user?.address?.region}</span> 
                             </div>
                             <div className="city h-10 flex items-center p-4 gap-2">
                                 <span className="text">City:</span> 
-                                <span className="text font-bold">{user?.address.city}</span> 
+                                <span className="text font-bold">{user?.address?.city}</span> 
                             </div>
                             <div className="address h-10 flex items-center p-4 gap-2">
                                 <span className="text">Address: </span>
-                                <span className="text font-bold">{user?.address.address}</span> 
+                                <span className="text font-bold">{user?.address?.address}</span> 
                             </div>
                             <div className="info h-10 flex items-center p-4 gap-2">
                                 <span className="text">Additional info:</span>
-                                <span className="text font-bold">{user?.address.info}</span> 
+                                <span className="text font-bold">{user?.address?.info}</span> 
                             </div>
                             <div className="phone h-10 flex items-center p-4 gap-2">
                                 <span className="text">Phone:</span>
-                                <span className="text font-bold">{user?.address.mobile}</span> 
+                                <span className="text font-bold">{user?.address?.mobile}</span> 
                             </div>
                         </div>
 

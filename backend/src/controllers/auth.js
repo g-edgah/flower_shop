@@ -20,21 +20,31 @@ export const register = async (req, res) => {
         // console.log('register req: ', req.body)
 
         if (!email || !password || !confirmPassword) {
-            return res.status(400).json({ error: "Missing required field(s)" });
+            return res.status(400).json({ 
+                errorType: "general",
+                error: "Missing required field(s)" 
+            });
         }
 
         if (!/\S+@\S+\.\S+/.test(email)) {
-            return res.status(400).json({ error: "Invalid email format" });
+            return res.status(400).json({ 
+                errorType: "email",
+                error: "Invalid email format" 
+            });
         }
 
         if (password !== confirmPassword) {
-            return res.status(400).json({ error: "Passwords do not match" });
+            return res.status(400).json({ 
+                errorType: "password",
+                error: "Passwords do not match" 
+            });
         }
 
         // password strength validation
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ 
+                errorType: "password",
                 error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 
             });
         }
@@ -55,7 +65,10 @@ export const register = async (req, res) => {
         console.log("new user created: "+savedUser)
 
     } catch (error) {
-        res.status(500).json({message: 'error creating new user'})
+        res.status(500).json({
+            errorType: "general",
+            message: 'error creating new user'
+        })
         console.log("error in register function: "+error)
         
     }
@@ -76,21 +89,33 @@ export const login = async (req, res) => {
 
         console.log('login req: ', req.body)
 
-        if (!email) return res.status(400).json({message: 'missing email'});
-        if (!password) return res.status(400).json({message: 'missing password'});
+        if (!email) return res.status(400).json({ 
+            errorType: "email",
+            error: 'missing email'
+        });
+        if (!password) return res.status(400).json({ 
+            errorType: "password",
+            error: 'missing password'
+        });
 
         //generic error message to prevent enumeration. subtle time differences might still allow enumeration
         
         const user = await User.findOne({ "email.email": email });
         if (!user) {
             // console.log("wrong email. provided email: ", email )
-            return res.status(400).json({ message: 'wrong email or password' });
+            return res.status(400).json({ 
+                errorType: "general",
+                error: 'wrong email or password' 
+            });
 
         }
 
         const passwdMatch = await bcrypt.compare(password, user.password.password);
         if (!passwdMatch) {
-            return res.status(400).json({ message: 'wrong email or password' });
+            return res.status(400).json({ 
+                errorType: "general",
+                error: 'wrong email or password' 
+            });
         }
 
 
@@ -134,7 +159,10 @@ export const login = async (req, res) => {
         
     } catch (error) {
         console.log("error logging in: "+error);
-        res.status(500).json({message: 'login error'})
+        res.status(500).json({ 
+            errorType: "general",
+            error: 'login error' 
+        })
     }
 
 }
@@ -159,6 +187,7 @@ export const logout = async (req, res) => {
         console.error('Logout error:', error);
         res.status(500).json({ 
             success: false, 
+            errorType: "general",
             message: 'Logout failed' 
         });
     }
@@ -190,6 +219,7 @@ export const editUserPassword = async (req, res) => {
         // validate that all password fields are provided
         if (!password || !passwordOne || !passwordTwo) {
             return res.status(400).json({ 
+                errorType: "general",
                 error: "All password fields are required" 
             });
         }
@@ -197,6 +227,7 @@ export const editUserPassword = async (req, res) => {
         // check if new passwords match
         if (passwordOne !== passwordTwo) {
             return res.status(400).json({ 
+                errorType: "general",
                 error: "New passwords do not match" 
             });
         }
@@ -205,6 +236,7 @@ export const editUserPassword = async (req, res) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$_#^!%*?&])[A-Za-z\d@$_#^!%*?&]{8,}$/;
         if (!passwordRegex.test(passwordOne)) {
             return res.status(400).json({ 
+                errorType: "general",
                 error: "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character" 
             });
         }
@@ -213,13 +245,17 @@ export const editUserPassword = async (req, res) => {
         // Find the user
         const user = await User.findById(id);
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ 
+                errorType: "general", 
+                error: "User not found" 
+            });
         }
 
         // check if current password matches
         const isPasswordValid = await bcrypt.compare(password, user.password.password);
         if (!isPasswordValid) {
             return res.status(401).json({ 
+                errorType: "currentPassword",
                 error: "Current password is incorrect" 
             });
         }
@@ -228,6 +264,7 @@ export const editUserPassword = async (req, res) => {
         const isSamePassword = await bcrypt.compare(passwordOne, user.password.password);
         if (isSamePassword) {
             return res.status(400).json({ 
+                errorType: "password",
                 error: "New password cannot be the same as current password" 
             });
         }
@@ -257,7 +294,10 @@ export const editUserPassword = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ error: "error while updating user details" });
+        res.status(500).json({ 
+            errorType: "general",
+            error: "error while updating user details" 
+        });
         console.error(`error while updating user details: ${error}`)
     }
 }
@@ -286,6 +326,7 @@ export const editUserEmail = async (req, res) => {
         // validate that both fields are provided
         if (!emailTrimmed || !password) {
             return res.status(400).json({ 
+                errorType: "general",
                 error: "Email and password are required" 
             });
         }
@@ -294,6 +335,7 @@ export const editUserEmail = async (req, res) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(emailTrimmed)) {
             return res.status(400).json({ 
+                errorType: "general",
                 error: "Please provide a valid email address" 
             });
         }
@@ -301,33 +343,39 @@ export const editUserEmail = async (req, res) => {
         // find user
         const user = await User.findById(id);
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ 
+                errorType: "general",
+                error: "User not found" 
+            });
         }
 
         // Verify current password
         const isPasswordValid = await bcrypt.compare(passTrimmed, user.password.password);
         if (!isPasswordValid) {
             return res.status(401).json({ 
+                errorType: "password",
                 error: "Incorrect password" 
             });
         }
 
         // check if the new email is already in use by another user
         const existingUser = await User.findOne({ 
-            email: emailTrimmed.toLowerCase(),
+            'email.email': emailTrimmed.toLowerCase(),
             _id: { $ne: id } // exclude current user
         });
         
         // note this allows for email enumeration. take steps such as daily limits or blocking devices/ips that attempt enumeration to prevent enumeration
         if (existingUser) {
             return res.status(409).json({ 
+                errorType: "email",
                 error: "Email is already registered to another account" 
             });
         }
 
         // Check if the new email is the same as the current one
-        if (user.email.toLowerCase() === emailTrimmed.toLowerCase()) {
+        if (user.email.email.toLowerCase() === emailTrimmed.toLowerCase()) {
             return res.status(400).json({ 
+                errorType: "email",
                 error: "New email is the same as the current email" 
             });
         }
@@ -367,6 +415,7 @@ export const editUserEmail = async (req, res) => {
     } catch (error) {
         console.error("Error updating email:", error);
         return res.status(500).json({ 
+            errorType: "general",
             error: "Internal server error" 
         });
     }
