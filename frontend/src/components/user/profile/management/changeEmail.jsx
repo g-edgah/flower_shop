@@ -82,16 +82,8 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
 
                 setErrors({})
 
-                toast('Email changed successfully!', {
-                    // position: "top-right",
-                    // autoClose: 5000,
-                    // hideProgressBar: false,
-                    // closeOnClick: false,
-                    // pauseOnHover: true,
-                    // draggable: true,
-                    // progress: undefined,
-                    // theme: "light",
-                    // transition: Bounce,
+                toast.success('Email changed successfully!', {
+                    className: 'custom-toast--success',
                 });
 
                 handleState("none")
@@ -102,21 +94,19 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
                 console.error('Email change failed:', error);
                 // Handle specific error messages from API
 
-                toast('Email change failed!', {
-                    // position: "top-right",
-                    // autoClose: 5000,
-                    // hideProgressBar: false,
-                    // closeOnClick: false,
-                    // pauseOnHover: true,
-                    // draggable: true,
-                    // progress: undefined,
-                    // theme: "light",
-                    // transition: Bounce,
+                toast.error('Email change failed!', {
+                    className: 'custom-toast--error',
                 });
                 
                 setErrors({ general: 'Email change failed. Please try again.' });
                 
             }
+        });
+    }
+
+    const testToast = () => {
+        toast.success('Email changed successfully!', {
+            className: 'custom-toast--success',
         });
     }
 
@@ -194,7 +184,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
 
                 <div className="w-full mt-5 flex justify-center">
                     <button
-                         onClick={(e) => handleSubmit(e)}
+                         onClick={(e) => testToast(e)}
                         // disabled={isLoading}
                         className="w-30 mt-3 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >

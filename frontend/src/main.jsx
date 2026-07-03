@@ -10,11 +10,21 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
+const contextClass = {
+  success: "bg-blue-600",
+  error: "bg-red-600",
+  info: "bg-gray-600",
+  warning: "bg-orange-400",
+  default: "bg-indigo-600",
+  dark: "bg-white-600 font-gray-300",
+};
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter >
-        <ToastContainer className=""
+        <App />
+        <ToastContainer 
           position="bottom-center"
           autoClose={3000}
           hideProgressBar={true}
@@ -24,10 +34,16 @@ createRoot(document.getElementById('root')).render(
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light"
+          theme="colored"
+          toastClassName="custom-toast"
+          // toastStyle={{
+          //   backgroundColor: 'white',
+          //   color: 'black',
+          //   borderRadius: '8px',
+          //   boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          // }}
           // transition={Bounce}
         />
-        <App />
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,
