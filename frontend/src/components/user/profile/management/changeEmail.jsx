@@ -105,7 +105,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
     }
 
     const testToast = () => {
-        toast.success('Email changed successfully!', {
+        toast.error('Email changed successfully!', {
             className: 'custom-toast--success',
         });
     }
