@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
+import DeletedUser from '../models/deletedUser.js';
 
 import { mergeCarts } from './user/cart.js'
 import { mergeWishlists } from './user/wishlist.js'
@@ -408,12 +409,87 @@ export const editUserEmail = async (req, res) => {
         // Optional: Send confirmation email to old and/or new address
         // await sendEmailNotification(user.email, 'Email changed successfully');
 
-        return res.status(200).json({ 
-            message: "Email updated successfully",
-        });
+        if (updatedUser) {
+            return res.status(200).json({ 
+                message: "Email updated successfully",
+            });
+        }
 
     } catch (error) {
         console.error("Error updating email:", error);
+        return res.status(500).json({ 
+            errorType: "general",
+            error: "Internal server error" 
+        });
+    }
+};
+
+
+// delete user
+export const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const paramId = req.params.id;
+
+        // Verify user is editing their own email
+        if (paramId !== id) {
+            return res.status(403).json({ 
+                error: "You are not authorized to delete this user" 
+            });
+        }
+
+        const { password, reason } = req.body;
+
+        console.log("delete user req received: ", req.body)
+
+        const passTrimmed = password.trim()
+
+        // validate that both fields are provided
+        if (!password) {
+            return res.status(400).json({ 
+                errorType: "general",
+                error: "Password is required" 
+            });
+        }
+
+
+        // find user
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ 
+                errorType: "general",
+                error: "User not found" 
+            });
+        }
+
+        // Verify current password
+        const isPasswordValid = await bcrypt.compare(passTrimmed, user.password.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ 
+                errorType: "password",
+                error: "Incorrect password" 
+            });
+        }
+
+        const newDeletedUser = new DeletedUser({
+            userId: id,
+            reason: reason.trim(),
+            role: user?.role,
+        });
+
+        const savedDeletedUser = await newDeletedUser.save()
+
+
+        const deletedUser = await User.findByIdAndDelete(id);
+
+        if (deletedUser) {
+            return res.status(200).json({ 
+                message: "User deleted successfully",
+            });
+        }
+
+    } catch (error) {
+        console.error("Error deleting user:", error);
         return res.status(500).json({ 
             errorType: "general",
             error: "Internal server error" 

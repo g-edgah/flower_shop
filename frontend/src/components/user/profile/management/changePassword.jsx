@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify';
 
 import { useEditPassword } from '../../../../hooks/user/auth.js'
 
@@ -41,18 +42,18 @@ const ChangePassword = ({user, userRefetch, handleState, state}) => {
 
 
         if (newPasswordOne !== newPasswordTwo) {
-            newErrors.newPasswordOne = 'Passwords do not match';
-            newErrors.newPasswordTwo = 'Passwords do not match';
+            newErrors.newPasswordOne = 'New passwords do not match';
+            newErrors.newPasswordTwo = 'New passwords do not match';
         } 
 
         if (!newPasswordOne) {
-            newErrors.newPasswordTwo = 'Password is required';
+            newErrors.newPasswordTwo = 'New password is required';
             newErrors.currentPassword = '';
             newErrors.newPasswordOne = '';
         } 
         
         if (!newPasswordTwo && newPasswordOne) {
-            newErrors.newPasswordTwo = 'Please confirm password';
+            newErrors.newPasswordTwo = 'Please confirm new password';
             newErrors.newPasswordOne = '';
         } 
 
@@ -90,7 +91,7 @@ const ChangePassword = ({user, userRefetch, handleState, state}) => {
             setErrors(validationErrors);
             console.log("errors: ", errors)
             return;
-        }
+        } 
         //console.log("submitted change password")
         
         
@@ -113,15 +114,29 @@ const ChangePassword = ({user, userRefetch, handleState, state}) => {
                     }
                 }
 
+                toast.success('Password changed successfully!', {
+                    className: 'custom-toast--success',
+                });
+
                 handleState("none")
 
                 
             },
             onError: (error) => {
-                console.error('Password change failed:', error);
+                //console.error('Password change failed:', error);
+
                 // Handle specific error messages from API
+                const errorData = error.response?.data;
                 
-                setErrors({ general: 'Password change failed. Please try again.' });
+                toast.error('Email change failed!', {
+                    className: 'custom-toast--error',
+                });
+                
+                if (errorData?.errorType === 'currentPassword') {
+                    setErrors({ currentPassword: errorData?.error || 'Incorrect password' });
+                } else {
+                    setErrors({ general: 'Password change failed. Please try again.' });
+                }
                 
             }
         });

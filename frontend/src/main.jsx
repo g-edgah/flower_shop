@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.jsx'
 
 import { BrowserRouter } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Bounce, Slide, Zoom, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter >
         <App />
         <ToastContainer 
-          position="top-right"
+          position="bottom-center"
           autoClose={3000}
           hideProgressBar={true}
           newestOnTop={true}
@@ -41,11 +41,12 @@ createRoot(document.getElementById('root')).render(
             // fontSize: '14px',
             minHeight: '45px',  
             maxHeight: '45px',
+            width: 'fit-content',
             // boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
-          // transition={Bounce}
+          transition={Slide}
         />
       </BrowserRouter>
     </QueryClientProvider>
-  </StrictMode>,
+  </StrictMode>
 )

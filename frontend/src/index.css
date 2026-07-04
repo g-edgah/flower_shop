@@ -62,28 +62,28 @@
   color: #2e7d32 !important;
   border: 1px solid #2e7d32;
   font-size: 14px;
-  padding: 0px;
 }
 
 /* Error toast styling */
 .custom-toast--error {
   background-color: oklch(97.1% 0.013 17.38) !important;
   color: #c62828 !important;
-  /* border: 2px solid #c62828; */
-  height: 5px;
-  padding: 0px;
+  border: 1px solid #c62828;
+  font-size: 14px;
 }
 
 /* Warning toast styling */
 .custom-toast--warning {
   background-color: oklch(97.1% 0.013 17.38) !important;
   color: #e65100 !important;
-  /* border: 2px solid #c62828; */
+  border: 1px solid #c62828;
+  font-size: 14px;
 }
 
 /* Info toast styling */
 .custom-toast--info {
   background-color: oklch(97.1% 0.013 17.38) !important;
   color: #0d47a1 !important;
-  /* border: 2px solid #c62828; */
+  font-size: 14px;
+  border: 1px solid #c62828;
 }

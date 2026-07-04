@@ -39,7 +39,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
         if (!email) {
             newErrors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'Email address is invalid';
+            newErrors.email = 'Invalid email address';
         }
            
         return newErrors;
@@ -90,23 +90,25 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
 
                 
             },
-            onError: (error) => {
-                console.error('Email change failed:', error);
-                // Handle specific error messages from API
+            onError: (error, ) => {
+                //console.error('Email change failed:', error.response?.data);
+
+                // handle specific error messages from API
+                const errorData = error.response?.data;
 
                 toast.error('Email change failed!', {
                     className: 'custom-toast--error',
                 });
                 
-                setErrors({ general: 'Email change failed. Please try again.' });
+                if (errorData?.errorType === 'password') {
+                    setErrors({ password: errorData?.error || 'Incorrect password' });
+                } else if (errorData?.errorType === 'email') {
+                    setErrors({ email: errorData?.error || 'Invalid email address' });
+                } else {
+                    setErrors({ general: 'Email change failed. Please try again.' });
+                }
                 
             }
-        });
-    }
-
-    const testToast = () => {
-        toast.error('Email changed successfully!', {
-            className: 'custom-toast--success',
         });
     }
 
@@ -184,7 +186,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
 
                 <div className="w-full mt-5 flex justify-center">
                     <button
-                         onClick={(e) => testToast(e)}
+                         onClick={(e) => handleSubmit(e)}
                         // disabled={isLoading}
                         className="w-30 mt-3 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >

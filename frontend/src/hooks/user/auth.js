@@ -67,3 +67,16 @@ export const useEditEmail = (formData) => {
     });
     
 };
+
+
+// user account deletion
+export const useDeleteAccount = (formData) => {
+    console.log(`deleting account`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/auth/delete/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
