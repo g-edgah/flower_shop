@@ -64,12 +64,6 @@ const paypalItemSchema = new mongoose.Schema({
     default: 'personal',
   },
   
-  // Whether this is the default payment method
-  isDefault: {
-    type: Boolean,
-    default: false,
-  },
-  
   // Verification status
   isVerified: {
     type: Boolean,

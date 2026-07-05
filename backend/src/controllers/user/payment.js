@@ -326,8 +326,8 @@ export const addPaymentMethod = async (req, res) => {
         
 
     } catch (error) {
-        res.status(500).json({ error: "error while updating user details" });
-        console.error(`error while updating user details: ${error}`)
+        res.status(500).json({ error: "error while adding payment account" });
+        console.error(`error while adding payment account: ${error}`)
     }
 }
 
@@ -487,7 +487,156 @@ export const removePaymentMethod = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ error: "error while updating user details" });
-        console.error(`error while updating user details: ${error}`)
+        res.status(500).json({ error: "error while reemoving payment account" });
+        console.error(`error while while reemoving payment account: ${error}`)
+    }
+}
+
+
+
+export const editDefaultMethod = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { 
+            type,
+            methodId
+        } = req.body;
+
+        //console.log("add payment method req: ",req.body)
+
+
+        if (!type || !details) {
+            return res.status(400).json({
+                success: false,
+                error: "Missing required fields"
+            });
+        }
+
+        const validTypes = ['mobile_money', 'card'] //, 'paypal'];
+        if (!validTypes.includes(type)) {
+            return res.status(400).json({
+                success: false,
+                error: `Invalid methodType. Supported: ${validTypes.join(', ')}`
+            });
+        }
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: "User not found"
+            });
+        }
+
+        if (type === 'mobile') {
+
+            if (!user.paymentMethods.mobile || user.paymentMethods.mobile.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    error: "No mobile money accounts found for this user"
+                });
+            }
+
+            const index = user.paymentMethods.mobile.findIndex(
+                method => method._id.toString() === methodId
+            );
+
+            if (index === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: "Mobile money account not found"
+                });
+            }
+
+            if (index !== -1) {
+                        
+               if (user.defaultPaymentMethod.methodId === methodId) {
+                    return res,status(400).json({
+                        success: true,
+                        message: "Payment account is already the default"
+                    })
+
+                } else if (user.defaultPaymentMethod.methodId !== methodId) {
+                    await User.findByIdAndUpdate(
+                    id,
+                    { 
+                        $set: { 
+                            defaultPaymentMethod: { 
+                                methodType: type,
+                                methodId: methodId
+                            } 
+                        } 
+                    });
+
+                    return res,status(200).json({
+                        success: true,
+                        message: "Payment account successfully set as default"
+                    })
+                }
+
+                
+            }
+
+
+
+        } else if(type === 'card') {
+
+            if (!user.paymentMethods.card || user.paymentMethods.card.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    error: "No cards found for this user"
+                });
+            }
+
+            const index = user.paymentMethods.card.findIndex(
+                method => method._id.toString() === methodId
+            );
+
+            if (index === -1) {
+                return res.status(404).json({
+                    success: false,
+                    error: "Card not found"
+                });
+            }
+
+            if (index !== -1) {
+                        
+
+                if (user.defaultPaymentMethod.methodId === methodId) {
+                    return res,status(400).json({
+                        success: true,
+                        message: "Payment account is already the default"
+                    })
+
+                } else if (user.defaultPaymentMethod.methodId !== methodId) {
+                    await User.findByIdAndUpdate(
+                    id,
+                    { 
+                        $set: { 
+                            defaultPaymentMethod: { 
+                                methodType: type,
+                                methodId: methodId
+                            } 
+                        } 
+                    });
+
+                    return res,status(200).json({
+                        success: true,
+                        message: "Payment account successfully set as default"
+                    })
+                }
+            }
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: "error while updating default payment account" });
+        console.error(`error while while updating default payment account: ${error}`)
     }
 }

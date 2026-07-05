@@ -39,11 +39,6 @@ const mobilemoneyItemSchema = new mongoose.Schema({
     type: String, 
     required: true
   },
-  // to handle multiple cards or marking a default
-  isDefault: {
-    type: Boolean,
-    default: false,
-  },
 }, { 
     // _id: false // Prevent automatic _id generation for subdocuments
     timestamps: true,
