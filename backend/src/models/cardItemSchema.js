@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
 const cardItemSchema = new mongoose.Schema({
-  // Store the unique ID from the payment processor
-  gatewayId: { 
-    type: String, 
-    required: true, 
-    unique: true 
-  },
+//   // Store the unique ID from the payment processor
+//   gatewayId: { 
+//     type: String, 
+//     required: true, 
+//     unique: true 
+//   },
   cardNumber: {
     type: String,
     required: true,
@@ -17,12 +17,23 @@ const cardItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['Visa', 'MasterCard', 'Mpesa_Global'] 
+    enum: ['visa', 'masterCard', 'mpesa_global'] 
   },
   holderName: {
-    type: String,
-    required: true,
-    trim: true,
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 50
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 50
+    }
   },
   expiryDate: {
     type: String, // consider storing as "MM/YY" or a Date object, but "MM/YY" is common for frontend display
@@ -43,10 +54,6 @@ const cardItemSchema = new mongoose.Schema({
   isDefault: {
     type: Boolean,
     default: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   },
 }, { 
     // _id: false // Prevent automatic _id generation for subdocuments

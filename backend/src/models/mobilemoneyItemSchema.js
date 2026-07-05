@@ -11,7 +11,7 @@ const mobilemoneyItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    match: [/^\d{10}$/, 'Please enter a valid 10-digit mobile money number']
+    match: [/^\d{12}$/, 'Please enter a valid 10-digit mobile money number']
   },
   brand: {
     type: String,
@@ -20,9 +20,20 @@ const mobilemoneyItemSchema = new mongoose.Schema({
     enum: ['mpesa', 'airtel_money', 'tkash'] 
   },
   name: {
-    type: String,
-    required: true,
-    trim: true,
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 50
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 50
+    }
   },
   lastFour: {
     type: String, 
@@ -32,10 +43,6 @@ const mobilemoneyItemSchema = new mongoose.Schema({
   isDefault: {
     type: Boolean,
     default: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   },
 }, { 
     // _id: false // Prevent automatic _id generation for subdocuments

@@ -83,15 +83,7 @@ const paypalItemSchema = new mongoose.Schema({
   lastUsedAt: {
     type: Date,
     default: Date.now,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
+  }
 }, {
   timestamps: true, 
   strict: true

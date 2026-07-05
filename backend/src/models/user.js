@@ -54,6 +54,17 @@ const userSchema = new mongoose.Schema({
         mobile: [mobilemoneyItemSchema],
         paypal: [paypalItemSchema],
     },
+    defaultPaymentMethod: {
+        methodType: {
+        type: String,
+        enum: ['mobile', 'card', 'paypal', null],
+        default: null,
+        },
+        methodId: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+        },
+    },
     cart: [cartItemSchema],
     wishlist: [wishlistItemSchema],
     role: {
