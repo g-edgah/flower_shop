@@ -154,7 +154,7 @@ export const useReview = () => {
     });
 }
 
-// getting orders
+// getting vouchers
 export const useVouchers = () => {
     console.log(`getting them vouchers`) 
     const userId = getUserId()
@@ -166,3 +166,25 @@ export const useVouchers = () => {
     });
     
 };
+
+// adding payment method
+export const useAddPayment = () => {
+    console.log(`add payment method request`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`user/payment/add/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
+
+// removing payment method
+export const useRemovePayment = () => {
+    console.log(`add payment method request`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`user/payment/remove/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}

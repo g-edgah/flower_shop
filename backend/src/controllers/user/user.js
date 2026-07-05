@@ -37,9 +37,9 @@ export const getUser = async (req, res) => {
             lastName: user.lastName, 
             address: user.address, 
             picturePath: user.picturePath,
-            cart: user.cart,
-            wishlist: user.wishlist,
-            orders: user.orders,
+            // cart: user.cart,
+            // wishlist: user.wishlist,
+            // orders: user.orders,
         };
 
         res.status(200).json({ 
@@ -69,18 +69,6 @@ export const editUser = async (req, res) => {
             lastName, 
             address 
         } = req.body;
-
-        //console.log("edit user req body address: ",req.body.address)
-
-        // if (newPassword !== confirmPassword) {
-        //     res.status(400).json({error: "passwords do not match"})
-        //     return
-        // }
-
-        // if (currentPassword === newPassword) {
-        //     res.status(400).json({error: "new and current passsword cannot be the same"})
-        //     return
-        // } //this compares from user input rather than from database to prevent password enumeration
 
 
         const updatedUser = await User.findByIdAndUpdate(

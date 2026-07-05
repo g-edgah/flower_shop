@@ -1,5 +1,64 @@
 import mongoose from 'mongoose';
-import User from '../../models/User.js';
+import User from '../../models/user.js';
+
+export const getUserWishlist = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const user = await User.findById(id);
+
+        
+        const cards = user.paymentMethods.card.map( ({ 
+            card: { _id, brand, lastFour },
+        }) => {
+            return { 
+                _id, 
+                brand, 
+                lastFour
+            }
+        })
+
+        const mobile = user.paymentMethods.mobile.map( ({ 
+            card: { _id, brand, lastFour },
+        }) => {
+            return { 
+                _id, 
+                brand, 
+                lastFour
+            }
+        })
+
+        const defaultMethod = user.paymentMethods.defaultPaymentMethod.map( ({ 
+            card: { methodType, methodId },
+        }) => {
+            return { 
+                methodType, 
+                methodId 
+            }
+        })
+
+        const paymentMethods ={
+            cards: cards, 
+            mobile: mobile,
+            defaultMethod: defaultMethod
+        }
+
+        res.status(200).json({ 
+            success: true,
+            data: paymentMethods 
+        })
+    } catch (error) {
+        res.status(404).json({ error: "error while fetching user payment methods" });
+        console.error(`error while fetching user payment methods: ${error}`)
+    }
+}
+
 
 export const addPaymentMethod = async (req, res) => {
     try {
