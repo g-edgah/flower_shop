@@ -114,6 +114,7 @@ const ChangePassword = ({user, userRefetch, handleState, state}) => {
                     }
                 }
 
+                toast.dismiss();
                 toast.success('Password changed successfully!', {
                     className: 'custom-toast--success',
                 });
@@ -128,7 +129,8 @@ const ChangePassword = ({user, userRefetch, handleState, state}) => {
                 // Handle specific error messages from API
                 const errorData = error.response?.data;
                 
-                toast.error('Email change failed!', {
+                toast.dismiss();
+                toast.error('Password change failed!', {
                     className: 'custom-toast--error',
                 });
                 

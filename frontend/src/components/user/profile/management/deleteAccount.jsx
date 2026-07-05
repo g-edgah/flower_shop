@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useDeleteAccount } from '../../../../hooks/user/auth.js'
 
 const DeleteAccount = ({user, userRefetch, handleState, state}) => {
+    const navigate = useNavigate()
+    const queryClient = useQueryClient();
+
+
     const [ errors, setErrors ] = useState({})
     const [ password, setPassword ] = useState("")
     const [ showPassword, setShowPassword ] = useState("")
@@ -47,7 +53,6 @@ const DeleteAccount = ({user, userRefetch, handleState, state}) => {
 
     const handleSubmit = (e) => {
         
-
         const validationErrors = validateDelete();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -64,29 +69,28 @@ const DeleteAccount = ({user, userRefetch, handleState, state}) => {
         }, {
             onSuccess: (data) => {
                 console.log('Account deletion successful:', data);
-                
-
-                // store jwt
-                if (data.token) {
-                    console.log("token: ", data.token)
-                    localStorage.setItem('token', data.token);
-                    if (formData.rememberMe) {
-                        localStorage.setItem('rememberMe', 'true');
-                    }
-                }
 
                 setPassword("")
                 setReason("")
 
                 setErrors({})
 
+                toast.dismiss();
                 toast.success('Account deleted successfully!', {
                     className: 'custom-toast--success',
                 });
 
+                //clear all cached data
+                queryClient.clear();
+
+                localStorage.removeItem('rememberMe');
+                localStorage.removeItem('userId');
+
                 handleState("none")
 
-                
+                userRefetch()
+
+                navigate('/')
             },
             onError: (error, ) => {
                 //console.error('Account deletion failed:', error.response?.data);
@@ -94,6 +98,7 @@ const DeleteAccount = ({user, userRefetch, handleState, state}) => {
                 // handle specific error messages from API
                 const errorData = error.response?.data;
 
+                toast.dismiss();
                 toast.error('Account deletion failed!', {
                     className: 'custom-toast--error',
                 });

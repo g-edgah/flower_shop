@@ -1,6 +1,7 @@
 import { useLogout } from '../../../../hooks/user/auth.js'
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 
 
@@ -23,10 +24,14 @@ const Logout = ({userData, userRefetch }) => {
                 localStorage.removeItem('rememberMe');
                 localStorage.removeItem('userId');
                 
+                
                 //clear all cached data
                 queryClient.clear();
                 userRefetch()
                 
+                toast.success('Successfully logged out!', {
+                    className: 'custom-toast--success',
+                });
 
                 // redirect out of profile
                 navigate('/');
@@ -36,6 +41,9 @@ const Logout = ({userData, userRefetch }) => {
             },
             onError: (error) => {
                 console.error('Logout failed:', error);
+                toast.error('Failed to log out. Please try again.', {
+                    className: 'custom-toast--error',
+                });
             }
         });
         

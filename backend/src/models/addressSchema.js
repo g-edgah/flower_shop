@@ -1,6 +1,20 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: false,
+        trim: true,
+        minLength: 2,
+        maxLength: 30,
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        minLength: 2,
+        maxLength: 30,
+        required: false,
+    },
     country: { 
         type: String,
         required: false  

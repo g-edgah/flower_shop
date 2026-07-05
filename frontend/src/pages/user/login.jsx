@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import { toast } from 'react-toastify';
 
 import { useLogin } from '../../hooks/user/auth.js';
 
@@ -87,7 +87,6 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                 }));
 
                 localStorage.setItem('wishlist', JSON.stringify([]));
-                
 
 
                 // store jwt
@@ -113,6 +112,9 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
                 cartRefetch()
                 wishlistRefetch()
                 
+                toast.success('Successfully logged in!', {
+                    className: 'custom-toast--success',
+                });
                 
                 // redirect to previous page
                 if (page === 'profile') {
@@ -127,17 +129,26 @@ const Login = ({localWishlist, setLocalWishlist, localCart, setLocalCart, userRe
             onError: (error) => {
                 console.error('Login failed:', error);
                 // Handle specific error messages from API
-                if (error.response?.status === 401) {
-                    setErrors({ general: 'Invalid email or password' });
+                if (error.response?.status === 400) {
+                    setErrors({ 
+                        email: 'Invalid email or password',
+                        password: 'Invalid email or password'
+                     });
+                    toast.error('Invalid email or password', {
+                    className: 'custom-toast--error',
+                });
                 } else {
                     setErrors({ general: 'Login failed. Please try again.' });
+                    toast.error('Login failed. Please try again.', {
+                    className: 'custom-toast--error',
+                });
                 }
             }
         });
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center gap-7">
+        <div className="min-h-screen flex flex-col pt-30 items-center gap-7">
             <span className="title text-center w-full text-xl font-bold">Sign In</span>
             <form onSubmit={handleSubmit} className="form bg-cartCard px-3 py-5 rounded-lg flex flex-col gap-8">
                 <div className="mt-5 email flex flex-col gap-2 w-100">

@@ -100,7 +100,8 @@ const voucherSchema = new mongoose.Schema({
     }]
 
 }, {
-    timestamps: true
+    timestamps: true,
+    strict: true
 });
 
 // methods

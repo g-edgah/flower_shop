@@ -1,16 +1,17 @@
 import { use, useEffect, useState } from 'react'
 import { BiSolidEdit } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useEditUser, useCreateOrder } from '../../../hooks/user/user.js';
 
 const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, cartRefetch }) => {
     const navigate = useNavigate();
     const [ addressEdit, setAddressEdit ] = useState(false)
-    const [errors, setErrors] = useState({})
-    const [ payMethod, setPayMethod] = useState('card')
+    const [errors, setErrors ] = useState({})
+    const [addressErrors, setAddressErrors ] = useState({})
+    const [ payMethod, setPayMethod]  = useState('card')
 
 
     useEffect(() => {
@@ -26,6 +27,8 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         firstName: user?.firstName,
         lastName: user?.lastName,
         address: {
+            firstName: user?.firstName,
+            lastName: user?.lastName,
             country: user?.address?.country,
             region: user?.address?.region,
             city: user?.address?.city,
@@ -82,17 +85,30 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         const newErrors = {};
         
         
-        // if (formData.firstName.length < 1) {
-        // newErrors.newPassword = 'Password must be at least 6 characters';
-        // }
-        
+        if (!formData?.address?.firstName) {
+            newErrors.firstName = 'First name is required';
+        }
 
-        // if (formData.email) {
-        // !/\S+@\S+\.\S+/.test(formData.email)
-        // newErrors.email = 'Email is invalid';
-        // }
+        if (!formData?.address?.lastName) {
+            newErrors.lastName = 'Last name is required';
+        }
+
+        if (!formData?.address?.region) {
+            newErrors.region = 'Region is required';
+        }
+
+        if (!formData?.address?.city) {
+            newErrors.city = 'City is required';
+        }
+
+        if (!formData?.address?.address) {
+            newErrors.address = 'Address is required';
+        }
+
+        if (!formData?.address?.mobile) {
+            newErrors.mobile = 'Mobile number is required';
+        }
            
-        
         return newErrors;
     };
 
@@ -103,7 +119,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
     
 
     //form submission
-    const handleSubmit = async (e, type) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("e: ",e)
 
@@ -114,39 +130,110 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+            toast.dismiss();
+            toast.error('Please fill in all required address fields.', {
+                className: 'custom-toast--error',
+            });
+            
             return;
         }
         
         editUser(formData, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
-                userRefetch()
-                refetch()
                 
+                toast.dismiss();
+                toast.success('Delivery info updated successfully!', {
+                    className: 'custom-toast--success',
+                });
+
+                userRefetch()
+                refetch()     
+            
             },
             onError: (error) => {
                 console.error('Edit failed: ', error)
-                alert('Edit failed. Please try again.')
-                if (type === 'account') {
-                    setAccountEdit(true)
-                } else if (type === 'address') {
-                    setAddressEdit(true)
-                }
+
+                toast.dismiss();
+                toast.error('Failed to update delivery info. Please try again', {
+                    className: 'custom-toast--error',
+                });
+               
+                setAddressEdit(true)
+                
                
             }
         })
 
-        if (type === 'account') {
-            setAccountEdit(false)
-        } else if (type === 'address') {
-            setAddressEdit(false)
-        }
+        
+        setAddressEdit(false)
+        
                
     };
 
     const { mutate: createOrder, isLoading: createOrderLoading, error: createOrderError } = useCreateOrder();
 
+    const validateAddress = () => {
+        const newErrors = {};
+        
+        if (!user?.address?.firstName) {
+            newErrors.firstName = 'First name is required';
+        }
+
+        if (!user?.address?.lastName) {
+            newErrors.lastName = 'Last name is required';
+        }
+
+        if (!user?.address?.region) {
+            newErrors.region = 'Region is required';
+        }
+
+        if (!user?.address?.city) {
+            newErrors.city = 'City is required';
+        }
+
+        if (!user?.address?.address) {
+            newErrors.address = 'Address is required';
+        }
+
+        if (!user?.address?.mobile) {
+            newErrors.mobile = 'Mobile number is required';
+        }
+           
+        return newErrors;
+    }
+
     const handleCreateOrder = () => {
+
+        const formdataErrors = validateForm();
+        const addressErrors = validateAddress();
+
+
+        if (Object.keys(formdataErrors).length > 0 && Object.keys(addressErrors).length > 0) {
+            setErrors(formdataErrors);
+            setAddressErrors(addressErrors);
+            setAddressEdit(true)
+            toast.dismiss();
+            toast.error('Please fill in all required address fields.', {
+                className: 'custom-toast--error',
+            });
+            return;
+        }
+
+        if (Object.keys(formdataErrors).length === 0 && Object.keys(addressErrors).length > 0) {
+            setErrors(formdataErrors);
+            setAddressErrors(addressErrors);
+            setAddressEdit(true)
+            toast.dismiss();
+            toast.error('Please submit address info.', {
+                className: 'custom-toast--error',
+            });
+            return;
+        }
+
+        
+
+        
         const orderData = {
             cart,
             subTotal,
@@ -161,12 +248,18 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                 console.log('Order created successfully!', data)
                 userRefetch()
                 refetch()
+
+                toast.success('Order placed successfully!', {
+                    className: 'custom-toast--success',
+                });
                 navigate('/profile/orders')
                 
             },
             onError: (error) => {
                 console.error('Order creation failed: ', error)
-                alert('Order creation failed. Please try again.')
+                toast.error('Order creation failed. Please try again.!', {
+                    className: 'custom-toast--error',
+                });
                 
             }
         })
@@ -189,7 +282,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                     </div>
 
                     { addressEdit ?
-                        <form onSubmit={(e) => handleSubmit(e, 'address')} className="edit relative w-full h-auto py-3 flex flex-col gap-6">
+                        <form onSubmit={(e) => handleSubmit(e)} className="edit relative w-full h-auto py-3 flex flex-col gap-6">
                             <div className="address flex flex-col items-start justify-center px-4 space-y-3">
                                 <span className="text pl-1 font-bold">Name: </span>
                                 <div className="flex flex-row gap-4 w-full">

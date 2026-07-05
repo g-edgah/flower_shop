@@ -90,14 +90,11 @@ export const login = async (req, res) => {
 
         console.log('login req: ', req.body)
 
-        if (!email) return res.status(400).json({ 
-            errorType: "email",
-            error: 'missing email'
+        if (!email || !password) return res.status(400).json({ 
+            errorType: "general",
+            error: 'missing email or password'
         });
-        if (!password) return res.status(400).json({ 
-            errorType: "password",
-            error: 'missing password'
-        });
+        
 
         //generic error message to prevent enumeration. subtle time differences might still allow enumeration
         
@@ -483,6 +480,13 @@ export const deleteUser = async (req, res) => {
         const deletedUser = await User.findByIdAndDelete(id);
 
         if (deletedUser) {
+            res.clearCookie('token', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                path: '/'
+            });
+            
             return res.status(200).json({ 
                 message: "User deleted successfully",
             });

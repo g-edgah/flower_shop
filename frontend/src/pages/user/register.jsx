@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import { toast } from 'react-toastify';
 
 import { useRegister } from '../../hooks/user/auth.js';
 
@@ -94,19 +94,24 @@ const Register = ({}) => {
             onSuccess: (data) => {
                 console.log('Registration successfull!', data)
 
+                toast.success('Registration successful!', {
+                    className: 'custom-toast--success',
+                });
                 // Redirect or update auth state
                 navigate('/login');
 
             },
             onError: (error) => {
                 console.error('Registration failed: ', error)
-                alert('Registration failed. Please try again.')
+                toast.error('Registration failed. Please try again.', {
+                    className: 'custom-toast--error',
+                });
             }
        })
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center gap-7">
+        <div className="min-h-screen flex flex-col pt-30 items-center gap-7">
             <span className="title text-center w-full text-xl font-bold">Sign Up</span>
             <form onSubmit={handleSubmit} className="form bg-cartCard px-3 py-5 rounded-lg flex flex-col gap-8">
                 <div className="email mt-5 flex flex-col gap-2 w-100">

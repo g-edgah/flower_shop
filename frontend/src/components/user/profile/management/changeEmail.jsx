@@ -82,6 +82,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
 
                 setErrors({})
 
+                toast.dismiss();
                 toast.success('Email changed successfully!', {
                     className: 'custom-toast--success',
                 });
@@ -96,6 +97,7 @@ const ChangeEmail = ({user, userRefetch, handleState, state}) => {
                 // handle specific error messages from API
                 const errorData = error.response?.data;
 
+                toast.dismiss();
                 toast.error('Email change failed!', {
                     className: 'custom-toast--error',
                 });

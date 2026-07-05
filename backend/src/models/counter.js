@@ -10,6 +10,8 @@ const counterSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
+}, {
+    strict: true
 });
 
 const Counter = mongoose.model('Counter', counterSchema); 

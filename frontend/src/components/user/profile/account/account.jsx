@@ -16,6 +16,8 @@ const Account = ({userRefetch, user}) => {
         firstName: user?.firstName,
         lastName: user?.lastName,
         address: {
+            firstName: user?.firstName,
+            lastName: user?.lastName,
             country: user?.address?.country,
             region: user?.address?.region,
             city: user?.address?.city,

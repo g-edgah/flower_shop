@@ -7,6 +7,9 @@ import voucherItemSchema from './voucher.js'
 import addressSchema from './addressSchema.js'
 import emailItemSchema from './emailItemSchema.js'
 import passwordItemSchema from './passwordItemSchema.js'
+import cardItemSchema from './cardItemSchema.js'
+import mobilemoneyItemSchema from './mobilemoneyItemSchema.js'
+import paypalItemSchema from './paypalItemSchema.js'
 
 
 const userSchema = new mongoose.Schema({
@@ -47,14 +50,9 @@ const userSchema = new mongoose.Schema({
         match: [/^\d{10}$/, "invalid mobile number"],
     },
     paymentMethods: {
-        card: {
-            type: Object,
-            required: false,
-        },
-        mpesa: {
-            type: Object,
-            required: false,
-        },
+        card: [cardItemSchema],
+        mobile: [mobilemoneyItemSchema],
+        paypal: [paypalItemSchema],
     },
     cart: [cartItemSchema],
     wishlist: [wishlistItemSchema],
