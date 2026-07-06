@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import User from '../../models/user.js';
 
-export const getUserWishlist = async (req, res) => {
+export const getUserPaymentMethods = async (req, res) => {
     try {
         const { id } = req.user
 
@@ -25,7 +25,7 @@ export const getUserWishlist = async (req, res) => {
         })
 
         const mobile = user.paymentMethods.mobile.map( ({ 
-            card: { _id, brand, lastFour },
+            mobile: { _id, brand, lastFour },
         }) => {
             return { 
                 _id, 
@@ -34,14 +34,11 @@ export const getUserWishlist = async (req, res) => {
             }
         })
 
-        const defaultMethod = user.paymentMethods.defaultPaymentMethod.map( ({ 
-            card: { methodType, methodId },
-        }) => {
-            return { 
-                methodType, 
-                methodId 
-            }
-        })
+        const defaultMethod = { 
+            methodType: user.paymentMethods.defaultPaymentMethod.methodType,
+            methodId: user.paymentMethods.defaultPaymentMethod.methodId
+        }
+        
 
         const paymentMethods ={
             cards: cards, 
