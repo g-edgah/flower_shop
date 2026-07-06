@@ -167,6 +167,19 @@ export const useVouchers = () => {
     
 };
 
+// getting payment methods
+export const usePaymentMethods = () => {
+    console.log(`getting them payment methods`) 
+    const userId = getUserId()
+
+    return useQuery({ 
+        queryKey: ['paymentMethods', userId],
+        queryFn: () => api.get(`/user/payment/${userId}`).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
+
 // adding payment method
 export const useAddPayment = () => {
     console.log(`add payment method request`) 
@@ -180,11 +193,22 @@ export const useAddPayment = () => {
 
 // removing payment method
 export const useRemovePayment = () => {
-    console.log(`add payment method request`) 
+    console.log(`remove payment method request`) 
     const userId = getUserId()
 
     return useMutation({ 
         mutationFn: (formData) => api.post(`user/payment/remove/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
+
+// editing default payment method
+export const useEditDefaultPayment = () => {
+    console.log(`editing default payment method request`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`user/payment/default/${userId}`, formData).then(res => res.data),
         enabled: !!userId
     });
 }
