@@ -16,10 +16,6 @@ const Filter = ({ handleSort, toggleSort, sortOpen, sortBy, page, setPage }) => 
                     <span className="item cursor-pointer" onClick={() => handleSort('popularity')}>Popularity</span>
                 </div>
             </div>
-
-            <div className="pages">
-
-            </div>
         </div>
     )
 }

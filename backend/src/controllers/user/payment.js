@@ -13,26 +13,23 @@ export const getUserPaymentMethods = async (req, res) => {
 
         const user = await User.findById(id);
 
-        
-        const cards = user.paymentMethods.card.map( ({ 
-            card: { _id, brand, lastFour },
-        }) => {
-            return { 
-                _id, 
-                brand, 
-                lastFour
-            }
-        })
 
-        const mobile = user.paymentMethods.mobile.map( ({ 
-            mobile: { _id, brand, lastFour },
-        }) => {
-            return { 
-                _id, 
-                brand, 
-                lastFour
-            }
-        })
+        
+        const cards = user.paymentMethods?.card?.map((item) => ({
+            _id: item._id,
+            brand: item.brand,
+            lastFour: item.lastFour
+        })) || []
+
+
+        const mobile =user.paymentMethods.mobile.map((item) => ({
+            _id: item._id,
+            brand: item.brand,
+            lastFour: item.lastFour
+        })) || []
+
+
+        
 
         const defaultMethod = { 
             methodType: user.defaultPaymentMethod.methodType,
@@ -112,15 +109,37 @@ export const addPaymentMethod = async (req, res) => {
                 });
             }
 
-            let formattedPhone = number.replace(/\s/g, '');
 
-            if (!/^\d{9}$/.test(formattedPhone)){
-                return res.status(400).json({
-                    success: false,
-                    error: 'Invalid data1'
-                })
+            if (number){
+                // must contain only digits
+                if (!/^\d+$/.test(number)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid data'
+                    })
+                } 
+
+                // exactly 10 digits
+                else if (!/^\d{10}$/.test(number)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid data'
+                    })
+                } 
+
+                // starts with 07 or 01
+                else if (!/^(07|01)/.test(number)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid data'
+                    })
+                }
+
             }
+            
 
+            // remove leadind 0
+            const formattedPhone = number.replace(/^0/, '');
             const formattedNumber = `254${formattedPhone}`
 
             const providers = ['mpesa', 'airtel', 'tkash']
@@ -131,29 +150,50 @@ export const addPaymentMethod = async (req, res) => {
                 });
             }
 
-            const formattedFirstName = firstName.replace(/\s/g, '');
-            const formattedLastName = lastName.replace(/\s/g, '');
+            
 
-            if (!formattedFirstName || !formattedLastName) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'Missing required field'
-                });
+            if (firstName) {
+                // only letters allowed
+                if (!/^[A-Za-z]+$/.test(firstName)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid details'
+                    })
+                
+                // only 2-50 characters
+                } else if (firstName.length < 2 || firstName.length > 50) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid details'
+                    })
+                }
             }
 
-            if (!/^.{2,}$/.test(formattedFirstName) || !/^.{2,}$/.test(formattedLastName)){
-                return res.status(400).json({
-                    success: false,
-                    error: 'Invalid details'
-                })
+            if (lastName) {
+                // only letters allowed
+                if (!/^[A-Za-z]+$/.test(lastName)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid details'
+                    })
+                
+                // only 2-50 characters
+                } else if (lastName.length < 2 || lastName.length > 50) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid details'
+                    })
+                }
             }
+            
+            
 
             if (!user.paymentMethods.mobile) {
                 user.paymentMethods.mobile = [];
             }
-
+            
             // Check for duplicate
-            const existing = user.paymentMethods.mobileMoney.find(
+            const existing = user.paymentMethods.mobile.find(
                 m => m.number === formattedNumber && m.brand === brand.toLowerCase()
             );
             if (existing) {
@@ -163,6 +203,8 @@ export const addPaymentMethod = async (req, res) => {
                 });
             }
 
+            
+
             await User.findByIdAndUpdate(
                 id,
                 {
@@ -171,9 +213,10 @@ export const addPaymentMethod = async (req, res) => {
                             number: formattedNumber,
                             brand: brand,
                             name: {
-                                firstName: formattedFirstName,
-                                lastName: formattedLastName
-                            }
+                                firstName: firstName,
+                                lastName: lastName
+                            },
+                            lastFour: number.slice(-4)
                         }
                     }
                     
@@ -187,7 +230,6 @@ export const addPaymentMethod = async (req, res) => {
                 success: true,
                 message: 'payment method added successfully'
             }) 
-
 
 
 

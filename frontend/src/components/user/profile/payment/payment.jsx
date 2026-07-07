@@ -5,13 +5,24 @@ import { toast } from 'react-toastify';
 
 import { usePaymentMethods, useAddPayment, useRemovePayment, useEditDefaultPayment } from "../../../../hooks/user/user";
 
+import AddCard from './addCard.jsx'
+import AddMobile from './addMobile.jsx'
+
+
 const Payment = () => {
     const [ newState, setNewState ] = useState("none")
     const [ mobileErrors, setMobileErrors ] = useState({})
     const [ cardErrors, setCardErrors ] = useState({})
+    const [ dayOpen, setDayOpen ] = useState(false)
+    const [ monthOpen, setMonthOpen ] = useState(false)
+    const [ yearOpen, setYearOpen ] = useState(false)
     const [ newCard, setNewCard ] = useState({
         cardNumber: '',
-        expiryDate: '',
+        expiryDate: {
+            day: '31',
+            month: '',
+            year: ''
+        },
         cvv: '',
         firstName: '',
         lastName: '',
@@ -23,6 +34,10 @@ const Payment = () => {
         phoneNumber: '',
         provider: ''
     })
+
+    const days = ['01', '02', '03', '04' ]
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const years = ['2026', '2027', '2028', '2029']
 
     // get user's existing payment methods
     const { data: paymentMethods, isLoading: paymentMethodsLoading, error: paymentMethodsError, refetch: refetchPaymentMethods } = usePaymentMethods();
@@ -160,7 +175,7 @@ const Payment = () => {
             } 
             // exactly 10 digits
             else if (!/^\d{10}$/.test(newMobile.phoneNumber)) {
-                errors.phoneNumber = 'Phone number cannot exceed 10 digits';
+                errors.phoneNumber = 'Invalid phone number';
             } 
             // starts with 07 or 01
             else if (!/^(07|01)/.test(newMobile.phoneNumber)) {
@@ -231,6 +246,13 @@ const Payment = () => {
                     toast.success('Payment option added successfully!', {
                         className: 'custom-toast--success',
                     });
+
+                    setNewMobile({
+                        firstName: '',
+                        lastName: '',
+                        phoneNumber: '',
+                        provider: ''
+                    })
                     
                     setNewState("none")
     
@@ -256,6 +278,47 @@ const Payment = () => {
                     }
                 }
             });
+        }
+    }
+
+    const handleDate = (type, value) => {
+        if (type === 'day') {
+            setNewCard(prev => ({
+                ...prev,
+                expiryDate: {
+                    ...prev.expiryDate,
+                    day: value
+                }
+            }))
+            setDayOpen(false)
+        } else if (type === 'month') {
+            setNewCard(prev => ({
+                ...prev,
+                expiryDate: {
+                    ...prev.expiryDate,
+                    month: value
+                }
+            }))
+            setMonthOpen(false)
+        } else if (type === 'year') {
+            setNewCard(prev => ({
+                ...prev,
+                expiryDate: {
+                    ...prev.expiryDate,
+                    year: value
+                }
+            }))
+            setYearOpen(false)
+        }
+    }
+
+    const handleDateToggle = (type) => {
+        if (type === 'day') {
+            setDayOpen(!dayOpen)
+        } else if (type === 'month') {
+            setMonthOpen(!monthOpen)
+        } else if (type === 'year') {
+            setYearOpen(!yearOpen)
         }
     }
 
@@ -289,15 +352,25 @@ const Payment = () => {
                         <div className="saved">
                             <div className="mobile">
                                 <span className="text font-semibold">Your mobile money accounts</span>
-                                <div className="flex py-5">
+                                <div className="flex py-5 gap-3 items-start">
                                     {paymentMethods?.data?.mobile.map((mobile) => (
-                                    <div key={mobile._id} className="mobile-account flex flex-col gap-1 p-2 border border-gray-300 rounded-md">
-                                        <span className="text font-semibold">{mobile.brand}</span>
-                                        <span className="text text-sm">**** **** **** {mobile.lastFour}</span>
+                                    <div key={mobile._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
+                                        <div className={`mpesa cursor-pointer 
+                                        ${mobile.brand === 'mpesa' && 'bg-[url(/logos/mpesa1.png)] bg-size-[auto_48px]  bg-white'}
+                                        ${mobile.brand === 'airtel' && 'bg-[url(/logos/airtel1.png)] bg-size-[auto_40px]  bg-white'} 
+                                        ${mobile.brand === 'tkash' && 'bg-[url(/logos/telkom.png)] bg-size-[auto_24px] bg-[#00AACA]'} 
+                                        bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+
+                                        </div>
+                                        <div className="text-sm w-full flex">
+                                            <span className="text  min-w-11 " >*******</span>
+                                            <span className="text w-4">{mobile.lastFour}
+                                            </span>
+                                        </div>
                                     </div>
                                     ))}
                                     <div className="add">
-                                        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 flex gap-1 items-center justify-center" onClick={() => setNewState('mobile')}>
+                                        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 flex gap-1 items-center justify-center h-13" onClick={() => setNewState('mobile')}>
                                             <FaPlus /> Add
                                         </button>
                                     </div>
@@ -313,14 +386,13 @@ const Payment = () => {
                                         </div>
                                     ))}
                                     <div className="add">
-                                        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 flex gap-1 items-center justify-center" onClick={() => setNewState('card')}>
+                                        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 flex gap-1 items-center justify-center h-13" onClick={() => setNewState('card')}>
                                             <FaPlus /> Add
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                                
+                        </div>           
                     </div>
                 </div>
             
@@ -328,280 +400,12 @@ const Payment = () => {
 
             
             {(newState === 'mobile') &&
-                <div className="p-3 flex flex-col gap-5">
-                    <div className="title flex gap-3 border-b border-gray-300 w-10/10 p-3">
-                        <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setNewState("none")} />
-                        <span className="title text-xl font-bold">Add mobile money Account</span>
-                    </div>
-
-                    <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e, 'mobile')}>
-                        <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
-                            <span className="text font-semibold">Name: </span>
-
-                            <div className="flex justify-between w-full gap-4">
-                            
-                            <div className="flex flex-col">
-                            <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${mobileErrors?.firstName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-300 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg `}
-                                type="text" 
-                                id='firstName' 
-                                name='firstName'
-                                value={newMobile.firstName}
-                                onChange={(e) => {handleMobileChange(e)}}
-                                placeholder="First Name"
-                            />
-                            {mobileErrors?.firstName && (
-                            <p className="mt-1 text-sm text-red-500">{mobileErrors?.firstName}</p>
-                            )}
-                            </div>
-
-                            <div className="flex flex-col">
-                            <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${mobileErrors?.lastName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-300 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg `}
-                                type="text" 
-                                id='lastName' 
-                                name='lastName'
-                                value={newMobile.lastName}
-                                onChange={(e) => {handleMobileChange(e)}}
-                                placeholder="Last Name"
-                            />
-                                {mobileErrors?.lastName && (
-                                <p className="mt-1 text-sm text-red-500">{mobileErrors?.lastName}</p>
-                                )} 
-                            </div>
-                            </div>
-
-                        </div>
-
-                        <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
-
-                            <span className="text font-semibold">Phone Number: </span>
-                            <div className="flex items-start gap-2">
-
-                                <span className="text font-semibold border border-gray-300 rounded-lg py-1.5 px-1.5">
-                                    +254
-                                </span>
-                                <div className="flex flex-col">
-                                <input 
-                                    className={`w-full pl-4 pr-2 py-1.5 border ${mobileErrors?.phoneNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-300 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg `}
-                                    type='text'
-                                    id='phoneNumber' 
-                                    name='phoneNumber'
-                                    value={newMobile.phoneNumber}
-                                    onChange={(e) => {handleMobileChange(e)}}
-                                    placeholder="0712345678"
-                                />
-
-
-                                {mobileErrors?.phoneNumber && (
-                                <p className="mt-1 text-sm text-red-500">{mobileErrors?.phoneNumber}</p>
-                                )} 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3 items-start justify-start max-w-90">
-                            
-
-                            <div className="type flex flex-col gap-2">
-                                <span className="text font-semibold">Provider: </span>
-
-                                <div className="cont flex gap-3">
-
-                                    <div onClick ={()=>{setNewMobile({
-                                        ...newMobile,
-                                        provider: 'mpesa'
-                                    })}} className={`mpesa cursor-pointer bg-[url(/logos/mpesa1.png)] bg-no-repeat bg-center w-15 h-9 bg-white bg-size-[auto_33px] rounded-md border border-gray-400 ${newMobile?.provider ==='mpesa' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
-
-                                    </div>
-
-                                    <div onClick ={()=>{setNewMobile({
-                                        ...newMobile,
-                                        provider: 'airtel'
-                                    })}} className={`airtel cursor-pointer bg-[url(/logos/airtel1.png)] bg-no-repeat bg-center w-15 h-9 bg-size-[auto_29px] border bg-white border-gray-400 rounded-md ${newMobile?.provider ==='airtel' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
-
-                                    </div>
-
-                                    <div onClick ={()=>{setNewMobile({
-                                        ...newMobile,
-                                        provider: 'tkash'
-                                    })}} className={`tkash cursor-pointer bg-[url(/logos/telkom.png)] bg-no-repeat bg-center w-15 h-9 bg-[#00AACA] bg-size-[auto_17px] border border-gray-400 rounded-md ${newMobile?.provider ==='tkash' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
-
-                                    </div>
-
-
-                                </div>
-
-
-                            
-                                {mobileErrors?.provider && (
-                                <p className="mt-1 text-sm text-red-500">{mobileErrors?.provider}</p>
-                                )} 
-                            </div>
-                        </div>
-
-                        <div className="flex w-full justify-center">
-
-                            <button type='submit' className='bg-active text-white p-2 rounded-md w-35'>Add Mobile</button>
-                        </div>
-                    </form>
-                
-                </div>
+                <AddMobile handleMobileChange={handleMobileChange} newMobile={newMobile} handleSubmit={handleSubmit} mobileErrors={mobileErrors} setNewState={setNewState}/>
                     
             }
 
             {(newState === 'card') &&
-                <div className='p-3 flex flex-col gap-5'>
-                    <div className="title flex gap-5 items-center border-b border-gray-300 w-full p-3">
-                        <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setNewState("none")} />
-                        <span className="title text-xl font-bold">Add Card</span>
-                    </div>
-                    <div className="new">
-
-                
-                    <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e, 'card')}>
-                        <div className="relative flex flex-col justify-between w-full max-w-90 gap-1">
-                            <span className="text font-semibold">Card Holder Name: </span>
-
-                            
-                            <div className="flex justify-between w-full gap-4">
-
-                            <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                type="text" 
-                                id='firstName' 
-                                name='firstName'
-                                value={newCard.firstName}
-                                onChange={(e) => {handleChange(e)}}
-                                placeholder="First Name"
-                            />
-                            {cardErrors?.firstName && (
-                            <p className="mt-1 text-sm text-red-500">{cardErrors?.firstName}</p>
-                            )} 
-
-                            <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                type="text" 
-                                id='lastName' 
-                                name='lastName'
-                                value={newCard.lastName}
-                                onChange={(e) => {handleChange(e)}}
-                                placeholder="Last Name"
-                            />
-                                {cardErrors?.lastName && (
-                                <p className="mt-1 text-sm text-red-500">{cardErrors?.lastName}</p>
-                                )} 
-                            </div>
-                        </div>
-
-                        <div className="relative flex flex-col justify-between w-full max-w-90 gap-1">
-
-                            <span className="text font-semibold">Card Number: </span>
-
-                            <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cardNumber ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                type='text'
-                                id='cardNumber' 
-                                name='cardNumber'
-                                value={newCard.cardNumber}
-                                onChange={(e) => {handleChange(e)}}
-                                placeholder="Card Number"
-                            />
-
-
-                            {cardErrors?.cardNumber && (
-                            <p className="mt-1 text-sm text-red-500">{cardErrors?.cardNumber}</p>
-                            )} 
-                        </div>
-
-                        <div className="flex gap-3 items-start justify-start max-w-90">
-                            <div className="relative flex flex-col justify-between w-30  gap-1">
-                                <span className="text font-semibold">Expiry Date: </span>
-
-                                <input 
-                                    className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.expiryDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                    type='text'
-                                    id='expiryDate' 
-                                    name='expiryDate'
-                                    value={newCard.expiryDate}
-                                    onChange={(e) => {handleChange(e)}}
-                                    placeholder="MM/YY"
-                                />
-
-
-                                {cardErrors?.expiryDate && (
-                                <p className="mt-1 text-sm text-red-500">{cardErrors?.expiryDate}</p>
-                                )} 
-                            </div>
-
-                            <div className="relative flex flex-col justify-between w-25 max-w-70 gap-1">
-                                <span className="text font-semibold">CVV: </span>
-                                <input 
-                                    className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cvv ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                    type='text'
-                                    id='cvv' 
-                                    name='cvv'
-                                    value={newCard.cvv}
-                                    onChange={(e) => {handleChange(e)}}
-                                    placeholder="CVV"
-                                />
-
-
-                                {cardErrors?.cvv && (
-                                <p className="mt-1 text-sm text-red-500">{cardErrors?.cvv}</p>
-                                )} 
-                            </div>
-
-                            
-                        </div>
-
-                        <div className="type flex flex-col gap-1">
-                                <span className="text font-semibold">Card Type: </span>
-
-                                <div className="cont flex gap-2">
-
-                                <div className="mastercard bg-[url(/logos/mastercard.png)] bg-no-repeat bg-center w-15 h-9 bg-size-[auto_80px] border border-gray-400 rounded-md">
-
-                                </div>
-
-                                <div className="mastercard bg-[url(/logos/visa.png)] bg-no-repeat bg-center w-15 h-9 bg-size-[auto_16px] border border-gray-400 rounded-md">
-
-                                </div>
-
-                                <div className="mpesa bg-[url(/logos/global2.jpg)] bg-no-repeat bg-[#F7F7F7] bg-center w-15 h-9 bg-size-[auto_27px] border border-gray-400 rounded-md">
-
-                                </div>
-
-
-                                </div>
-                                
-
-
-                                {/* <select 
-                                    className={`w-full pl-4 pr-2 py-1.5 border ${errors.cardType ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
-                                    id='cardType' 
-                                    name='cardType'
-                                    value={newCard.cardType}
-                                    onChange={(e) => {handleChange(e)}}
-                                >
-                                    <option value="">Select Card Type</option>
-                                    <option value="Visa">Visa</option>
-                                    <option value="MasterCard">MasterCard</option>
-                                    <option value="Amex">Amex</option>
-                                </select> */}
-
-                                {cardErrors?.cardType && (
-                                <p className="mt-1 text-sm text-red-500">{cardErrors?.cardType}</p>
-                                )} 
-                            </div>
-
-                        <div className="flex w-full justify-center">
-
-                            <button type='submit' className='bg-active text-white p-2 rounded-md w-35'>Add Card</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
+                <AddCard handleCardChange={handleCardChange} newCard={newCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} days={days} months={months} years={years}/>
             }      
         </div>
     )
