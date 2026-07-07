@@ -35,8 +35,8 @@ export const getUserPaymentMethods = async (req, res) => {
         })
 
         const defaultMethod = { 
-            methodType: user.paymentMethods.defaultPaymentMethod.methodType,
-            methodId: user.paymentMethods.defaultPaymentMethod.methodId
+            methodType: user.defaultPaymentMethod.methodType,
+            methodId: user.defaultPaymentMethod.methodId
         }
         
 
@@ -72,7 +72,7 @@ export const addPaymentMethod = async (req, res) => {
             details 
         } = req.body;
 
-        //console.log("add payment method req: ",req.body)
+        console.log("add payment method req: ",req.body)
 
         if (!type || !details) {
             return res.status(400).json({
@@ -81,7 +81,7 @@ export const addPaymentMethod = async (req, res) => {
             });
         }
 
-        const validTypes = ['mobile_money', 'card'] //, 'paypal'];
+        const validTypes = ['mobile', 'card'] //, 'paypal'];
         if (!validTypes.includes(type)) {
             return res.status(400).json({
                 success: false,
@@ -97,7 +97,7 @@ export const addPaymentMethod = async (req, res) => {
             });
         }
 
-        if (type === 'mobile_money') {
+        if (type === 'mobile') {
             const {
                 number,
                 brand,
@@ -117,13 +117,13 @@ export const addPaymentMethod = async (req, res) => {
             if (!/^\d{9}$/.test(formattedPhone)){
                 return res.status(400).json({
                     success: false,
-                    error: 'Invalid data'
+                    error: 'Invalid data1'
                 })
             }
 
             const formattedNumber = `254${formattedPhone}`
 
-            const providers = ['mpesa', 'airtel_money', 'tkash']
+            const providers = ['mpesa', 'airtel', 'tkash']
             if (!providers.includes(brand)) {
                 return res.status(400).json({
                     success: false,

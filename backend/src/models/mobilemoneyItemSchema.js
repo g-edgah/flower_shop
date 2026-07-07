@@ -17,7 +17,7 @@ const mobilemoneyItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['mpesa', 'airtel_money', 'tkash'] 
+    enum: ['mpesa', 'airtel', 'tkash'] 
   },
   name: {
     firstName: {
