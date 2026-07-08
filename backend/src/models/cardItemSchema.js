@@ -17,7 +17,7 @@ const cardItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['visa', 'masterCard', 'mpesa'] 
+    enum: ['visa', 'mastercard', 'mpesa'] 
   },
   holderName: {
     firstName: {

@@ -612,9 +612,9 @@ const Payment = () => {
                                         bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
 
                                         </div>
-                                        <div className="text-sm w-full flex">
-                                            <span className="text  min-w-11 " >*******</span>
-                                            <span className="text w-4">{mobile.lastFour}
+                                        <div className="text-sm w-full flex justify-center gap-1">
+                                            <span className="text" >***</span>
+                                            <span className="text">{mobile.lastFour}
                                             </span>
                                         </div>
                                     </div>
@@ -628,12 +628,22 @@ const Payment = () => {
                             </div>
                             <div className="cards">
                                 <span className="text font-semibold">Your cards</span>
-                                <div className="flex py-5">
+                                <div className="flex py-5 gap-3 items-start">
                                     {paymentMethods?.data?.cards.map((card) => (
-                                        <div key={card._id} className="card-account flex flex-col gap-1 p-2 border border-gray-300 rounded-md">
-                                            <span className="text font-semibold">{card.brand}</span>
-                                            <span className="text text-sm">**** **** **** {card.lastFour}</span>
+                                        <div key={card._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
+                                        <div className={`mpesa cursor-pointer 
+                                        ${card.brand === 'mastercard' && 'bg-[url(/logos/mastercard.png)] bg-size-[auto_100px]  bg-white'}
+                                        ${card.brand === 'visa' && 'bg-[url(/logos/visa.png)] bg-size-[auto_20px]  bg-white'} 
+                                        ${card.brand === 'mpesa' && 'bg-[url(/logos/global2.jpg)] bg-size-[auto_39px] bg-[#F7F7F7]'} 
+                                        bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+
                                         </div>
+                                        <div className="text-sm w-full flex justify-center gap-1">
+                                            <span className="text " >***</span>
+                                            <span className="text">{card.lastFour}
+                                            </span>
+                                        </div>
+                                    </div>
                                     ))}
                                     <div className="add">
                                         <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 flex gap-1 items-center justify-center h-13" onClick={() => setNewState('card')}>
