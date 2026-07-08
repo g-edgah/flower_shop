@@ -1,6 +1,6 @@
 import { FaArrowLeft } from "react-icons/fa6";
 
-const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, setNewState}) => {
+const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, setMobileErrors, setNewState, setNewMobile}) => {
 
     return (
         <div className="p-3 flex flex-col gap-5">
@@ -86,21 +86,34 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                             <div onClick ={()=>{setNewMobile({
                                 ...newMobile,
                                 provider: 'mpesa'
-                            })}} className={`mpesa cursor-pointer bg-[url(/logos/mpesa1.png)] bg-no-repeat bg-center w-15 h-9 bg-white bg-size-[auto_33px] rounded-md border border-gray-400 ${newMobile?.provider ==='mpesa' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
+                            })}} 
+                            className={`mpesa cursor-pointer bg-[url(/logos/mpesa1.png)] bg-no-repeat bg-center w-15 h-9 bg-white bg-size-[auto_33px] rounded-md border border-gray-400 ${newMobile?.provider ==='mpesa' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
 
                             </div>
 
-                            <div onClick ={()=>{setNewMobile({
-                                ...newMobile,
-                                provider: 'airtel'
-                            })}} className={`airtel cursor-pointer bg-[url(/logos/airtel1.png)] bg-no-repeat bg-center w-15 h-9 bg-size-[auto_29px] border bg-white border-gray-400 rounded-md ${newMobile?.provider ==='airtel' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
+                            <div onClick ={()=>{
+                                setNewMobile({
+                                    ...newMobile,
+                                    provider: 'airtel'
+                                })
+                                setMobileErrors({
+                                    ...mobileErrors,
+                                    provider: ''
+                                })}} 
+                            className={`airtel cursor-pointer bg-[url(/logos/airtel1.png)] bg-no-repeat bg-center w-15 h-9 bg-size-[auto_29px] border bg-white border-gray-400 rounded-md ${newMobile?.provider ==='airtel' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
 
                             </div>
 
-                            <div onClick ={()=>{setNewMobile({
-                                ...newMobile,
-                                provider: 'tkash'
-                            })}} className={`tkash cursor-pointer bg-[url(/logos/telkom.png)] bg-no-repeat bg-center w-15 h-9 bg-[#00AACA] bg-size-[auto_17px] border border-gray-400 rounded-md ${newMobile?.provider ==='tkash' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
+                            <div onClick ={()=>{
+                                setNewMobile({
+                                    ...newMobile,
+                                    provider: 'tkash'
+                                })
+                                setMobileErrors({
+                                    ...mobileErrors,
+                                    provider: ''
+                                })}} 
+                            className={`tkash cursor-pointer bg-[url(/logos/telkom.png)] bg-no-repeat bg-center w-15 h-9 bg-[#00AACA] bg-size-[auto_17px] border border-gray-400 rounded-md ${newMobile?.provider ==='tkash' ? 'outline-[2px] outline-offset-1 outline-active ':''}`}>
 
                             </div>
 
@@ -115,7 +128,7 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                     </div>
                 </div>
 
-                <div className="flex w-full justify-center">
+                <div className="flex w-full justify-center mt-4">
 
                     <button type='submit' className='bg-active text-white p-2 rounded-md w-35'>Add Mobile</button>
                 </div>

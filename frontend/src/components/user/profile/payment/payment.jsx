@@ -19,7 +19,6 @@ const Payment = () => {
     const [ newCard, setNewCard ] = useState({
         cardNumber: '',
         expiryDate: {
-            day: '31',
             month: '',
             year: ''
         },
@@ -57,12 +56,14 @@ const Payment = () => {
 
         if (name === 'firstName') {
             setMobileErrors({
+                ...mobileErrors,
                 firstName: ``
             });
 
             // only allow letters
             if (/[^A-Za-z]/.test(value)) {
                 setMobileErrors({
+                    ...mobileErrors,
                     firstName: `Invalid character`
                 });
                 return;
@@ -71,6 +72,7 @@ const Payment = () => {
             // ensure name is less than 50 characters long
             if (value.length > 50) {
                 setMobileErrors({
+                    ...mobileErrors,
                     firstName: `Name length cannot exceed 50 characters`
                 });
                 return;
@@ -83,12 +85,14 @@ const Payment = () => {
         } else if (name === 'lastName') {
 
             setMobileErrors({
+                ...mobileErrors,
                 lastName: ``
             });
 
             // only allow letters
             if (/[^A-Za-z]/.test(value)) {
                 setMobileErrors({
+                    ...mobileErrors,
                     lastName: `Invalid character`
                 });
                 return;
@@ -97,6 +101,7 @@ const Payment = () => {
             // ensure name is less than 50 characters long
             if (value.length > 50) {
                 setMobileErrors({
+                    ...mobileErrors,
                     lastName: `Name length cannot exceed 50 characters`
                 });
                 return;
@@ -108,12 +113,14 @@ const Payment = () => {
             })
         } else  if (name === 'phoneNumber') {
             setMobileErrors({
+                ...mobileErrors,
                 phoneNumber: ``
             });
 
             //only allow digits
             if (/\D/.test(value)) {
                 setMobileErrors({
+                    ...mobileErrors,
                     phoneNumber: 'Invalid character'
                 });
                 return;
@@ -122,6 +129,7 @@ const Payment = () => {
             // check length
             if (value.length > 10) {
                 setMobileErrors({
+                    ...mobileErrors,
                     phoneNumber: 'Phone number cannot exceed 10 digits'
                 });
                 return;
@@ -134,10 +142,120 @@ const Payment = () => {
     }
 
     const handleCardChange = (e) => {
-        setNewCard({
-            ...newCard,
-            [e.target.name]: e.target.value
-        })
+        const { name, value } = e.target;
+        console.log("new card info", name, value)
+        if (name === 'firstName') {
+            setCardErrors({
+                ...cardErrors,
+                firstName: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setCardErrors({
+                    ...cardErrors,
+                    firstName: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setCardErrors({
+                    ...cardErrors,
+                    firstName: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewCard({
+                ...newCard,
+                [name]: value
+            })
+        } else if (name === 'lastName') {
+
+            setCardErrors({
+                ...cardErrors,
+                lastName: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setCardErrors({
+                    ...cardErrors,
+                    lastName: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setCardErrors({
+                    ...cardErrors,
+                    lastName: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewCard({
+                ...newCard,
+                [name]: value
+            })
+        } else  if (name === 'cardNumber') {
+            setCardErrors({
+                ...cardErrors,
+                cardNumber: ``
+            });
+
+            //only allow digits
+            if (/\D/.test(value)) {
+                setCardErrors({
+                    ...cardErrors,
+                    cardNumber: 'Invalid character'
+                });
+                return;
+            }
+            
+            // check length
+            if (value.length > 10) {
+                setCardErrors({
+                    ...cardErrors,
+                    cardNumber: 'Phone number cannot exceed 10 digits'
+                });
+                return;
+            }
+            setNewCard({
+                ...newCard,
+                [name]: value
+            })
+        } else if (name === 'cvv') {
+            setCardErrors({
+                ...cardErrors,
+                cvv: ``
+            });
+
+            //only allow digits
+            if (/\D/.test(value)) {
+                setCardErrors({
+                    ...cardErrors,
+                    cvv: 'Invalid character'
+                });
+                return;
+            }
+            
+            // check length
+            if (value.length > 3) {
+                setCardErrors({
+                    ...cardErrors,
+                    cvv: 'cvv cannot exceed 3 digits'
+                });
+                return;
+            }
+            setNewCard({
+                ...newCard,
+                [name]: value
+            })
+        } 
     }
 
     const validateMobileDetails = () => {
@@ -196,19 +314,86 @@ const Payment = () => {
     }
 
     const validateCardDetails = (number) => {
-        // Remove spaces and dashes
-        const cleaned = number.replace(/[\s-]/g, '');
-        // Check if it's all digits and has a length of 16
-        return /^\d{16}$/.test(cleaned);
+        const errors = {}
+
+        if (!newCard.firstName){
+            errors.firstName = 'First name is required'
+        } else {
+            if (!/^[A-Za-z]+$/.test(newCard.firstName)) {
+                errors.firstName = 'First name can only contain letters';
+            } else if (newCard.firstName.length < 2 || newMobile.firstName.length > 50) {
+                errors.firstName = 'First name must be between 2 and 50 characters';
+            } 
+        } 
+        
+
+        if (!newCard.lastName){
+            errors.lastName = 'Last name is required'
+        } else {
+            if (!/^[A-Za-z]+$/.test(newCard.lastName)) {
+                errors.lastName = 'First name can only contain letters';
+            } else if (newCard.lastName.length < 2 || newCard.lastName.length > 50) {
+                errors.lastName = 'Last name must be between 2 and 50 characters';
+            }
+
+        }
+
+        if (!newCard.cardNumber){
+            errors.cardNumber = 'Card number is required'
+        } else{
+            // must contain only digits
+            if (!/^\d+$/.test(newCard.cardNumber)) {
+                errors.cardNumber = 'Invalid character(s)';
+            } 
+            // exactly 10 digits
+            else if (!/^\d{10}$/.test(newCard.cardNumber)) {
+                errors.cardNumber = 'Invalid card number';
+            } 
+        }
+
+        if (!newCard.expiryDate.month){
+            errors.expiryMonth = 'Expiry month is required'
+        } else{
+
+        }
+
+        if (!newCard.expiryDate.year){
+            errors.expiryYear = 'Expiry year is required'
+        } else{
+            
+        }
+
+        if (!newCard.cvv){
+            errors.cvv = 'CVV is required'
+        } else{
+            // must contain only digits
+            if (!/^\d+$/.test(newCard.cvv)) {
+                errors.cvv = 'Invalid character(s)';
+            } 
+            // exactly 3 digits
+            else if (!/^\d{3}$/.test(newCard.cvv)) {
+                errors.cvv = 'Invalid card number';
+            } 
+        }
+
+        if (!newCard.cardType){
+            errors.cardType = 'Please select your provider'
+        } else {
+            const validProviders = ['mastercard', 'visa', 'mpesa']
+            if (!validProviders.includes(newMobile.cardType)){
+                errors.cardType = 'Invalid provider'
+            }
+        }
+
+        return errors
     }
 
     const handleSubmit = (e, type) => {
         e.preventDefault()
 
         if (type === 'card') {
-            validateCardDetails()
             
-            const validationErrors = validateMobileDetails()
+            const validationErrors = validateCardDetails()
             
             if (Object.keys(validationErrors).length > 0) {
                 setCardErrors(validationErrors);
@@ -282,16 +467,7 @@ const Payment = () => {
     }
 
     const handleDate = (type, value) => {
-        if (type === 'day') {
-            setNewCard(prev => ({
-                ...prev,
-                expiryDate: {
-                    ...prev.expiryDate,
-                    day: value
-                }
-            }))
-            setDayOpen(false)
-        } else if (type === 'month') {
+        if (type === 'month') {
             setNewCard(prev => ({
                 ...prev,
                 expiryDate: {
@@ -299,6 +475,10 @@ const Payment = () => {
                     month: value
                 }
             }))
+            setCardErrors({
+                ...cardErrors,
+                expiryMonth: ''
+            })
             setMonthOpen(false)
         } else if (type === 'year') {
             setNewCard(prev => ({
@@ -308,17 +488,27 @@ const Payment = () => {
                     year: value
                 }
             }))
+            setCardErrors({
+                ...cardErrors,
+                expiryYear: ''
+            })
             setYearOpen(false)
         }
     }
 
     const handleDateToggle = (type) => {
-        if (type === 'day') {
-            setDayOpen(!dayOpen)
-        } else if (type === 'month') {
+        if (type === 'month') {
             setMonthOpen(!monthOpen)
+            // setCardErrors({
+            //     ...cardErrors,
+            //     expiryMonth: ''
+            // })
         } else if (type === 'year') {
             setYearOpen(!yearOpen)
+            // setCardErrors({
+            //     ...cardErrors,
+            //     expiryYear: ''
+            // })
         }
     }
 
@@ -400,12 +590,12 @@ const Payment = () => {
 
             
             {(newState === 'mobile') &&
-                <AddMobile handleMobileChange={handleMobileChange} newMobile={newMobile} handleSubmit={handleSubmit} mobileErrors={mobileErrors} setNewState={setNewState}/>
+                <AddMobile handleMobileChange={handleMobileChange} newMobile={newMobile} setNewMobile={setNewMobile} handleSubmit={handleSubmit} mobileErrors={mobileErrors} setMobileErrors={setMobileErrors} setNewState={setNewState}/>
                     
             }
 
             {(newState === 'card') &&
-                <AddCard handleCardChange={handleCardChange} newCard={newCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} days={days} months={months} years={years}/>
+                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} days={days} months={months} years={years}/>
             }      
         </div>
     )
