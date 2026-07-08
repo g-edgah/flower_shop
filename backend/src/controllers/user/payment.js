@@ -146,7 +146,7 @@ export const addPaymentMethod = async (req, res) => {
             if (!providers.includes(brand)) {
                 return res.status(400).json({
                     success: false,
-                    error: 'Invalid details'
+                    error: 'Invalid data'
                 });
             }
 
@@ -157,14 +157,14 @@ export const addPaymentMethod = async (req, res) => {
                 if (!/^[A-Za-z]+$/.test(firstName)) {
                     return res.status(400).json({
                         success: false,
-                        error: 'Invalid details'
+                        error: 'Invalid data'
                     })
                 
                 // only 2-50 characters
                 } else if (firstName.length < 2 || firstName.length > 50) {
                     return res.status(400).json({
                         success: false,
-                        error: 'Invalid details'
+                        error: 'Invalid data'
                     })
                 }
             }
@@ -174,14 +174,14 @@ export const addPaymentMethod = async (req, res) => {
                 if (!/^[A-Za-z]+$/.test(lastName)) {
                     return res.status(400).json({
                         success: false,
-                        error: 'Invalid details'
+                        error: 'Invalid data'
                     })
                 
                 // only 2-50 characters
                 } else if (lastName.length < 2 || lastName.length > 50) {
                     return res.status(400).json({
                         success: false,
-                        error: 'Invalid details'
+                        error: 'Invalid data'
                     })
                 }
             }
@@ -194,7 +194,7 @@ export const addPaymentMethod = async (req, res) => {
             
             // Check for duplicate
             const existing = user.paymentMethods.mobile.find(
-                m => m.number === formattedNumber && m.brand === brand.toLowerCase()
+                m => m.number === formattedNumber
             );
             if (existing) {
                 return res.status(409).json({
@@ -244,58 +244,110 @@ export const addPaymentMethod = async (req, res) => {
                 cvv
             } = details
 
-            if (!cardNumber || !brand || !firstName || !lastName || !expiryDate || !cvv) {
+            if (!cardNumber || !brand || !firstName || !lastName || !expiryDate?.month || !expiryDate?.year || !cvv) {
                 return res.status(400).json({
                     success: false,
                     message: "Missing required field(s)"
                 })
             }
 
-            const cleanCardNumber = cardNumber.replace(/\s/g, '');
-            if (!/^\d{16}$/.test(cleanCardNumber)) {
+            if (cardNumber){
+                // must contain only digits
+                if (!/^\d+$/.test(cardNumber)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid data'
+                    })
+                } 
+
+                // exactly 16 digits
+                else if (!/^\d{16}$/.test(cardNumber)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Invalid data'
+                    })
+                } 
+
+            }
+
+            const years = ['2026', '2027', '2028', '2029', '2030']
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+            if (!years.includes(expiryDate.year)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid data)"
+                    message: "Invalid data",
+                    year: expiryDate.year
                 })
             }
 
-            if (!/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(expiryDate)) {
+            if (!months.includes(expiryDate.month)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid data)"
+                    message: "Invalid data"
                 })
             }
 
-            if (!/^\d{3,4}$/.test(cvv)) {
+            //cvv validation
+            // must contain only digits
+            if (!/^\d+$/.test(cvv)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid data)"
+                    message: "Invalid data"
                 })
-            }
+            } 
+            // exactly 3 digits
+            else if (!/^\d{3}$/.test(cvv)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid data"
+                })
+            } 
 
-            const providers = ['visa', 'mastercard', 'mpesa_global']
+            //cardType validation
+            const providers = ['visa', 'mastercard', 'mpesa']
             if (!providers.includes(brand)) {
                 return res.status(400).json({
                     success: false,
-                    error: 'Invalid details'
+                    error: 'Invalid data'
                 });
             }
 
-            const formattedFirstName = firstName.replace(/\s/g, '');
-            const formattedLastName = lastName.replace(/\s/g, '');
+            //validate names
 
-            if (!formattedFirstName || !formattedLastName) {
+            if (!firstName || !lastName) {
                 return res.status(400).json({
                     success: false,
-                    error: 'Invalid details'
+                    error: 'Invalid data'
                 });
             }
 
-            if (!/^.{2,}$/.test(formattedFirstName) || !/^.{2,}$/.test(formattedLastName)){
+            // contains only letters
+            if (!/^[A-Za-z]+$/.test(lastName)) {
                 return res.status(400).json({
                     success: false,
-                    error: 'Invalid details'
-                })
+                    error: 'Invalid data'
+                });
+            //between 2 and 50 characters long
+            } else if (lastName.length < 2 || lastName.length > 50) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                });
+            }
+
+            // contains only letters
+            if (!/^[A-Za-z]+$/.test(firstName)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                });
+            //between 2 and 50 characters long
+            } else if (firstName.length < 2 || firstName.length > 50) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                });
             }
 
             // // detect card brand
@@ -322,9 +374,9 @@ export const addPaymentMethod = async (req, res) => {
                 user.paymentMethods.cards = [];
             }
 
-            const lastFour = cleanCardNumber.slice(-4);
+            const lastFour = cardNumber.slice(-4);
             const existing = user.paymentMethods.cards.find(
-                c => c.lastFour === lastFour && c.brand === brand
+                c => c.cardNumber === cardNumber && c.brand === brand
             );
             if (existing) {
                 return res.status(409).json({
@@ -339,14 +391,18 @@ export const addPaymentMethod = async (req, res) => {
                 {
                     $push: {
                         "paymentMethods.card": {
-                            cardNumber: cleanCardNumber,
+                            cardNumber: cardNumber,
                             brand: brand,
                             holderName: {
-                                firstName: formattedFirstName,
-                                lastName: formattedLastName
+                                firstName: firstName,
+                                lastName: lastName
                             },
-                            expiryDate: expiryDate.trim(),
-                            cvv: cvv.trim()
+                            expiryDate: {
+                                month: expiryDate.month.trim(),
+                                year: expiryDate.year.trim()
+                            },
+                            cvv: cvv.trim(),
+                            lastFour: lastFour
                         }
                     }
                     

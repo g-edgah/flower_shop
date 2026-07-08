@@ -1,11 +1,32 @@
 import { FaArrowLeft } from "react-icons/fa6";
+import {useEffect} from 'react'
 
 const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, setMobileErrors, setNewState, setNewMobile}) => {
+
+    useEffect(() => {
+        setNewMobile({
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            provider: ''
+        })
+        setMobileErrors({})
+    },[])
 
     return (
         <div className="p-3 flex flex-col gap-5">
             <div className="title flex gap-3 border-b border-gray-300 w-10/10 p-3">
-                <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => setNewState("none")} />
+                <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" 
+                onClick={() => {
+                    setNewState("none")
+                    setNewMobile({
+                        firstName: '',
+                        lastName: '',
+                        phoneNumber: '',
+                        provider: ''
+                    })
+                    setMobileErrors({})
+                }} />
                 <span className="title text-xl font-bold">Add mobile money Account</span>
             </div>
 

@@ -34,9 +34,9 @@ const Payment = () => {
         provider: ''
     })
 
-    const days = ['01', '02', '03', '04' ]
+    
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const years = ['2026', '2027', '2028', '2029']
+    const years = ['2026', '2027', '2028', '2029', '2030']
 
     // get user's existing payment methods
     const { data: paymentMethods, isLoading: paymentMethodsLoading, error: paymentMethodsError, refetch: refetchPaymentMethods } = usePaymentMethods();
@@ -217,10 +217,10 @@ const Payment = () => {
             }
             
             // check length
-            if (value.length > 10) {
+            if (value.length > 16) {
                 setCardErrors({
                     ...cardErrors,
-                    cardNumber: 'Phone number cannot exceed 10 digits'
+                    cardNumber: 'Card number cannot exceed 16 digits'
                 });
                 return;
             }
@@ -345,8 +345,8 @@ const Payment = () => {
             if (!/^\d+$/.test(newCard.cardNumber)) {
                 errors.cardNumber = 'Invalid character(s)';
             } 
-            // exactly 10 digits
-            else if (!/^\d{10}$/.test(newCard.cardNumber)) {
+            // exactly 16 digits
+            else if (!/^\d{16}$/.test(newCard.cardNumber)) {
                 errors.cardNumber = 'Invalid card number';
             } 
         }
@@ -380,7 +380,7 @@ const Payment = () => {
             errors.cardType = 'Please select your provider'
         } else {
             const validProviders = ['mastercard', 'visa', 'mpesa']
-            if (!validProviders.includes(newMobile.cardType)){
+            if (!validProviders.includes(newCard.cardType)){
                 errors.cardType = 'Invalid provider'
             }
         }
@@ -399,6 +399,66 @@ const Payment = () => {
                 setCardErrors(validationErrors);
                 return;
             }
+
+            addPayment({
+                type: 'card',
+                details: {
+                    cardNumber: newCard.cardNumber,
+                    brand: newCard.provider,
+                    firstName: newCard.firstName,
+                    lastName: newCard.lastName,
+                    expiryDate: newCard.expiryDate,
+                    cvv: newCard.cvv,
+                    brand: newCard.cardType
+                }
+            }, {
+                onSuccess: (data) => {
+                    console.log('Card added successfully:', data);
+                    
+    
+                    // refetchdata
+                    refetchPaymentMethods()
+                    
+                    toast.success('Card added successfully!', {
+                        className: 'custom-toast--success',
+                    });
+
+                    setNewCard({
+                        cardNumber: '',
+                        expiryDate: {
+                            month: '',
+                            year: ''
+                        },
+                        cvv: '',
+                        firstName: '',
+                        lastName: '',
+                        cardType: ''
+                    })
+                    
+                    setNewState("none")
+    
+                },
+                onError: (error) => {
+                    console.error('Adding card failed:', error);
+                    // handling specific error messages from API
+                    if (error.response?.status === 400) {
+                        // setMobileErrors({ 
+                        //     firstName: 'Invalid data',
+                        //     lastName: 'Invalid data',
+                        //     phoneNumber: 'Invalid data',
+                        //     provider: 'Invalid data',
+                        // });
+                        toast.error('Failed to add card. Please try again', {
+                        className: 'custom-toast--error',
+                    });
+                    } else {
+                        // setMobileErrors({ general: 'Login failed. Please try again.' });
+                        toast.error('Failed to add card. Please try again', {
+                        className: 'custom-toast--error',
+                    });
+                    }
+                }
+            });
 
              
 
@@ -422,13 +482,13 @@ const Payment = () => {
                 }
             }, {
                 onSuccess: (data) => {
-                    console.log('Payment option uccessfully added:', data);
+                    console.log('Mobile money account added successfully:', data);
                     
     
                     // refetchdata
                     refetchPaymentMethods()
                     
-                    toast.success('Payment option added successfully!', {
+                    toast.success('Mobile money account option added successfully!', {
                         className: 'custom-toast--success',
                     });
 
@@ -443,8 +503,8 @@ const Payment = () => {
     
                 },
                 onError: (error) => {
-                    console.error('Login failed:', error);
-                    // Handle specific error messages from API
+                    console.error('Adding mobile money account failed:', error);
+                    // handling specific error messages from API
                     if (error.response?.status === 400) {
                         // setMobileErrors({ 
                         //     firstName: 'Invalid data',
@@ -452,12 +512,12 @@ const Payment = () => {
                         //     phoneNumber: 'Invalid data',
                         //     provider: 'Invalid data',
                         // });
-                        toast.error('Failed to add payment option. Please try again', {
+                        toast.error('Failed to add mobile money account. Please try again', {
                         className: 'custom-toast--error',
                     });
                     } else {
                         // setMobileErrors({ general: 'Login failed. Please try again.' });
-                        toast.error('Failed to add payment option. Please try again', {
+                        toast.error('Failed to add mobile money account. Please try again', {
                         className: 'custom-toast--error',
                     });
                     }
@@ -595,7 +655,7 @@ const Payment = () => {
             }
 
             {(newState === 'card') &&
-                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} days={days} months={months} years={years}/>
+                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} months={months} years={years}/>
             }      
         </div>
     )

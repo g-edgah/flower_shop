@@ -17,7 +17,7 @@ const cardItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['visa', 'masterCard', 'mpesa_global'] 
+    enum: ['visa', 'masterCard', 'mpesa'] 
   },
   holderName: {
     firstName: {
@@ -36,9 +36,14 @@ const cardItemSchema = new mongoose.Schema({
     }
   },
   expiryDate: {
-    type: String, // consider storing as "MM/YY" or a Date object, but "MM/YY" is common for frontend display
-    required: true,
-    match: [/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, 'Please enter a valid expiry date (MM/YY)']
+    month: {
+      type: String,
+      enum: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    },
+    year: {
+      type: String,
+      enum: ['2026', '2027', '2028', '2029', '2030']
+    }
   },
   cvv: {
     type: String,
