@@ -2,7 +2,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {useState, useEffect} from 'react'
 
-const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, newCard, setNewState, handleDate, handleDateToggle, dayOpen, monthOpen, yearOpen, days, months, years, setNewCard }) => {
+const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, newCard, handleDate, handleDateToggle, dayOpen, monthOpen, yearOpen, days, months, years, setNewCard }) => {
     
     useEffect(() => {
         setNewCard({
@@ -20,31 +20,16 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
     },[])
 
     return (
-        <div className='p-3 flex flex-col gap-5'>
-            <div className="title flex gap-5 items-center border-b border-gray-300 w-full p-3">
-                <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" onClick={() => {
-                    setNewState("none")
-                    setNewCard({
-                        cardNumber: '',
-                        expiryDate: {
-                            month: '',
-                            year: ''
-                        },
-                        cvv: '',
-                        firstName: '',
-                        lastName: '',
-                        cardType: ''
-                    })
-                    setCardErrors({})
-                }} />
-                <span className="title text-xl font-bold">Add Card</span>
+        <div className='p-3 pt-10 flex flex-col gap-5'>
+            <div className="title flex gap-2 items-center border-gray-300 w-full p-3">
+                <span className="title text-md font-semibold text-summaryButtons">Use new card</span>
             </div>
             <div className="new">
 
         
-            <form className="flex flex-col gap-7 py-5 px-5" onSubmit={(e) => {handleSubmit(e, 'card')}}>
+            <form className="flex flex-col gap-7 pb-1 px-5" onSubmit={(e) => {handleSubmit(e, 'card')}}>
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
-                    <span className="text-[16px] font-semibold">Card Holder Name: </span>
+                    <span className="text-[14px] font-semibold">Card Holder Name: </span>
 
                     
                     <div className="flex justify-between w-full gap-4">
@@ -83,7 +68,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
 
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
 
-                    <span className="text-[16px] font-semibold">Card Number: </span>
+                    <span className="text-[14px] font-semibold">Card Number: </span>
 
                     <input 
                         className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cardNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
@@ -103,13 +88,13 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
 
                 <div className="flex gap-3 items-start justify-start max-w-90">
                     <div className="relative flex flex-col justify-between w-full  gap-2">
-                <span className="text-[16px] font-semibold">Expiry Date: </span>
+                <span className="text-[14px] font-semibold">Expiry Date: </span>
                 <div className="flex justify-between w-63">
 
                 <div className="flex flex-col w-33">
 
                 <div className={`w-full relative`}>
-                    <div className={`sort py-1.5 pl-4 pr-2 flex justify-between items-center cursor-pointer border border-gray-400 min-h-9.75 bg-gray-100 
+                    <div className={`sort py-1.5 pl-4 pr-2 flex justify-between items-center cursor-pointer border border-gray-400 min-h-9.75 bg-gray-100
                     ${monthOpen ? 'rounded-t-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition' : 'rounded-lg'} w-full border 
                     ${cardErrors?.expiryMonth ? 'border-red-500' : ''} 
 
@@ -177,7 +162,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
         
 
                     <div className="relative flex flex-col justify-between w-26 max-w-70 gap-2">
-                        <span className="text-[16px] font-semibold">CVV: </span>
+                        <span className="text-[14px] font-semibold">CVV: </span>
                         <input 
                             className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cvv ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                             type='text'
@@ -198,7 +183,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                 </div>
 
                 <div className="type flex flex-col gap-2">
-                    <span className="text-[16px] font-semibold">Card Type: </span>
+                    <span className="text-[14px] font-semibold">Card Type: </span>
 
                     <div className="cont flex gap-3">
 
@@ -247,6 +232,16 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                     {cardErrors?.cardType && (
                     <p className="mt-1 text-sm text-red-500">{cardErrors?.cardType}</p>
                     )} 
+                </div>
+                <div className="remember flex items-center justify-start">
+                    <input 
+                        type="checkbox" 
+                        className="check mr-2" 
+                        id='saveCard'
+                    />
+                    <label htmlFor="saveCard">
+                        save card details
+                    </label>
                 </div>
 
                 <div className="flex w-full justify-center mt-4">

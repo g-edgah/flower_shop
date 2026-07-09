@@ -14,25 +14,15 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
     },[])
 
     return (
-        <div className="p-3 flex flex-col gap-5">
-            <div className="title flex gap-3 border-b border-gray-300 w-10/10 p-3">
-                <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" 
-                onClick={() => {
-                    setNewState("none")
-                    setNewMobile({
-                        firstName: '',
-                        lastName: '',
-                        phoneNumber: '',
-                        provider: ''
-                    })
-                    setMobileErrors({})
-                }} />
-                <span className="title text-xl font-bold">Add mobile money Account</span>
+        <div className="p-3 pt-10 flex flex-col gap-2">
+            <div className="title flex gap-3 border-gray-300 w-10/10 p-3">
+                
+                <span className="title text-md font-semibold text-summaryButtons">Use new mobile money account</span>
             </div>
 
-            <form className="flex flex-col gap-7 py-5 px-5" onSubmit={(e) => handleSubmit(e, 'mobile')}>
+            <form className="flex flex-col gap-7 py-1 px-5" onSubmit={(e) => handleSubmit(e, 'mobile')}>
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
-                    <span className="text-[16px] font-semibold">Name: </span>
+                    <span className="text-[14px] font-semibold">Name: </span>
 
                     <div className="flex justify-between w-full gap-4">
                     
@@ -71,10 +61,10 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
 
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
 
-                    <span className="text-[16px] font-semibold">Phone Number: </span>
-                    <div className="flex items-start gap-1">
+                    <span className="text-[14px] font-semibold">Phone Number: </span>
+                    <div className="flex items-start gap-0">
 
-                        <span className="text font-semibold  border-gray-300 rounded-lg py-1.5 px-1.5">
+                        <span className="text font-semibold  border-gray-400 rounded-lg py-1.5 px-1.5">
                             +254
                         </span>
                         <div className="flex flex-col">
@@ -100,7 +90,7 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                     
 
                     <div className="type flex flex-col gap-2">
-                        <span className="text-[16px] font-semibold">Provider: </span>
+                        <span className="text-[14px] font-semibold">Provider: </span>
 
                         <div className="cont flex gap-3">
 
@@ -147,6 +137,17 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                         <p className="mt-1 text-sm text-red-500">{mobileErrors?.provider}</p>
                         )} 
                     </div>
+                </div>
+
+                <div className="remember flex items-center justify-start">
+                    <input 
+                        type="checkbox" 
+                        className="check mr-2" 
+                        id='saveCard'
+                    />
+                    <label htmlFor="saveCard">
+                        save card details
+                    </label>
                 </div>
 
                 <div className="flex w-full justify-center mt-4">

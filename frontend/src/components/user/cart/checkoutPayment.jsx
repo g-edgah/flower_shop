@@ -1,16 +1,14 @@
-
 import {useState, useEffect} from 'react'
 import { FaPlus, FaArrowLeft } from "react-icons/fa6";
 import { toast } from 'react-toastify';
 
-import { usePaymentMethods, useAddPayment, useRemovePayment, useEditDefaultPayment } from "../../../../hooks/user/user";
+import { usePaymentMethods, useAddPayment, useRemovePayment, useEditDefaultPayment } from "../../../hooks/user/user";
 
 import AddCard from './addCard.jsx'
 import AddMobile from './addMobile.jsx'
 
 
-const Payment = () => {
-    const [ newState, setNewState ] = useState("none")
+const CheckoutPayment = ({formData, handleChange, payMethod, setPayMethod}) => {
     const [ mobileErrors, setMobileErrors ] = useState({})
     const [ cardErrors, setCardErrors ] = useState({})
     const [ dayOpen, setDayOpen ] = useState(false)
@@ -34,7 +32,9 @@ const Payment = () => {
         provider: ''
     })
 
-    
+
+
+
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const years = ['2026', '2027', '2028', '2029', '2030']
 
@@ -43,13 +43,6 @@ const Payment = () => {
 
     // add payment method
     const { mutate: addPayment, isLoading: addPaymentLoading, error: addPaymentError, data: addPaymentData } = useAddPayment();
-
-    // remove payment method
-    const { mutate: removePayment, isLoading: removePaymentLoading, error: removePaymentError, data: removePaymentData } = useRemovePayment();
-
-    // change default payment method
-    const { mutate: editDefaultPayment, isLoading: editDefaultPaymentLoading, error: editDefaultPaymentError, data: editDefaultPaymentData } = useEditDefaultPayment();
-
 
     const handleMobileChange = (e) => {
         const { name, value } = e.target;
@@ -573,102 +566,79 @@ const Payment = () => {
     }
 
 
-    useEffect(() => {
-        if(newState === 'card') {
-            // focus on first input field
-            document.getElementById('cardNumber').focus()
-        } else if(newState === 'mobile') {
-            // focus on first input field
-            document.getElementById('firstName').focus()
-        }
-    }, [newState])
-
-
-    useEffect(() => {
-        refetchPaymentMethods()
-        console.log("refetching payment methods: ", paymentMethods)
-    },[])
-    console.log("refetching payment methods: ", paymentMethods)
-
     return (
-        <div className=''>
-            
-            {(newState === 'none') &&
-                <div className='p-3 flex flex-col gap-5'>
-                    <div className="title border-b border-gray-300 w-10/10 p-3">
-                        <span className="title text-xl font-bold ">Payment Options</span>
-                    </div>
-                    <div className="methods flex flex-col ">
-                        <div className="saved flex flex-col gap-7 py-5 px-5">
-                            <div className="mobile">
-                                <span className="text font-semibold">Your mobile money accounts</span>
-                                <div className="flex py-5 gap-3 items-start flex-wrap">
-                                    {paymentMethods?.data?.mobile.map((mobile) => (
-                                    <div key={mobile._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
-                                        <div className={`mpesa cursor-pointer 
-                                        ${mobile.brand === 'mpesa' && 'bg-[url(/logos/mpesa1.png)] bg-size-[auto_48px]  bg-white'}
-                                        ${mobile.brand === 'airtel' && 'bg-[url(/logos/airtel1.png)] bg-size-[auto_40px]  bg-white'} 
-                                        ${mobile.brand === 'tkash' && 'bg-[url(/logos/telkom.png)] bg-size-[auto_24px] bg-[#00AACA]'} 
-                                        bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+        <div className="paymentInfo bg-gray-200 w-9/10  mt-5 rounded-lg p-3">
+            <div className="title font-bold h-13 flex items-center border-b border-gray-400 w-full p-4 justify-between">
+                <span>Payment Options</span>
+            </div>
 
-                                        </div>
-                                        <div className="text-sm w-full flex justify-center gap-1">
-                                            <span className="text" >***</span>
-                                            <span className="text">{mobile.lastFour}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    ))}
-                                    <div className="add">
-                                        <button className="bg-summaryButtons text-white font-semibold py-2 px-4 rounded-md cursor-pointer hover:bg-active flex gap-1 items-center justify-center h-13" onClick={() => setNewState('mobile')}>
-                                            <FaPlus /> Add
-                                        </button>
-                                    </div>
+            <div className="flex flex-col gap-3">
+                <div className="edit relative w-full h-auto py-5 px-4 flex gap-5">
+                    <div onClick={()=>{setPayMethod('card')}}
+                    className={`flex cursor-pointer ${payMethod === 'card' ? 'border-b-[2px] border-summaryButtons text-summaryButtons' : ''}`}>
+                        <span  >Card</span>    
+                    </div>
+                    <div onClick={()=>{setPayMethod('mobile')}}
+                    className={`flex cursor-pointer ${payMethod === 'mobile' ? 'border-b-[2px] border-summaryButtons text-summaryButtons' : ''}`}>
+                        <span  >Mobile money</span>    
+                    </div>
+                </div>   
+
+                {payMethod === 'card' && (
+                    <div className="flex flex-col">
+                        <div className="flex gap-2 items-start flex-wrap">
+                            {paymentMethods?.data?.cards.map((card) => (
+                                <div key={card._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
+                                <div className={`mpesa cursor-pointer 
+                                ${card.brand === 'mastercard' && 'bg-[url(/logos/mastercard.png)] bg-size-[auto_100px]  bg-white'}
+                                ${card.brand === 'visa' && 'bg-[url(/logos/visa.png)] bg-size-[auto_20px]  bg-white'} 
+                                ${card.brand === 'mpesa' && 'bg-[url(/logos/global2.jpg)] bg-size-[auto_39px] bg-[#F7F7F7]'} 
+                                bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+
+                                </div>
+                                <div className="text-sm w-full flex justify-center gap-1">
+                                    <span className="text " >***</span>
+                                    <span className="text">{card.lastFour}
+                                    </span>
                                 </div>
                             </div>
-                            <div className="cards">
-                                <span className="text font-semibold">Your cards</span>
-                                <div className="flex py-5 gap-3 items-start flex-wrap">
-                                    {paymentMethods?.data?.cards.map((card) => (
-                                        <div key={card._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
-                                        <div className={`mpesa cursor-pointer 
-                                        ${card.brand === 'mastercard' && 'bg-[url(/logos/mastercard.png)] bg-size-[auto_100px]  bg-white'}
-                                        ${card.brand === 'visa' && 'bg-[url(/logos/visa.png)] bg-size-[auto_20px]  bg-white'} 
-                                        ${card.brand === 'mpesa' && 'bg-[url(/logos/global2.jpg)] bg-size-[auto_39px] bg-[#F7F7F7]'} 
-                                        bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+                            ))}
+                            
+                        </div>
+                        <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} months={months} years={years}/>
+                    </div>
+                )}
 
-                                        </div>
-                                        <div className="text-sm w-full flex justify-center gap-1">
-                                            <span className="text " >***</span>
-                                            <span className="text">{card.lastFour}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    ))}
-                                    <div className="add">
-                                        <button className="bg-summaryButtons text-white font-semibold py-2 px-4 rounded-md cursor-pointer hover:bg-active flex gap-1 items-center justify-center h-13" onClick={() => setNewState('card')}>
-                                            <FaPlus /> Add
-                                        </button>
-                                    </div>
+                {payMethod === 'mobile' && (
+                    <div className="flex flex-col">
+                        <div className="flex gap-2 items-start flex-wrap">
+                            {paymentMethods?.data?.mobile.map((mobile) => (
+                            <div key={mobile._id} className={`mobile-account flex flex-col gap-1 px-2 `}>
+                                <div className={`mpesa cursor-pointer 
+                                ${mobile.brand === 'mpesa' && 'bg-[url(/logos/mpesa1.png)] bg-size-[auto_48px]  bg-white'}
+                                ${mobile.brand === 'airtel' && 'bg-[url(/logos/airtel1.png)] bg-size-[auto_40px]  bg-white'} 
+                                ${mobile.brand === 'tkash' && 'bg-[url(/logos/telkom.png)] bg-size-[auto_24px] bg-[#00AACA]'} 
+                                bg-no-repeat bg-center w-22 h-13 rounded-md border border-gray-400`}>
+
+                                </div>
+                                <div className="text-sm w-full flex justify-center gap-1">
+                                    <span className="text" >***</span>
+                                    <span className="text">{mobile.lastFour}
+                                    </span>
                                 </div>
                             </div>
-                        </div>           
+                            ))}
+                            
+                        </div>
+                        <AddMobile handleMobileChange={handleMobileChange} newMobile={newMobile} setNewMobile={setNewMobile} handleSubmit={handleSubmit} mobileErrors={mobileErrors} setMobileErrors={setMobileErrors} />
                     </div>
-                </div>
-            
-            }
-
-            
-            {(newState === 'mobile') &&
-                <AddMobile handleMobileChange={handleMobileChange} newMobile={newMobile} setNewMobile={setNewMobile} handleSubmit={handleSubmit} mobileErrors={mobileErrors} setMobileErrors={setMobileErrors} setNewState={setNewState}/>
                     
-            }
+                )}
+            </div>
 
-            {(newState === 'card') &&
-                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} months={months} years={years}/>
-            }      
+
         </div>
     )
 }
 
-export default Payment
+export default CheckoutPayment
