@@ -12,9 +12,12 @@ import CheckoutPayment from './checkoutPayment.jsx'
 const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLocation, setShippingLocation, shippingCost, setShippingCost, user, userRefetch, cartRefetch }) => {
     const navigate = useNavigate();
     const [ addressEdit, setAddressEdit ] = useState(false)
-    const [errors, setErrors ] = useState({})
-    const [addressErrors, setAddressErrors ] = useState({})
-    const [ payMethod, setPayMethod]  = useState('card')
+    const [ errors, setErrors ] = useState({})
+    const [ addressErrors, setAddressErrors ] = useState({})
+    const [ saveAddress, setSaveAddress ] = useState(false)
+    const [ savePayMethod, setSavePayMethod ] = useState(false)
+
+    const [ payMethod, setPayMethod ]  = useState('card')
 
 
     useEffect(() => {
@@ -44,47 +47,20 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
     });
 
 
+    // address edit hook
+    const { mutate: editUser, isLoading, error, userdata } = useEditUser();
+
+    // order creation
+    const { mutate: createOrder, isLoading: createOrderLoading, error: createOrderError } = useCreateOrder();
+
+
     const handleAddress = (state) => {
         //console.log("handling address: ", state)
         setAddressEdit(state)
     }
 
-    // handle input
-    const handleChange = (e) => {
 
-        const { name, value } = e.target;
-
-
-        if (name.includes('.')) {
-            const [parent, child] = name.split('.');
-            setFormData(prevData => ({
-                ...formData,
-                [parent]: {
-                    ...formData[parent],
-                    [child]: value
-                }
-            }));
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value,
-            });
-        }
-       
-
-        // clear error for this field when user starts typing
-        if (errors[name]) {
-        setErrors({
-            ...errors,
-            [name]: '',
-        });
-        }
-    };
-
-
-
-
-    // validate form
+    // validate address
     const validateForm = () => {
         const newErrors = {};
         
@@ -116,13 +92,73 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         return newErrors;
     };
 
+    // validate user has a valid saved address
+    const validateAddress = () => {
+        const newErrors = {};
+        
+        if (!user?.address?.firstName) {
+            newErrors.firstName = 'First name is required';
+        }
 
+        if (!user?.address?.lastName) {
+            newErrors.lastName = 'Last name is required';
+        }
+
+        if (!user?.address?.region) {
+            newErrors.region = 'Region is required';
+        }
+
+        if (!user?.address?.city) {
+            newErrors.city = 'City is required';
+        }
+
+        if (!user?.address?.address) {
+            newErrors.address = 'Address is required';
+        }
+
+        if (!user?.address?.mobile) {
+            newErrors.mobile = 'Mobile number is required';
+        }
+           
+        return newErrors;
+    }
+
+
+  
+    // handle address input
+    const handleChange = (e) => {
+
+        const { name, value } = e.target;
+
+
+        if (name.includes('.')) {
+            const [parent, child] = name.split('.');
+            setFormData(prevData => ({
+                ...formData,
+                [parent]: {
+                    ...formData[parent],
+                    [child]: value
+                }
+            }));
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+       
+
+        // clear error for this field when user starts typing
+        if (errors[name]) {
+        setErrors({
+            ...errors,
+            [name]: '',
+        });
+        }
+    };
     
-    const { mutate: editUser, isLoading, error, userdata } = useEditUser();
 
-    
-
-    //form submission
+    // submit address(save address)
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("e: ",e)
@@ -175,44 +211,14 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
                
     };
 
-    const { mutate: createOrder, isLoading: createOrderLoading, error: createOrderError } = useCreateOrder();
 
-    const validateAddress = () => {
-        const newErrors = {};
-        
-        if (!user?.address?.firstName) {
-            newErrors.firstName = 'First name is required';
-        }
-
-        if (!user?.address?.lastName) {
-            newErrors.lastName = 'Last name is required';
-        }
-
-        if (!user?.address?.region) {
-            newErrors.region = 'Region is required';
-        }
-
-        if (!user?.address?.city) {
-            newErrors.city = 'City is required';
-        }
-
-        if (!user?.address?.address) {
-            newErrors.address = 'Address is required';
-        }
-
-        if (!user?.address?.mobile) {
-            newErrors.mobile = 'Mobile number is required';
-        }
-           
-        return newErrors;
-    }
 
     const handleCreateOrder = () => {
 
         const formdataErrors = validateForm();
         const addressErrors = validateAddress();
 
-
+        // user has no valid address saved and has not provided one
         if (Object.keys(formdataErrors).length > 0 && Object.keys(addressErrors).length > 0) {
             setErrors(formdataErrors);
             setAddressErrors(addressErrors);
@@ -224,17 +230,28 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
             return;
         }
 
+        // user has a valid address filled in
         if (Object.keys(formdataErrors).length === 0 && Object.keys(addressErrors).length > 0) {
+            setErrors(formdataErrors);
+            setAddressErrors(addressErrors);
+            setAddressEdit(false)
+            if(saveAddress){
+                handleSubmit()
+            }
+            return;
+        }
+
+        // user has a valid saved address
+        if (Object.keys(formdataErrors).length > 0 && Object.keys(addressErrors).length === 0) {
             setErrors(formdataErrors);
             setAddressErrors(addressErrors);
             setAddressEdit(true)
             toast.dismiss();
-            toast.error('Please submit address info.', {
+            toast.error('Please provide a valid address.', {
                 className: 'custom-toast--error',
             });
             return;
         }
-
         
 
         
@@ -275,7 +292,7 @@ const Checkout = ({ cart, subTotal, total, couponCode, setCouponCode, shippingLo
         <div className="checkout w-full flex justify-center items-start pt-10 pb-23">
             <div className="checkout w-6/10 flex flex-col items-center space-y-5 max-w-200">
 
-                <CheckoutAddress addressEdit={addressEdit} handleAddress={handleAddress} handleSubmit={handleSubmit} errors={errors} formData={formData} user={user} isLoading={isLoading}/>
+                <CheckoutAddress addressEdit={addressEdit} handleChange={handleChange} handleAddress={handleAddress} handleSubmit={handleSubmit} errors={errors} formData={formData} user={user} isLoading={isLoading}/>
 
                 <CheckoutPayment formData={formData} handleChange={handleChange} payMethod={payMethod} setPayMethod={setPayMethod}/>
 

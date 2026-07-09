@@ -243,11 +243,6 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                         save card details
                     </label>
                 </div>
-
-                <div className="flex w-full justify-center mt-4">
-
-                    <button type='submit' className='bg-active text-white p-2 rounded-md w-35'>Add Card</button>
-                </div>
             </form>
             </div>
         </div>

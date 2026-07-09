@@ -72,8 +72,14 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
-    address: addressSchema,
-}, { 
+    address: [addressSchema],
+    defaultAddress: {
+        addressId: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
+        },
+    }
+}, {
     timestamps: true,
     collection: 'users',
     strict: true //only allow fields specified in schema. strict: 'throw' throws an error on extra undefined fields

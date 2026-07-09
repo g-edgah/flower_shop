@@ -1,7 +1,7 @@
 import { BiSolidEdit } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 
-const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, formData, user, isLoading }) => {
+const CheckoutAddress = ({ addressEdit, handleChange, handleAddress, handleSubmit, errors, formData, user, isLoading }) => {
 
 
     return (
@@ -17,12 +17,12 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
             </div>
 
             { addressEdit ?
-                <form onSubmit={(e) => handleSubmit(e)} className="edit relative w-full h-auto py-3 flex flex-col gap-6">
-                    <div className="address flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text pl-1 font-bold">Name: </span>
+                <form onSubmit={(e) => handleSubmit(e)} className="edit relative w-full h-auto py-3 flex flex-col gap-6 max-w-120 px-5">
+                    <div className="address flex flex-col items-start justify-center pt-7 px-4 space-y-3">
+                        <span className="text-[14px] pl-1 font-semibold">Name: </span>
                         <div className="flex flex-row gap-4 w-full">
                             <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${errors?.firstName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                                className={`w-full pl-4 pr-2 py-1.5 border ${errors?.firstName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} bg-gray-100 rounded-lg`}
                                 type="text" 
                                 id='firstName' 
                                 name='firstName'
@@ -35,7 +35,7 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                             )} 
 
                             <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${errors?.lastName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                                className={`w-full pl-4 pr-2 py-1.5 border ${errors?.lastName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} bg-gray-100 rounded-lg`}
                                 type="text" 
                                 id='lastName' 
                                 name='lastName'
@@ -50,9 +50,9 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                     </div>
 
                     <div className="region flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text pl-1 font-bold">Region:</span> 
+                        <span className="text-[14px] pl-1 font-semibold">Region:</span> 
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.region ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.region ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} bg-gray-100 rounded-lg`}
                             type="text" 
                             id='region' 
                             name='address.region'
@@ -65,9 +65,9 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                         )} 
                     </div>
                     <div className="city flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text pl-1 font-bold">City:</span> 
+                        <span className="text-[14px] pl-1 font-semibold">City:</span> 
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.city ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.city ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} bg-gray-100 rounded-lg`}
                             type="text" 
                             id='city' 
                             name='address.city'
@@ -80,9 +80,9 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                         )} 
                     </div>
                     <div className="address flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text pl-1 font-bold">Address: </span>
+                        <span className="text-[14px] pl-1 font-semibold">Address: </span>
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.address ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.address ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} bg-gray-100 rounded-lg`}
                             type="text" 
                             id='address' 
                             name='address.address'
@@ -96,9 +96,9 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                     
                     </div>
                     <div className="info flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text w-35 pl-1 font-bold">Additional info:</span>
+                        <span className="text-[14px] pl-1 font-semibold">Additional info:</span>
                         <textarea 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.info ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.info ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg  bg-gray-100`}
                             type="textarea" 
                             id='info' 
                             name='address.info'
@@ -111,9 +111,9 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                         )} 
                     </div>
                     <div className="phone flex flex-col items-start justify-center px-4 space-y-3">
-                        <span className="text pl-1 font-bold">Phone:</span>
+                        <span className="text-[14px] pl-1 font-semibold">Phone:</span>
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.mobile ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${errors?.mobile ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                             type="text" 
                             id='mobile' 
                             name='address.mobile'
@@ -125,25 +125,15 @@ const CheckoutAddress = ({ addressEdit, handleAddress, handleSubmit, errors, for
                         <p className="mt-1 text-sm text-red-500">{errors?.mobile}</p>
                         )} 
                     </div>
-
-                    <div className="w-full  flex justify-center">
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-30 mt-3 cursor-pointer bg-active text-white py-2 px-4 rounded-lg hover:bg-footer focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                        >
-                            {isLoading ? (
-                            <div className="flex items-center justify-center">
-                                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                </svg>
-                                Submitting...
-                            </div>
-                            ) : (
-                            'Submit'
-                            )}
-                        </button>
+                    <div className="remember flex items-center justify-start pt-3 pl-5">
+                        <input 
+                            type="checkbox" 
+                            className="check mr-2" 
+                            id='saveCard'
+                        />
+                        <label htmlFor="saveCard">
+                            save address
+                        </label>
                     </div>
                 </form>
             : 

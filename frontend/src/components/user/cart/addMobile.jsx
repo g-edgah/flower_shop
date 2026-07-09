@@ -14,13 +14,13 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
     },[])
 
     return (
-        <div className="p-3 pt-10 flex flex-col gap-2">
+        <div className="p-3 pt-10 flex flex-col gap-5">
             <div className="title flex gap-3 border-gray-300 w-10/10 p-3">
                 
                 <span className="title text-md font-semibold text-summaryButtons">Use new mobile money account</span>
             </div>
 
-            <form className="flex flex-col gap-7 py-1 px-5" onSubmit={(e) => handleSubmit(e, 'mobile')}>
+            <form className="flex flex-col gap-7 pb-1 px-5" onSubmit={(e) => handleSubmit(e, 'mobile')}>
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
                     <span className="text-[14px] font-semibold">Name: </span>
 
@@ -146,13 +146,8 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                         id='saveCard'
                     />
                     <label htmlFor="saveCard">
-                        save card details
+                        save mobile money account details
                     </label>
-                </div>
-
-                <div className="flex w-full justify-center mt-4">
-
-                    <button type='submit' className='bg-active text-white p-2 rounded-md w-35'>Add Mobile</button>
                 </div>
             </form>
         
