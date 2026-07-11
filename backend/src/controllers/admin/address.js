@@ -6,13 +6,13 @@ export const addCountryRegions = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        // }
  
         const { countryName, regions } = req.body;
         console.log("add country req body: ", req.body)
@@ -90,13 +90,13 @@ export const removeCountryRegions = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        // }
  
         const { countryName, regions } = req.body;
         console.log("add country req body: ", req.body)
@@ -191,13 +191,13 @@ export const editCountryRegion = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        // }
  
         const { countryName, region, newRegion } = req.body;
         console.log("add country req body: ", req.body)
@@ -300,13 +300,13 @@ export const addRegionCities = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        // }
  
         const { countryName, regionName, cities } = req.body;
         console.log("add region req body: ", req.body)
@@ -408,15 +408,15 @@ export const removeRegionCities = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ 
-                error: "psyche!!! hahaa!!" 
-            });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ 
+        //         error: "psyche!!! hahaa!!" 
+        //     });
+        // }
  
         const { countryName, regionName, cities } = req.body;
         console.log("remove region req body: ", req.body)
@@ -533,13 +533,13 @@ export const editRegionCity = async(req, res) => {
     try {
         const { id } = req.user
 
-        const paramId = req.params.id
+        // const paramId = req.params.id
 
         
 
-        if (paramId !== id) {
-            return res.status(403).json({ error: "psyche!!! hahaa!!" });
-        }
+        // if (paramId !== id) {
+        //     return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        // }
  
         const { countryName, regionName, city, newCity } = req.body;
         console.log("add country req body: ", req.body)

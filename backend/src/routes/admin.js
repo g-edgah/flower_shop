@@ -13,6 +13,14 @@ import {
     toggleNewProduct,
     getAllProductsAdmin
 } from '../controllers/admin/products.js';
+import {
+    addCountryRegions,
+    removeCountryRegions,
+    editCountryRegion,
+    addRegionCities,
+    removeRegionCities,
+    editRegionCity
+} from '../controllers/admin/address.js'
 
 import { updateOrderStatus } from '../controllers/admin/orders.js';
 
@@ -23,21 +31,28 @@ adminRouter.use(verifyAdmin);
 // product management
 adminRouter.post('/products/create', createProduct);
 adminRouter.get('/products/all', getAllProductsAdmin);
-adminRouter.put('/products/:productId', updateProduct);
-adminRouter.delete('/products/:productId', deleteProduct);
+adminRouter.post('/products/edit/:productId', updateProduct);
+adminRouter.post('/products/delete/:productId', deleteProduct);
 
 // bulk operations
-adminRouter.post('/products/bulk', bulkCreateProducts);
-adminRouter.delete('/products/bulk', bulkDeleteProducts);
+adminRouter.post('/products/create/bulk', bulkCreateProducts);
+adminRouter.post('/products/delete/bulk', bulkDeleteProducts);
 
 // product updates
-adminRouter.patch('/products/:productId/stock', updateProductStock);
-adminRouter.patch('/products/:productId/discount', updateProductDiscount);
-adminRouter.patch('/products/:productId/florist-pick', toggleFloristPick);
-adminRouter.patch('/products/:productId/new', toggleNewProduct);
+adminRouter.post('/products/:productId/stock', updateProductStock);
+adminRouter.post('/products/:productId/discount', updateProductDiscount);
+adminRouter.post('/products/:productId/florist-pick', toggleFloristPick);
+adminRouter.post('/products/:productId/new', toggleNewProduct);
 
 // order management
-adminRouter.patch('/orders/:id/:orderId', updateOrderStatus)
+adminRouter.post('/orders/:id/:orderId', updateOrderStatus)
 
+//address management
+adminRouter.post('/address/add/country', addCountryRegions);
+adminRouter.post('/address/remove/country', removeCountryRegions);
+adminRouter.post('/address/edit/contry', editCountryRegion);
+adminRouter.post('/address/add/region', addRegionCities);
+adminRouter.post('/address/remove/region', removeRegionCities);
+adminRouter.post('/address/edit/contry', editRegionCity);
 
 export default adminRouter
