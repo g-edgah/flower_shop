@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 
 const regionSchema = new mongoose.Schema({
-    country: {
-        type: mongoose.Schema.Types.ObjectId
+    countryName: {
+        type: String,
+        required: true
     },
     regionName: {
         type: String,
