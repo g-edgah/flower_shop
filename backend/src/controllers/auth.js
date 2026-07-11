@@ -18,7 +18,7 @@ export const register = async (req, res) => {
             confirmPassword
         } = req.body
 
-        // console.log('register req: ', req.body)
+         console.log('register req: ', req.body)
 
         if (!email || !password || !confirmPassword) {
             return res.status(400).json({ 

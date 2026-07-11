@@ -16,6 +16,7 @@ const emailItemSchema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
+        sparse: true,  // allows multiple null values
         unique: true,
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address']
     },
@@ -40,14 +41,6 @@ const emailItemSchema = new mongoose.Schema({
     //     type: Boolean,
     //     default: true
     // },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    },
     // // For audit trail
     // changedFrom: {
     //     type: String,
