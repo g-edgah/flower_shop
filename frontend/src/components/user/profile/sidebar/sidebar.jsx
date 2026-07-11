@@ -40,6 +40,10 @@ const SideBar = ({ profilePage, handleProfilePage }) => {
                     navigate("/profile/payment")
                     handleProfilePage("payment")
                 }} className={`w-full h-13 text-center flex items-center justify-start px-5 hover:bg-gray-200 cursor-pointer ${profilePage == "payment" ? "bg-gray-200" : "bg-cartCard"}`}>Payment Settings</span>
+                <span onClick={() => {
+                    navigate("/profile/address")
+                    handleProfilePage("address")
+                }} className={`w-full h-13 text-center flex items-center justify-start px-5 hover:bg-gray-200 cursor-pointer ${profilePage == "address" ? "bg-gray-200" : "bg-cartCard"}`}>Address Book</span>
             </div>
             
             <div className="w-full bg-cartCard text-center flex flex-col rounded-b-lg">

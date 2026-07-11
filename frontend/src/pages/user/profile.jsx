@@ -5,6 +5,7 @@ import Header from '../../components/user/common/header.jsx';
 import Footer from '../../components/user/common/footer.jsx';
 import SideBar from '../../components/user/profile/sidebar/sidebar.jsx'
 import Account from '../../components/user/profile/account/account.jsx'
+import Address from '../../components/user/profile/address/address.jsx'
 import Orders from '../../components/user/profile/orders/orders.jsx'
 import Wishlist from '../../components/user/profile/wishlist/wishlist.jsx'
 import Reviews from '../../components/user/profile/reviews/reviews.jsx'
@@ -41,7 +42,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
         setPage("profile")
         console.log("page from profile:", page)
 
-        if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "logout"].includes(page)) {
+        if (page && ["account", "orders", "wishlist", "reviews", "vouchers", "management", "payment", "address", "logout"].includes(page)) {
             setProfilePage(page)
             //console.log("profile page:", page)
         } else {
@@ -85,6 +86,7 @@ const Profile = ({ setPage, userData, isUserLoading, userError, isUserFetching, 
                     {page === "vouchers" && <Vouchers userRefetch={userRefetch} user={user} />} 
                     {page === "management" && <Management userRefetch={userRefetch} user={user} />} 
                     {page === "payment" && <Payment userRefetch={userRefetch} user={user} />} 
+                    {page === "address" && <Address userRefetch={userRefetch} user={user} />} 
                     {page === "logout" && <Logout userRefetch={userRefetch} user={user} setCart={setCart} setWishlist={setWishlist} refreshCart={refreshCart} refreshWishlist={refreshWishlist} />} 
                 
             </div>

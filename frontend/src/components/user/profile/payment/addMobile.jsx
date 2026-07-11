@@ -101,7 +101,7 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
 
                     <div className="type flex flex-col gap-2">
                         <span className="text-[16px] font-semibold">Provider: </span>
-
+                        <div className="flex flex-col">
                         <div className="cont flex gap-3">
 
                             <div onClick ={()=>{setNewMobile({
@@ -146,6 +146,7 @@ const AddMobile = ({handleSubmit, handleMobileChange, newMobile, mobileErrors, s
                         {mobileErrors?.provider && (
                         <p className="mt-1 text-sm text-red-500">{mobileErrors?.provider}</p>
                         )} 
+                        </div>
                     </div>
                 </div>
 

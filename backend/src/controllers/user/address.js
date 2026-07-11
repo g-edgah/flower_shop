@@ -65,8 +65,14 @@ export const addAddress = async (req, res) => {
         }
 
         const { 
-            type,
-            details 
+            firstName,
+            lastName,
+            country,
+            region,
+            city,
+            address,
+            info,
+            mobile
         } = req.body;
 
         console.log("add payment method req: ",req.body)

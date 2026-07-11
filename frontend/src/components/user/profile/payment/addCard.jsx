@@ -84,7 +84,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                 <div className="relative flex flex-col justify-between w-full max-w-90 gap-2">
 
                     <span className="text-[16px] font-semibold">Card Number: </span>
-
+                    <div className="flex flex-col">
                     <input 
                         className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cardNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                         type='text'
@@ -99,6 +99,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                     {cardErrors?.cardNumber && (
                     <p className="mt-1 text-sm text-red-500">{cardErrors?.cardNumber}</p>
                     )} 
+                    </div>
                 </div>
 
                 <div className="flex gap-3 items-start justify-start max-w-90">
@@ -178,6 +179,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
 
                     <div className="relative flex flex-col justify-between w-26 max-w-70 gap-2">
                         <span className="text-[16px] font-semibold">CVV: </span>
+                        <div className="flex flex-col">
                         <input 
                             className={`w-full pl-4 pr-2 py-1.5 border ${cardErrors?.cvv ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                             type='text'
@@ -192,6 +194,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                         {cardErrors?.cvv && (
                         <p className="mt-1 text-sm text-red-500">{cardErrors?.cvv}</p>
                         )} 
+                        </div>
                     </div>
 
                     
@@ -199,7 +202,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
 
                 <div className="type flex flex-col gap-2">
                     <span className="text-[16px] font-semibold">Card Type: </span>
-
+                    <div className="flex flex-col">
                     <div className="cont flex gap-3">
 
                         <div onClick ={()=>{
@@ -247,6 +250,7 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                     {cardErrors?.cardType && (
                     <p className="mt-1 text-sm text-red-500">{cardErrors?.cardType}</p>
                     )} 
+                    </div>
                 </div>
 
                 <div className="flex w-full justify-center mt-4">
