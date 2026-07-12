@@ -18,6 +18,7 @@ import {
     removeCountryRegions,
     editCountryRegion,
     addRegionCities,
+    addMultipleRegionCities,
     removeRegionCities,
     editRegionCity
 } from '../controllers/admin/address.js'
@@ -51,7 +52,7 @@ adminRouter.post('/orders/:id/:orderId', updateOrderStatus)
 adminRouter.post('/address/add/country', addCountryRegions);
 adminRouter.post('/address/remove/country', removeCountryRegions);
 adminRouter.post('/address/edit/contry', editCountryRegion);
-adminRouter.post('/address/add/region', addRegionCities);
+adminRouter.post('/address/add/region', addMultipleRegionCities);
 adminRouter.post('/address/remove/region', removeRegionCities);
 adminRouter.post('/address/edit/contry', editRegionCity);
 

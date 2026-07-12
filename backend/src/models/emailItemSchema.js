@@ -16,8 +16,6 @@ const emailItemSchema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
-        sparse: true,  // allows multiple null values
-        unique: true,
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address']
     },
 

@@ -404,7 +404,6 @@ const Payment = () => {
                 type: 'card',
                 details: {
                     cardNumber: newCard.cardNumber,
-                    brand: newCard.provider,
                     firstName: newCard.firstName,
                     lastName: newCard.lastName,
                     expiryDate: newCard.expiryDate,

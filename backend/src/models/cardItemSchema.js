@@ -1,12 +1,10 @@
 import mongoose from 'mongoose'
 
 const cardItemSchema = new mongoose.Schema({
-//   // Store the unique ID from the payment processor
-//   gatewayId: { 
-//     type: String, 
-//     required: true, 
-//     unique: true 
-//   },
+  // Store the unique ID from the payment processor
+  gatewayId: { 
+    type: String,
+  },
   cardNumber: {
     type: String,
     required: true,

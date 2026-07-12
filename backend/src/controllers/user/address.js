@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
+
 import User from '../../models/user.js';
+
+import Country from '../../models/countrySchema.js';
+import Region from '../../models/regionSchema.js';
 
 export const getUserAddresses = async (req, res) => {
     try {
@@ -798,5 +802,108 @@ export const editDefaultAddress = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "error while updating default payment account" });
         console.error(`error while while updating default payment account: ${error}`)
+    }
+}
+
+export const getRegions = async(req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { countryName } = req.body
+
+        if(!countryName) {
+            return res.status(400).json({
+                success: false,
+                meessage: "Misssing required field(s)"
+            })
+        }
+
+        const country = await Country.findOne({
+            countryName: countryName
+        })
+
+        if (!country) {
+            return res.status(400).json({
+                success: false,
+                meessage: "Non-existent country"
+            })
+        }
+
+        if (country) {
+            const data = {
+                countryName: country.countryName,
+                regions: country.regions
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: data
+            })
+        }
+
+    } catch(error){
+        console.log("errror in getRegions: ", error)
+        res.status(500).json({
+            success: false,
+            message: "Internal server errror"
+        })
+    }
+}
+
+
+export const getCities = async(req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const { countryName } = req.body
+
+        if(!countryName) {
+            return res.status(400).json({
+                success: false,
+                meessage: "Misssing required field(s)"
+            })
+        }
+
+        const country = await Country.findOne({
+            countryName: countryName
+        })
+
+        if (!country) {
+            return res.status(400).json({
+                success: false,
+                meessage: "Non-existent country"
+            })
+        }
+
+        if (country) {
+            const data = {
+                countryName: country.countryName,
+                regions: country.regions
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: data
+            })
+        }
+
+    } catch(error){
+        console.log("errror in getRegions: ", error)
+        res.status(500).json({
+            success: false,
+            message: "Internal server errror"
+        })
     }
 }
