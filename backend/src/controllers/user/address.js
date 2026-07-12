@@ -17,8 +17,6 @@ export const getUserAddresses = async (req, res) => {
 
         const user = await User.findById(id);
 
-
-        
         const addresses = user.addresses?.map((item) => ({
             _id: item._id,
             firstName: item.firstName,
@@ -30,19 +28,18 @@ export const getUserAddresses = async (req, res) => {
             mobile: item.mobile
         })) || []
         
-
         const defaultAddress = { 
             addressId: user.defaultAddress.addressId
         }
-        
-``
+
         res.status(200).json({ 
             success: true,
             data: {
-                addresses: addressses, 
+                addresses: addresses, 
                 defaultAddress: defaultAddress
             }
         })
+
     } catch (error) {
         res.status(404).json({ error: "error while fetching user payment methods" });
         console.error(`error while fetching user payment methods: ${error}`)
@@ -230,7 +227,6 @@ export const addAddress = async (req, res) => {
 
 
 
-
 export const removeAddress = async (req, res) => {
     try {
         const { id } = req.user
@@ -242,27 +238,19 @@ export const removeAddress = async (req, res) => {
         }
 
         const { 
-            type,
-            methodId
+            addressId
         } = req.body;
 
         //console.log("add payment method req: ",req.body)
 
 
-        if (!type || !details) {
+        if (!addressId) {
             return res.status(400).json({
                 success: false,
-                error: "Missing required fields"
+                error: "Missing required field(s)"
             });
         }
 
-        const validTypes = ['mobile_money', 'card'] //, 'paypal'];
-        if (!validTypes.includes(type)) {
-            return res.status(400).json({
-                success: false,
-                error: `Invalid methodType. Supported: ${validTypes.join(', ')}`
-            });
-        }
 
         const user = await User.findById(id);
         if (!user) {
@@ -272,113 +260,57 @@ export const removeAddress = async (req, res) => {
             });
         }
 
-        if (type === 'mobile') {
+        
 
-            if (!user.paymentMethods.mobile || user.paymentMethods.mobile.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    error: "No mobile money accounts found for this user"
-                });
-            }
+        if (!user.addresses) {
+            return res.status(404).json({
+                success: false,
+                error: "No addresses found for this user"
+            });
+        }
 
-            const index = user.paymentMethods.mobile.findIndex(
-                method => method._id.toString() === methodId
+        const index = user.addresses.findIndex(
+            method => method._id.toString() === addressId
+        );
+
+        if (index === -1) {
+            return res.status(404).json({
+                success: false,
+                error: "Address not found"
+            });
+        }
+
+        if (index !== -1) {
+                    
+            // remove item 
+            await User.findByIdAndUpdate(
+                id,
+                { 
+                    $pull: { 
+                        addresses: { 
+                            _id: addressId 
+                        } 
+                    } 
+                }
             );
 
-            if (index === -1) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Mobile money account not found"
-                });
-            }
-
-            if (index !== -1) {
-                        
-                // remove item 
+            if (user.defaultAddress.addressId === addressId) {
                 await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $pull: { 
-                            "paymentMethods.mobile": { 
-                                _id: methodId 
-                            } 
+                id,
+                { 
+                    $set: { 
+                        defaultPaymentMethod: { 
+                            methodType: null,
+                            methodId: null
                         } 
-                    }
-                );
-
-                if (user.defaultPaymentMethod.methodId === methodId) {
-                    await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $set: { 
-                            defaultPaymentMethod: { 
-                                methodType: null,
-                                methodId: null
-                            } 
-                        } 
-                    });
-                }
-
-                return res,status(200).json({
-                    success: true,
-                    message: "Payment account removed successfully"
-                })
-            }
-
-
-
-        } else if(type === 'card') {
-
-            if (!user.paymentMethods.card || user.paymentMethods.card.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    error: "No cards found for this user"
+                    } 
                 });
             }
 
-            const index = user.paymentMethods.card.findIndex(
-                method => method._id.toString() === methodId
-            );
-
-            if (index === -1) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Card not found"
-                });
-            }
-
-            if (index !== -1) {
-                        
-                // remove item 
-                await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $pull: { 
-                            "paymentMethods.card": { 
-                                _id: methodId 
-                            } 
-                        } 
-                    }
-                );
-
-                if (user.defaultPaymentMethod.methodId === methodId) {
-                    await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $set: { 
-                            defaultPaymentMethod: { 
-                                methodType: null,
-                                methodId: null
-                            } 
-                        } 
-                    });
-                }
-
-                return res,status(200).json({
-                    success: true,
-                    message: "Payment account removed successfully"
-                })
-            }
+            return res,status(200).json({
+                success: true,
+                message: "Address removed successfully"
+            })
         }
 
 
