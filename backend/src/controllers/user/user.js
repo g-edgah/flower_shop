@@ -35,15 +35,15 @@ export const getUser = async (req, res) => {
             email: user.email.email,
             firstName: user.firstName, 
             lastName: user.lastName, 
-            address: {
-                firstName: user.address.firstName,
-                lastName: user.address.lastName,
-                region: user.address.region,
-                city: user.address.city,
-                address: user.address.address,
-                info: user.address.info,
-                mobile: user.address.mobile,
-            }, 
+            // address: {
+            //     firstName: user.address.firstName,
+            //     lastName: user.address.lastName,
+            //     region: user.address.region,
+            //     city: user.address.city,
+            //     address: user.address.address,
+            //     info: user.address.info,
+            //     mobile: user.address.mobile,
+            // }, 
             picturePath: user.picturePath,
             // cart: user.cart,
             // wishlist: user.wishlist,
@@ -75,13 +75,12 @@ export const editUser = async (req, res) => {
         const { 
             firstName, 
             lastName, 
-            address 
         } = req.body;
 
 
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            { firstName, lastName, address }
+            { firstName, lastName }
         ).select('-password');
 
         res.status(200).json({ message: 'success'}) //you can use a simple message then use getUser to fetch the updataed user cause it has security configured

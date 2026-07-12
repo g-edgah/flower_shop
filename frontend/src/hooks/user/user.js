@@ -212,3 +212,29 @@ export const useEditDefaultPayment = () => {
         enabled: !!userId
     });
 }
+
+// get regions
+export const getRegions = () => {
+    console.log(`getting them regions`) 
+    const userId = getUserId()
+
+    return useQuery({ 
+        queryKey: ['regions', userId],
+        queryFn: (countryName) => api.get(`/user/address/regions/${countryName}/${userId}`).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
+
+// get regions
+export const getCities = () => {
+    console.log(`getting them cities`) 
+    const userId = getUserId()
+
+    return useQuery({ 
+        queryKey: ['cities', userId],
+        queryFn: (regionName) => api.get(`/user/address/cities/${regionName}/${userId}`).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};

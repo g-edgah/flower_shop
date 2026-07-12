@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
-    address: [addressSchema],
+    addresses: [addressSchema],
     defaultAddress: {
         addressId: {
         type: mongoose.Schema.Types.ObjectId,
