@@ -867,30 +867,30 @@ export const getCities = async(req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
-        const { countryName } = req.body
+        const { regionName } = req.body
 
-        if(!countryName) {
+        if(!regionName) {
             return res.status(400).json({
                 success: false,
                 meessage: "Misssing required field(s)"
             })
         }
 
-        const country = await Country.findOne({
-            countryName: countryName
+        const region = await Region.findOne({
+            regionName: regionName
         })
 
-        if (!country) {
+        if (!region) {
             return res.status(400).json({
                 success: false,
-                meessage: "Non-existent country"
+                meessage: "Non-existent region"
             })
         }
 
-        if (country) {
+        if (region) {
             const data = {
-                countryName: country.countryName,
-                regions: country.regions
+                regionName: region.regionName,
+                cities: region.cities
             }
 
             return res.status(200).json({
@@ -900,7 +900,7 @@ export const getCities = async(req, res) => {
         }
 
     } catch(error){
-        console.log("errror in getRegions: ", error)
+        console.log("errror in getCities: ", error)
         res.status(500).json({
             success: false,
             message: "Internal server errror"
