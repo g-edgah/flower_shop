@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react'
 import { BiSolidEdit } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import axios from 'axios'
+import { FaPlus, FaArrowLeft } from "react-icons/fa6";
+import { toast } from 'react-toastify';
 
-import { getUserAddresses, addAddress, removeAddress, updateAddress, editDefaultAddress, getRegions, getCities } from '../../../../hooks/user/user.js';
+import { useGetUserAddresses, useAddAddress, useRemoveAddress, useUpdateAddress, useEditDefaultAddress, useGetRegions, useGetCities } from '../../../../hooks/user/user.js';
 
 import AddAddress from './addAddress.jsx'
+import AddressCard from './addressCard.jsx'
 
 
 const Address = ({userRefetch, user}) => {
@@ -32,7 +35,6 @@ const Address = ({userRefetch, user}) => {
 
         const { name, value } = e.target;
 
-
         if (name.includes('.')) {
             const [parent, child] = name.split('.');
             setFormData(prevData => ({
@@ -48,6 +50,11 @@ const Address = ({userRefetch, user}) => {
                 [name]: value,
             });
         }
+
+        if (name == 'address.region'){
+            console.log("region change: ", value)
+           
+        }
        
 
         // clear error for this field when user starts typing
@@ -59,6 +66,26 @@ const Address = ({userRefetch, user}) => {
         }
     };
 
+
+    
+
+    //get regions
+    const { data: regionsData, isLoading: getRegionsLoading, error: getRegionsError, isFetching: getRegionsFetching, refetch: getRegionsRefetch } = useGetRegions();
+    
+    //get cities
+    const { data: citiesData, isLoading: getCitiesLoading, error: getCitiesError, isFetching: getCitiesFetching, refetch: getCitiesRefetch } = useGetCities(formData.address.region);
+
+    //get user addresses
+    const { data: getAddressesData, isLoading: getAddressesLoading, error: getAddressesesError, isFetching: getAddressesFetching, refetch: getAddressesRefetch } = useGetUserAddresses();
+   
+    // add address
+    const { mutate: addAddress, isLoading: addAddressLoading, error: addAddressError, data: addAddressData } = useAddAddress();
+
+    // remove address
+    const { mutate: removeAddress, isLoading: removeAddressLoading, error: removeAddressError, data: removeAddressData } = useRemoveAddress();
+
+    // update address
+    const { mutate: updateAddress, isLoading: updateAddressLoading, error: updateAddressError, data: updateAddressData } = useUpdateAddress();
 
 
 
@@ -81,26 +108,6 @@ const Address = ({userRefetch, user}) => {
         return newErrors;
     };
 
-
-    
-
-    //get regions
-    const { data: regionsData, isLoading: getRegionsLoading, error: getRegionsError, isFetching: getRegionsFetching, refetch: getRegionsRefetch } = getRegions();
-    
-    //get cities
-    const { data: citiesData, isLoading: getCitiesLoading, error: getCitiesError, isFetching: getCitiesFetching, refetch: getCitiesRefetch } = getCities();
-
-    //get user addresses
-    const { data: getAddressesData, isLoading: getAddressesLoading, error: getAddressesesError, isFetching: getAddressesFetching, refetch: getAddressesRefetch } = getUserAddresses();
-    
-    // add address
-    const { mutate: addAddress, isLoading: addAddressLoading, error: addAddressError, data: addAddressData } = addAddress();
-
-    // remove address
-    const { mutate: removeAddress, isLoading: removeAddressLoading, error: removeAddressError, data: removeAddressData } = removeAddress();
-
-    // update address
-    const { mutate: updateAddress, isLoading: updateAddressLoading, error: updateAddressError, data: updateAddressData } = updateAddress();
 
 
     // form submission
@@ -148,16 +155,63 @@ const Address = ({userRefetch, user}) => {
 
 
     return (
-        <div className="flex flex-col p-3 justify-around gap-10 w-full">
-            <div className="title border-b border-gray-300 w-10/10 p-3">
-                    <span className="title text-xl font-bold ">Address Book</span>
-            </div>
-            <div className="flex justify-between gap-3">
+        <div className="flex flex-col justify-around w-full">
+            
+                <div className='p-3 flex flex-col gap-5'>
+                    {(addressState === 'addresses') ?
+                    <div className="title border-b border-gray-300 w-10/10 p-3">
+                        <span className="title text-xl font-bold ">Address Book</span>
+                    </div> 
+                    : 
+                    <div className="title border-b border-gray-300 w-10/10 p-3 flex gap-2">
+                        <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" 
+                        onClick={() => {
+                            setAddressState("addresses")
+                            setFormData=({
+                                firstName: "",
+                                lastName: "",
+                                country: "",
+                                region: "",
+                                city: "",
+                                address: "",
+                                info: "",
+                                mobile: ""
+                            })
+                            setErrors({})
+                        }} />
+                        <span className="title text-xl font-bold ">Add New Address</span>
+                    </div>
+                    }
+
+                    {(addressState === 'addresses') &&
+                    <div className="methods flex flex-col ">
+                        <div className="saved flex flex-col gap-7 py-5 px-5">
+                            <div className="address">
+                                
+                                <div className="flex py-5 gap-3 items-start flex-wrap">
+                                    {getAddressesData?.data?.addresses.map((address) => (
+                                    <AddressCard address={address} key={address._id} />
+                                        
+                                    ))}
+                                    <div className="add">
+                                        <button className="bg-summaryButtons text-white font-semibold py-2 px-4 rounded-md cursor-pointer hover:bg-active flex gap-1 items-center justify-center h-13" onClick={() => setAddressState('new')}>
+                                            <FaPlus /> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>           
+                    </div>
+                    }
+                </div>
+            
+            
+            
                 
-                {addressState === 'new' && 
-                    <AddAddress />
-                }
-            </div>
+            {addressState === 'new' && 
+                <AddAddress handleSubmit={handleSubmit} handleChange={handleChange} formData={formData} errors={errors} citiesData={citiesData} regionsData={regionsData} getCitiesLoading={getCitiesLoading} getRegionsLoading={getRegionsLoading} />
+            }
+            
         </div>
     )
 }

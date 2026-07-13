@@ -214,34 +214,33 @@ export const useEditDefaultPayment = () => {
 }
 
 // get regions
-export const getRegions = () => {
+export const useGetRegions = (countryName = 'Kenya') => {
     console.log(`getting them regions`) 
     const userId = getUserId()
 
     return useQuery({ 
         queryKey: ['regions', userId],
-        queryFn: (countryName) => api.get(`/user/address/regions/${countryName}/${userId}`).then(res => res.data),
+        queryFn: async () => api.get(`/user/address/regions/${countryName}/${userId}`).then(res => res.data),
         enabled: !!userId
     });
     
 };
 
 // get regions
-export const getCities = () => {
+export const useGetCities = (regionName = 'Nairobi') => {
     console.log(`getting them cities`) 
     const userId = getUserId()
-
-    return useQuery({ 
-        queryKey: ['cities', userId],
-        queryFn: (regionName) => api.get(`/user/address/cities/${regionName}/${userId}`).then(res => res.data),
-        enabled: !!userId
-    });
     
+    return useQuery({ 
+        queryKey: ['cities', regionName, userId],
+        queryFn: async () => api.get(`/user/address/cities/${regionName}/${userId}`).then(res => res.data),
+        enabled: !!userId && !!regionName
+    });
 };
 
 
 // get user addresses
-export const getUserAddresses = () => {
+export const useGetUserAddresses = () => {
     console.log(`getting them addresses`) 
     const userId = getUserId()
 
@@ -254,35 +253,46 @@ export const getUserAddresses = () => {
 };
 
 // editing default address
-export const editDefaultAddress = () => {
+export const useEditDefaultAddress = () => {
     console.log(`editing default address`) 
     const userId = getUserId()
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`u/user/address/update/${userId}`, formData).then(res => res.data),
+        mutationFn: (formData) => api.post(`/user/address/default/${userId}`, formData).then(res => res.data),
         enabled: !!userId
     });
 }
 
 
 // adding address
-export const addAddress = () => {
+export const useAddAddress = () => {
     console.log(`adding user address`) 
     const userId = getUserId()
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`u/user/address/add/${userId}`, formData).then(res => res.data),
+        mutationFn: (formData) => api.post(`/user/address/add/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
+
+// updating address
+export const useUpdateAddress = () => {
+    console.log(`adding user address`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`/user/address/update/${userId}`, formData).then(res => res.data),
         enabled: !!userId
     });
 }
 
 // removing address
-export const removeAddress = () => {
+export const useRemoveAddress = () => {
     console.log(`removing user address`) 
     const userId = getUserId()
 
     return useMutation({ 
-        mutationFn: (formData) => api.post(`u/user/address/remove/${userId}`, formData).then(res => res.data),
+        mutationFn: (formData) => api.post(`/user/address/remove/${userId}`, formData).then(res => res.data),
         enabled: !!userId
     });
 }

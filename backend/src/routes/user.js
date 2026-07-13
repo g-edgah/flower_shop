@@ -6,7 +6,7 @@ import { getUserWishlist, editWishlist } from '../controllers/user/wishlist.js'
 import { getUserPaymentMethods, addPaymentMethod, removePaymentMethod, editDefaultMethod } from '../controllers/user/payment.js'
 import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controllers/user/orders.js'
 import { getUserVouchers } from '../controllers/user/vouchers.js'
-import { getUserAddresses, addAddress, removeAddress, updateAddress, getRegions, getCities} from '../controllers/user/address.js'
+import { getUserAddresses, addAddress, removeAddress, updateAddress, editDefaultAddress, getRegions, getCities} from '../controllers/user/address.js'
 
 import { verifyToken } from '../middleware/auth.js'
 
@@ -49,6 +49,7 @@ userRouter.get('/address/:id', getUserAddresses)
 userRouter.post('/address/add/:id', addAddress)
 userRouter.post('/address/remove/:id', removeAddress)
 userRouter.post('/address/update/:id', updateAddress)
+userRouter.post('/address/default/:id', editDefaultAddress)
 userRouter.get('/address/regions/:countryName/:id', getRegions)
 userRouter.get('/address/cities/:regionName/:id', getCities)
 

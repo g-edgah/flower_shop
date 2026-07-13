@@ -15,6 +15,9 @@ export const getUserAddresses = async (req, res) => {
             return res.status(403).json({ error: "psyche!!! hahaa!!" });
         }
 
+         
+        //console.log("getAddressesData req ")
+
         const user = await User.findById(id);
 
         const addresses = user.addresses?.map((item) => ({
@@ -31,6 +34,9 @@ export const getUserAddresses = async (req, res) => {
         const defaultAddress = { 
             addressId: user.defaultAddress.addressId
         }
+
+         
+        //console.log("getAddressesData: ", addresses)
 
         res.status(200).json({ 
             success: true,
@@ -681,7 +687,7 @@ export const getCities = async(req, res) => {
         if (!region) {
             return res.status(400).json({
                 success: false,
-                meessage: "Non-existent region"
+                meessage: `Non-existent region ${regionName}`
             })
         }
 
