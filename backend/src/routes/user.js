@@ -6,7 +6,7 @@ import { getUserWishlist, editWishlist } from '../controllers/user/wishlist.js'
 import { getUserPaymentMethods, addPaymentMethod, removePaymentMethod, editDefaultMethod } from '../controllers/user/payment.js'
 import { createOrder, addOrderReview, getUserOrders, getOrderById } from '../controllers/user/orders.js'
 import { getUserVouchers } from '../controllers/user/vouchers.js'
-import { getUserAddresses, addAddress, removeAddress, getRegions, getCities} from '../controllers/user/address.js'
+import { getUserAddresses, addAddress, removeAddress, updateAddress, getRegions, getCities} from '../controllers/user/address.js'
 
 import { verifyToken } from '../middleware/auth.js'
 

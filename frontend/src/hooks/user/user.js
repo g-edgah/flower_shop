@@ -238,3 +238,51 @@ export const getCities = () => {
     });
     
 };
+
+
+// get user addresses
+export const getUserAddresses = () => {
+    console.log(`getting them addresses`) 
+    const userId = getUserId()
+
+    return useQuery({ 
+        queryKey: ['addresses', userId],
+        queryFn: (regionName) => api.get(`/user/address/${userId}`).then(res => res.data),
+        enabled: !!userId
+    });
+    
+};
+
+// editing default address
+export const editDefaultAddress = () => {
+    console.log(`editing default address`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`u/user/address/update/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
+
+
+// adding address
+export const addAddress = () => {
+    console.log(`adding user address`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`u/user/address/add/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
+
+// removing address
+export const removeAddress = () => {
+    console.log(`removing user address`) 
+    const userId = getUserId()
+
+    return useMutation({ 
+        mutationFn: (formData) => api.post(`u/user/address/remove/${userId}`, formData).then(res => res.data),
+        enabled: !!userId
+    });
+}
