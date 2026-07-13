@@ -72,7 +72,7 @@ export const addAddress = async (req, res) => {
 
         console.log("add payment method req: ",req.body)
 
-        if (!firstName || !lastName, || !country || !region || !city || !address || !info || !mobile) {
+        if (!firstName || !lastName || !country || !region || !city || !address || !info || !mobile) {
             return res.status(400).json({
                 success: false,
                 error: "Missing required field(s)"
@@ -225,6 +225,199 @@ export const addAddress = async (req, res) => {
 }
 
 
+export const updateAddress = async (req, res) => {
+    try {
+        const { id } = req.user
+
+        const paramId = req.params.id
+
+        if (paramId !== id) {
+            return res.status(403).json({ error: "psyche!!! hahaa!!" });
+        }
+
+        const {
+            address,
+            addressId
+        } = req.body;
+
+        if (!address || !address) {
+            return res.status(400).json({
+                success: false,
+                error: "Missing required field(s)"
+            });
+        }
+
+        const allowedFields = [
+            'firstName', 'lastName', 'country', 'region', 
+            'city', 'address', 'info', 'mobile'
+        ];
+
+        const updateData = {};
+        allowedFields.forEach(field => {
+            if (address[field] !== undefined) {
+                updateData[field] = address[field];
+            }
+        });
+
+
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: "No valid fields provided"
+            });
+        }
+
+
+        const updateQuery = {};
+        Object.keys(updateData).forEach(field => {
+            updateQuery[`addresses.$.${field}`] = updateData[field];
+        });
+
+
+        console.log("add payment method req: ",req.body)
+
+
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                error: "User not found"
+            });
+        }
+
+        const countryExists = await Country.findOne({
+            countryName: country
+        })
+        if (!countryExists) {
+            return res.status(404).json({
+                success: false,
+                error: "Country not found"
+            });
+        }
+
+        const regionExists = await Region.findOne({
+            regionName: region
+        })
+        if (!regionExists) {
+            return res.status(404).json({
+                success: false,
+                error: "Region not found"
+            });
+        }
+
+        const regionInCountry = countryExists.regions.includes(region)
+        if (!regionInCountry) {
+            return res.status(404).json({
+                success: false,
+                error: "Region not for this country"
+            });
+        }
+
+        const cityInRegion = regionExists.cities.includes(city)
+        if (!cityInRegion) {
+            return res.status(404).json({
+                success: false,
+                error: "Citynot for this region"
+            });
+        }
+
+
+        // validating data
+        if (updateQuery.firstName) {
+            // only letters allowed
+            if (!/^[A-Za-z]+$/.test(firstName)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            
+            // only 2-50 characters
+            } else if (firstName.length < 2 || firstName.length > 50) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            }
+        }
+
+        if (updateQuery.lastName) {
+            // only letters allowed
+            if (!/^[A-Za-z]+$/.test(lastName)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            
+            // only 2-50 characters
+            } else if (lastName.length < 2 || lastName.length > 50) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            }
+        }
+
+        if (updateQuery.mobile){
+            // must contain only digits
+            if (!/^\d+$/.test(mobile)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            } 
+
+            // exactly 10 digits
+            else if (!/^\d{10}$/.test(mobile)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            } 
+
+            // starts with 07 or 01
+            else if (!/^(07|01)/.test(mobile)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid data'
+                })
+            }
+
+        }
+        
+
+        // remove leadind 0
+        const formattedPhone = mobile.replace(/^0/, '');
+        const formattedNumber = `254${formattedPhone}`
+
+        await User.findByIdAndUpdate(
+            {
+                _id: id,
+                'addresses._id': addressId
+            },
+            { 
+                $set: {
+                    updateQuery
+                }
+            },
+            {
+                runValidators: true  // Validates against schema
+            }
+        );
+
+        res.status(200).json({
+            status: true,
+            message: "Address updated succsesfully"
+        })
+
+        
+
+    } catch (error) {
+        res.status(500).json({ error: "error while updating address" });
+        console.error(`error in updateddress: ${error}`)
+    }
+}
+
 
 
 export const removeAddress = async (req, res) => {
@@ -316,7 +509,7 @@ export const removeAddress = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: "error while reemoving payment account" });
-        console.error(`error while while reemoving payment account: ${error}`)
+        console.error(`error while while removing payment account: ${error}`)
     }
 }
 
