@@ -390,7 +390,7 @@ export const updateAddress = async (req, res) => {
         const formattedPhone = mobile.replace(/^0/, '');
         const formattedNumber = `254${formattedPhone}`
 
-        await User.findByIdAndUpdate(
+        await User.findOneAndUpdate(
             {
                 _id: id,
                 'addresses._id': addressId
@@ -526,27 +526,20 @@ export const editDefaultAddress = async (req, res) => {
         }
 
         const { 
-            type,
-            methodId
+            addressId
         } = req.body;
 
         //console.log("add payment method req: ",req.body)
 
 
-        if (!type || !details) {
+        if (!addressId) {
             return res.status(400).json({
                 success: false,
-                error: "Missing required fields"
+                error: "Missing required field(s)"
             });
         }
 
-        const validTypes = ['mobile_money', 'card'] //, 'paypal'];
-        if (!validTypes.includes(type)) {
-            return res.status(400).json({
-                success: false,
-                error: `Invalid methodType. Supported: ${validTypes.join(', ')}`
-            });
-        }
+        
 
         const user = await User.findById(id);
         if (!user) {
@@ -556,104 +549,52 @@ export const editDefaultAddress = async (req, res) => {
             });
         }
 
-        if (type === 'mobile') {
+        
 
-            if (!user.paymentMethods.mobile || user.paymentMethods.mobile.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    error: "No mobile money accounts found for this user"
-                });
-            }
+        if (!user.addressses || user.addresses.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: "No mobile money accounts found for this user"
+            });
+        }
 
-            const index = user.paymentMethods.mobile.findIndex(
-                method => method._id.toString() === methodId
-            );
+        const index = user.addresses.findIndex(
+            a => a._id.toString() === addressId.toString()
+        );
 
-            if (index === -1) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Mobile money account not found"
-                });
-            }
+        if (index === -1) {
+            return res.status(404).json({
+                success: false,
+                error: "Address not found"
+            });
+        }
 
-            if (index !== -1) {
-                        
-               if (user.defaultPaymentMethod.methodId === methodId) {
-                    return res,status(400).json({
-                        success: true,
-                        message: "Payment account is already the default"
-                    })
+        if (index !== -1) {
+                    
+            if (user.defaultAddress.addressId === addressId) {
+                return res,status(400).json({
+                    success: true,
+                    message: "Address is already the default"
+                })
 
-                } else if (user.defaultPaymentMethod.methodId !== methodId) {
-                    await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $set: { 
-                            defaultPaymentMethod: { 
-                                methodType: type,
-                                methodId: methodId
-                            } 
+            } else if (user.defaultAddress.addressId !== addressId) {
+                await User.findByIdAndUpdate(
+                id,
+                { 
+                    $set: { 
+                        defaultAddress: { 
+                            addressId: addressId
                         } 
-                    });
-
-                    return res,status(200).json({
-                        success: true,
-                        message: "Payment account successfully set as default"
-                    })
-                }
-
-                
-            }
-
-
-
-        } else if(type === 'card') {
-
-            if (!user.paymentMethods.card || user.paymentMethods.card.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    error: "No cards found for this user"
+                    } 
                 });
+
+                return res,status(200).json({
+                    success: true,
+                    message: "Address successfully set as default"
+                })
             }
 
-            const index = user.paymentMethods.card.findIndex(
-                method => method._id.toString() === methodId
-            );
-
-            if (index === -1) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Card not found"
-                });
-            }
-
-            if (index !== -1) {
-                        
-
-                if (user.defaultPaymentMethod.methodId === methodId) {
-                    return res,status(400).json({
-                        success: true,
-                        message: "Payment account is already the default"
-                    })
-
-                } else if (user.defaultPaymentMethod.methodId !== methodId) {
-                    await User.findByIdAndUpdate(
-                    id,
-                    { 
-                        $set: { 
-                            defaultPaymentMethod: { 
-                                methodType: type,
-                                methodId: methodId
-                            } 
-                        } 
-                    });
-
-                    return res,status(200).json({
-                        success: true,
-                        message: "Payment account successfully set as default"
-                    })
-                }
-            }
+            
         }
 
     } catch (error) {

@@ -48,6 +48,7 @@ userRouter.post('/payment/default/:id', editDefaultMethod)
 userRouter.get('/address/:id', getUserAddresses)
 userRouter.post('/address/add/:id', addAddress)
 userRouter.post('/address/remove/:id', removeAddress)
+userRouter.post('/address/update/:id', updateAddress)
 userRouter.get('/address/regions/:countryName/:id', getRegions)
 userRouter.get('/address/cities/:regionName/:id', getCities)
 
