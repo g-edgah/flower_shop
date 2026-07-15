@@ -13,9 +13,6 @@ const Payment = () => {
     const [ newState, setNewState ] = useState("none")
     const [ mobileErrors, setMobileErrors ] = useState({})
     const [ cardErrors, setCardErrors ] = useState({})
-    const [ dayOpen, setDayOpen ] = useState(false)
-    const [ monthOpen, setMonthOpen ] = useState(false)
-    const [ yearOpen, setYearOpen ] = useState(false)
     const [ newCard, setNewCard ] = useState({
         cardNumber: '',
         expiryDate: {
@@ -228,6 +225,32 @@ const Payment = () => {
                 ...newCard,
                 [name]: value
             })
+        } else if (name == 'month') {
+            setNewCard(prev => ({
+                ...prev,
+                expiryDate: {
+                    ...prev.expiryDate,
+                    month: value
+                }
+            }))
+            setCardErrors({
+                ...cardErrors,
+                expiryMonth: ''
+            })
+        
+        } else if (name == 'year') {
+            setNewCard(prev => ({
+                ...prev,
+                expiryDate: {
+                    ...prev.expiryDate,
+                    year: value
+                }
+            }))
+            setCardErrors({
+                ...cardErrors,
+                expiryYear: ''
+            })
+        
         } else if (name === 'cvv') {
             setCardErrors({
                 ...cardErrors,
@@ -525,52 +548,6 @@ const Payment = () => {
         }
     }
 
-    const handleDate = (type, value) => {
-        if (type === 'month') {
-            setNewCard(prev => ({
-                ...prev,
-                expiryDate: {
-                    ...prev.expiryDate,
-                    month: value
-                }
-            }))
-            setCardErrors({
-                ...cardErrors,
-                expiryMonth: ''
-            })
-            setMonthOpen(false)
-        } else if (type === 'year') {
-            setNewCard(prev => ({
-                ...prev,
-                expiryDate: {
-                    ...prev.expiryDate,
-                    year: value
-                }
-            }))
-            setCardErrors({
-                ...cardErrors,
-                expiryYear: ''
-            })
-            setYearOpen(false)
-        }
-    }
-
-    const handleDateToggle = (type) => {
-        if (type === 'month') {
-            setMonthOpen(!monthOpen)
-            // setCardErrors({
-            //     ...cardErrors,
-            //     expiryMonth: ''
-            // })
-        } else if (type === 'year') {
-            setYearOpen(!yearOpen)
-            // setCardErrors({
-            //     ...cardErrors,
-            //     expiryYear: ''
-            // })
-        }
-    }
-
 
     useEffect(() => {
         if(newState === 'card') {
@@ -664,7 +641,7 @@ const Payment = () => {
             }
 
             {(newState === 'card') &&
-                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState} handleDate={handleDate} dayOpen={dayOpen} monthOpen={monthOpen} yearOpen={yearOpen} handleDateToggle={handleDateToggle} months={months} years={years}/>
+                <AddCard handleCardChange={handleCardChange} newCard={newCard} setNewCard={setNewCard} handleSubmit={handleSubmit} cardErrors={cardErrors} setCardErrors={setCardErrors} setNewState={setNewState}  months={months} years={years}/>
             }      
         </div>
     )

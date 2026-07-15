@@ -227,7 +227,7 @@ export const useGetRegions = (countryName = 'Kenya') => {
 };
 
 // get regions
-export const useGetCities = (regionName = 'Nairobi') => {
+export const useGetCities = (regionName) => {
     console.log(`getting them cities`) 
     const userId = getUserId()
     

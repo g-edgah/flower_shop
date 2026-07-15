@@ -105,73 +105,65 @@ const AddCard = ({ handleCardChange, handleSubmit, cardErrors, setCardErrors, ne
                 <div className="flex gap-3 items-start justify-start max-w-90">
                     <div className="relative flex flex-col justify-between w-full  gap-2">
                 <span className="text-[16px] font-semibold">Expiry Date: </span>
+                
                 <div className="flex justify-between w-63">
 
                 <div className="flex flex-col w-33">
 
-                <div className={`w-full relative`}>
-                    <div className={`sort py-1.5 pl-4 pr-2 flex justify-between items-center cursor-pointer border border-gray-400 min-h-9.75 bg-gray-100 
-                    ${monthOpen ? 'rounded-t-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition' : 'rounded-lg'} w-full border 
-                    ${cardErrors?.expiryMonth ? 'border-red-500' : ''} 
-
-                        `} onClick={()=>{handleDateToggle('month')}}>
-                        {newCard.expiryDate.month ? <span>
-                            {newCard.expiryDate.month} 
-                        </span>
-                        :
-                        <span className="text text-gray-500">
-                            month 
-                        </span>
-                        }
-                        <MdKeyboardArrowDown />
-    
+                    <div className={`w-full relative`}>
+                        <select
+                            className={`w-full pl-4 pr-2 py-2 border ${cardErrors.expiryMonth ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100 pr-3`}
+                            id='month'
+                            name='month'
+                            value={newCard.expiryDate.month}
+                            onChange={(e) => handleCardChange(e)}
+                            disabled={months?.isLoading}
+                        >
+                            <option  value="">
+                                month
+                            </option>
+                            {months.map((month) => (
+                                <option key={month.id || month} value={month.name || month}>
+                                    {month.name || month}
+                                </option>
+                            ))}
+                        </select>
+                        
                     </div>
-                    <div className={`options absolute z-50 flex flex-col ${monthOpen ? 'block' : 'hidden'} w-full p-3 bg-cartCard rounded-b-md shadow-xl/70 gap-2`}>
-                        { months.map((month, index)=> {
-                        return (
-                        <span key={index} className="item cursor-pointer" onClick={() => handleDate('month',month)}>{month}</span>
-                    )})}
-                    </div>
-                    
-                </div>
 
 
-                {cardErrors?.expiryMonth && (
-                <p className="mt-1 text-sm text-red-500">{cardErrors?.expiryMonth}</p>
-                )} 
+                    {cardErrors?.expiryMonth && (
+                    <p className="mt-1 text-sm text-red-500">{cardErrors?.expiryMonth}</p>
+                    )} 
                 </div>
 
                 <div className="flex flex-col w-27">
 
-                <div className={`w-full relative`}>
-                    <div className={`sort py-1.5 pl-4 pr-2 flex justify-between items-center cursor-pointer border border-gray-400 min-h-9.75 bg-gray-100 
-                    ${yearOpen ? 'rounded-t-lg' : 'rounded-lg'} w-full border 
-                    ${cardErrors?.expiryYear ? 'border-red-500' : ''} 
-                        focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition`} onClick={()=>{handleDateToggle('year')}}>
-                        {newCard.expiryDate.year ? <span>
-                            {newCard.expiryDate.year} 
-                        </span>
-                        :
-                        <span className="text text-gray-500">
-                            year 
-                        </span>
-                        }
-                        <MdKeyboardArrowDown />
-    
-                    </div>
-                    <div className={`options absolute z-50 flex flex-col ${yearOpen ? 'block' : 'hidden'} w-full p-3 bg-cartCard rounded-b-md shadow-xl/70 gap-2`}>
-                        { years.map((year, index)=> {
-                        return (
-                        <span key={index} className="item cursor-pointer" onClick={() => handleDate('year',year)}>{year}</span>
-                    )})}
-                    </div>
+                    <div className={`w-full relative`}>
+                        <select
+                            className={`w-full pl-4 pr-2 py-2 border ${cardErrors.expiryYear ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100 pr-3`}
+                            id='year'
+                            name='year'
+                            value={newCard.expiryDate.year}
+                            onChange={(e) => handleCardChange(e)}
+                            disabled={years?.isLoading}
+                        >
+                            <option  value="">
+                                year
+                            </option>
+                            {years.map((year) => (
+                                <option key={year.id || year} value={year.name || year}>
+                                    {year.name || year}
+                                </option>
+                            ))}
+                        </select>
                     
-                </div>
+                    </div>
 
 
-                {cardErrors?.expiryYear && (
-                <p className="mt-1 text-sm text-red-500">{cardErrors?.expiryYear}</p>
-                )} 
+                    {cardErrors?.expiryYear && (
+                    <p className="mt-1 text-sm text-red-500">{cardErrors?.expiryYear}</p>
+                    )} 
                 </div>
                 </div>
             </div>
