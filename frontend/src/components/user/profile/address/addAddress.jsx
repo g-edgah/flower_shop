@@ -12,7 +12,7 @@ return (
 
                     <div className="flex justify-between w-full gap-4">
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <input 
                                 className={`w-full pl-4 pr-2 py-1.5 border ${errors.firstName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
                                 type="text" 
@@ -27,7 +27,7 @@ return (
                             )} 
                         </div>
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <input 
                                 className={`w-full pl-4 pr-2 py-1.5 border ${errors.lastName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
                                 type="text" 
@@ -47,7 +47,7 @@ return (
                 <div className="flex w-full px-4 gap-4">
                     <div className="min-w-35 w-4/10 region flex flex-col items-start gap-2">
                         <span className="text font-semibold">Region:</span>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <select
                                 className={`w-full pl-4 pr-2 py-2 border ${errors.region ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
                                 id='region'
@@ -72,7 +72,7 @@ return (
                     </div>
                     <div className="region flex flex-col items-start gap-2 min-w-40 w-6/10">
                         <span className="text font-semibold">City:</span> 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <select
                                 className={`w-full pl-4 pr-2 py-2 border ${errors.city ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100 pr-3`}
                                 id='city'
@@ -98,7 +98,7 @@ return (
                 </div>
                 <div className="address flex flex-col items-start px-4 gap-2">
                     <span className="text font-semibold">Address: </span>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <input 
                             className={`w-full pl-4 pr-2 py-1.5 border ${errors.address ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
                             type="text" 
@@ -116,7 +116,7 @@ return (
                 </div>
                 <div className="info flex flex-col items-start px-4 gap-2">
                     <span className="text font-semibold">Additional info:</span>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <textarea
                             className={`w-full pl-4 pr-2 py-1.5 border ${errors.info ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
                             type="text" 
@@ -138,7 +138,7 @@ return (
                         <span className="text font-semibold  border-gray-300 rounded-lg py-1.5 px-1.5">
                             +254
                         </span>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <input 
                                 className={`w-full pl-4 pr-2 py-1.5 border ${errors?.phoneNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                                 type='text'
