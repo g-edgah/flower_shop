@@ -7,16 +7,16 @@ import { toast } from 'react-toastify';
 
 import { useGetUserAddresses, useAddAddress, useRemoveAddress, useUpdateAddress, useEditDefaultAddress, useGetRegions, useGetCities } from '../../../../hooks/user/user.js';
 
-import AddAddress from './addAddress.jsx'
+import NewAddressPage from './addAddress.jsx'
 import AddressCard from './addressCard.jsx'
 
 
 const Address = ({userRefetch, user}) => {
     const [ addressState, setAddressState ] = useState('addresses') 
-    const [ addressEdit, setAddressEdit ] = useState(false)
-    const [errors, setErrors] = useState({})
+    const [ newAddressEdit, setNewAddressEdit ] = useState(false)
+    const [newErrors, setNewErrors] = useState({})
 
-    const [formData, setFormData] = useState({
+    const [newAddress, setNewAddress] = useState({
         firstName: "",
         lastName: "",
         country: "",
@@ -24,27 +24,27 @@ const Address = ({userRefetch, user}) => {
         city: "",
         address: "",
         info: "",
-        mobile: ""
+        phoneNumber: ""
     });
 
 
     
 
     // handle input
-    const handleChange = (e) => {
+    const handleNewChange = (e) => {
 
         const { name, value } = e.target;
 
         if (name === 'firstName') {
-            setErrors({
-                ...errors,
+            setNewErrors({
+                ...newErrors,
                 firstName: ``
             });
 
             // only allow letters
             if (/[^A-Za-z]/.test(value)) {
-                setErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     firstName: `Invalid character`
                 });
                 return;
@@ -52,28 +52,29 @@ const Address = ({userRefetch, user}) => {
 
             // ensure name is less than 50 characters long
             if (value.length > 50) {
-                setErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     firstName: `Name length cannot exceed 50 characters`
                 });
                 return;
             }
 
-            setformData({
-                ...formData,
+            setNewAddress({
+                ...newAddress,
                 [name]: value
             })
+
         } else if (name === 'lastName') {
 
-            setErrors({
-                ...errors,
+            setNewErrors({
+                ...newErrors,
                 lastName: ``
             });
 
             // only allow letters
             if (/[^A-Za-z]/.test(value)) {
-                setErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     lastName: `Invalid character`
                 });
                 return;
@@ -81,27 +82,147 @@ const Address = ({userRefetch, user}) => {
 
             // ensure name is less than 50 characters long
             if (value.length > 50) {
-                setErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     lastName: `Name length cannot exceed 50 characters`
                 });
                 return;
             }
 
-            setformData({
-                ...formData,
+            setNewAddress({
+                ...newAddress,
+                [name]: value
+            })
+
+        } else if (name === 'region') {
+
+            setNewErrors({
+                ...newErrors,
+                region: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setNewErrors({
+                    ...newErrors,
+                    region: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setNewErrors({
+                    ...newErrors,
+                    region: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewAddress({
+                ...newAddress,
+                [name]: value
+            })
+        } else if (name === 'city') {
+
+            setNewErrors({
+                ...newErrors,
+                city: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setNewErrors({
+                    ...newErrors,
+                    city: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setNewErrors({
+                    ...newErrors,
+                    city: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewAddress({
+                ...newAddress,
+                [name]: value
+            })
+
+        } else if (name === 'address') {
+
+            setNewErrors({
+                ...newErrors,
+                address: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                console.log("numberse detected")
+                setNewErrors({
+                    ...newErrors,
+                    address: `Invalid character`
+                });
+                return;
+                console.log("failed to return")
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setNewErrors({
+                    ...newErrors,
+                    address: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewAddress({
+                ...newAddress,
+                [name]: value
+            })
+        } else if (name === 'info') {
+
+            setNewErrors({
+                ...newErrors,
+                info: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setNewErrors({
+                    ...newErrors,
+                    info: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setNewErrors({
+                    ...newErrors,
+                    info: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setNewAddress({
+                ...newAddress,
                 [name]: value
             })
         } else  if (name === 'phoneNumber') {
-            setMobileErrors({
-                ...errors,
+            setNewErrors({
+                ...newErrors,
                 phoneNumber: ``
             });
 
             //only allow digits
             if (/\D/.test(value)) {
-                setMobileErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     phoneNumber: 'Invalid character'
                 });
                 return;
@@ -109,14 +230,15 @@ const Address = ({userRefetch, user}) => {
             
             // check length
             if (value.length > 10) {
-                setMobileErrors({
-                    ...errors,
+                setNewErrors({
+                    ...newErrors,
                     phoneNumber: 'Phone number cannot exceed 10 digits'
                 });
                 return;
             }
-            setformData({
-                ...formData,
+
+            setNewAddress({
+                ...newAddress,
                 [name]: value
             })
         }
@@ -129,7 +251,7 @@ const Address = ({userRefetch, user}) => {
     const { data: regionsData, isLoading: getRegionsLoading, error: getRegionsError, isFetching: getRegionsFetching, refetch: getRegionsRefetch } = useGetRegions();
     
     //get cities
-    const { data: citiesData, isLoading: getCitiesLoading, error: getCitiesError, isFetching: getCitiesFetching, refetch: getCitiesRefetch } = useGetCities(formData.address.region);
+    const { data: citiesData, isLoading: getCitiesLoading, error: getCitiesError, isFetching: getCitiesFetching, refetch: getCitiesRefetch } = useGetCities(newAddress.region);
 
     //get user addresses
     const { data: getAddressesData, isLoading: getAddressesLoading, error: getAddressesesError, isFetching: getAddressesFetching, refetch: getAddressesRefetch } = useGetUserAddresses();
@@ -150,13 +272,13 @@ const Address = ({userRefetch, user}) => {
         const newErrors = {};
         
         
-        // if (formData.firstName.length < 1) {
+        // if (newAddress.firstName.length < 1) {
         // newErrors.newPassword = 'Password must be at least 6 characters';
         // }
         
 
-        // if (formData.email) {
-        // !/\S+@\S+\.\S+/.test(formData.email)
+        // if (newAddress.email) {
+        // !/\S+@\S+\.\S+/.test(newAddress.email)
         // newErrors.email = 'Email is invalid';
         // }
            
@@ -166,22 +288,105 @@ const Address = ({userRefetch, user}) => {
 
 
 
-    // form submission
-    const handleSubmit = async (e, type) => {
+    // add address form submission
+    const handleNewSubmit = async (e, type) => {
         e.preventDefault();
         console.log("e: ",e)
 
 
 
-        console.log(formData)
+        console.log(newAddress)
         
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
+            setNewErrors(validationErrors);
             return;
         }
         
-        editUser(formData, {
+        addAddress(newAddress, {
+            onSuccess: (data) => {
+                console.log('Edit successfull!', data)
+                userRefetch()
+                
+            },
+            onError: (error) => {
+                console.error('Edit failed: ', error)
+                alert('Edit failed. Please try again.')
+                if (type === 'account') {
+                    setAccountEdit(true)
+                } else if (type === 'address') {
+                    setAddressEdit(true)
+                }
+               
+            }
+        })
+
+        if (type === 'account') {
+            setAccountEdit(false)
+        } else if (type === 'address') {
+            setAddressEdit(false)
+        }
+               
+    };
+
+
+    // edit address form submission
+    const handleUpdateSubmit = async (e, type) => {
+        e.preventDefault();
+        console.log("e: ",e)
+
+
+
+        console.log(newAddress)
+        
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setNewErrors(validationErrors);
+            return;
+        }
+        
+        updateAddress(newAddress, {
+            onSuccess: (data) => {
+                console.log('Edit successfull!', data)
+                userRefetch()
+                
+            },
+            onError: (error) => {
+                console.error('Edit failed: ', error)
+                alert('Edit failed. Please try again.')
+                if (type === 'account') {
+                    setAccountEdit(true)
+                } else if (type === 'address') {
+                    setAddressEdit(true)
+                }
+               
+            }
+        })
+
+        if (type === 'account') {
+            setAccountEdit(false)
+        } else if (type === 'address') {
+            setAddressEdit(false)
+        }
+               
+    };
+
+    // remove address form submission
+    const handleRemoveSubmit = async (e, type) => {
+        e.preventDefault();
+        console.log("e: ",e)
+
+
+
+        console.log(newAddress)
+        
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setNewErrors(validationErrors);
+            return;
+        }
+        
+        removeAddress(newAddress, {
             onSuccess: (data) => {
                 console.log('Edit successfull!', data)
                 userRefetch()
@@ -223,7 +428,7 @@ const Address = ({userRefetch, user}) => {
                         <FaArrowLeft className="cursor-pointer size-6 hover:text-summaryButtons" 
                         onClick={() => {
                             setAddressState("addresses")
-                            setFormData=({
+                            setNewAddress=({
                                 firstName: "",
                                 lastName: "",
                                 country: "",
@@ -233,7 +438,7 @@ const Address = ({userRefetch, user}) => {
                                 info: "",
                                 mobile: ""
                             })
-                            setErrors({})
+                            setNewErrors({})
                         }} />
                         <span className="title text-xl font-bold ">Add New Address</span>
                     </div>
@@ -265,7 +470,7 @@ const Address = ({userRefetch, user}) => {
             
                 
             {addressState === 'new' && 
-                <AddAddress handleSubmit={handleSubmit} handleChange={handleChange} formData={formData} errors={errors} citiesData={citiesData} regionsData={regionsData} getCitiesLoading={getCitiesLoading} getRegionsLoading={getRegionsLoading} />
+                <NewAddressPage handleNewSubmit={handleNewSubmit} handleNewChange={handleNewChange} newAddress={newAddress} newErrors={newErrors} citiesData={citiesData} regionsData={regionsData} getCitiesLoading={getCitiesLoading} getRegionsLoading={getRegionsLoading} />
             }
             
         </div>

@@ -1,12 +1,12 @@
 
 
-const AddAddress  = ({ handleSubmit, handleChange, formData, errors, citiesData, regionsData, getCitiesLoading, getRegionsLoading }) => {
+const NewAddressPage  = ({  handleNewSubmit, handleNewChange,  newAddress, newErrors, citiesData, regionsData, getCitiesLoading, getRegionsLoading }) => {
 
 return (
     <div className="flex justify-between gap-3 pb-5">
         <div className="address flex flex-col w-full rounded-md">
             
-            <form onSubmit={(e) => handleSubmit(e, 'address')} className="edit relative w-full  flex flex-col gap-7 py-5 px-5">
+            <form onSubmit={(e) =>  handleNewSubmit(e, 'address')} className="edit relative w-full  flex flex-col gap-7 py-5 px-5">
                 <div className="address flex flex-col items-start px-4 gap-2">
                     <span className="text font-semibold">Name: </span>
 
@@ -14,31 +14,31 @@ return (
 
                         <div className="flex flex-col w-full">
                             <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${errors.firstName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
+                                className={`w-full pl-4 pr-2 py-1.5 border ${newErrors.firstName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'} rounded-lg  bg-gray-100  transition`}
                                 type="text" 
                                 id='firstName' 
                                 name='firstName'
-                                value={formData.firstName}
-                                onChange={(e) => {handleChange(e)}}
+                                value={ newAddress.firstName}
+                                onChange={(e) => {handleNewChange(e)}}
                                 placeholder="Jane"
                             />
-                            {errors.firstName && (
-                            <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
+                            {newErrors.firstName && (
+                            <p className="mt-1 text-sm text-red-500">{newErrors.firstName}</p>
                             )} 
                         </div>
 
                         <div className="flex flex-col w-full">
                             <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${errors.lastName ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
+                                className={`w-full pl-4 pr-2 py-1.5 border ${newErrors.lastName ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'} rounded-lg bg-gray-100`}
                                 type="text" 
                                 id='lastName' 
                                 name='lastName'
-                                value={formData.lastName}
-                                onChange={(e) => {handleChange(e)}}
+                                value={ newAddress.lastName}
+                                onChange={(e) => {handleNewChange(e)}}
                                 placeholder="Doe"
                             />
-                            {errors.lastName && (
-                            <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
+                            {newErrors.lastName && (
+                            <p className="mt-1 text-sm text-red-500">{newErrors.lastName}</p>
                             )} 
                         </div>
                     </div>
@@ -49,11 +49,11 @@ return (
                         <span className="text font-semibold">Region:</span>
                         <div className="flex flex-col w-full">
                             <select
-                                className={`w-full pl-4 pr-2 py-2 border ${errors.region ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
+                                className={`w-full pl-4 pr-2 py-2 border ${newErrors.region ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'} rounded-lg bg-gray-100`}
                                 id='region'
                                 name='region'
-                                value={formData.address.region}
-                                onChange={(e) => handleChange(e)}
+                                value={ newAddress.region}
+                                onChange={(e) => handleNewChange(e)}
                                 disabled={regionsData?.isLoading}
                             >
                                 <option value="">
@@ -65,8 +65,8 @@ return (
                                     </option>
                                 ))}
                             </select>
-                            {errors.region && (
-                                <p className="mt-1 text-sm text-red-500">{errors.region}</p>
+                            {newErrors.region && (
+                                <p className="mt-1 text-sm text-red-500">{newErrors.region}</p>
                             )}
                         </div>
                     </div>
@@ -74,11 +74,11 @@ return (
                         <span className="text font-semibold">City:</span> 
                         <div className="flex flex-col w-full">
                             <select
-                                className={`w-full pl-4 pr-2 py-2 border ${errors.city ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100 pr-3`}
+                                className={`w-full pl-4 pr-2 py-2 border ${newErrors.city ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'}  rounded-lg bg-gray-100 pr-3`}
                                 id='city'
                                 name='city'
-                                value={formData.address.city}
-                                onChange={(e) => handleChange(e)}
+                                value={ newAddress.city}
+                                onChange={(e) => handleNewChange(e)}
                                 disabled={citiesData?.isLoading}
                             >
                                 <option value="">
@@ -90,8 +90,8 @@ return (
                                     </option>
                                 ))}
                             </select>
-                            {errors.city && (
-                                <p className="mt-1 text-sm text-red-500">{errors.city}</p>
+                            {newErrors.city && (
+                                <p className="mt-1 text-sm text-red-500">{newErrors.city}</p>
                             )}
                         </div>
                     </div>
@@ -100,16 +100,16 @@ return (
                     <span className="text font-semibold">Address: </span>
                     <div className="flex flex-col w-full">
                         <input 
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors.address ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${newErrors.address ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'}  rounded-lg bg-gray-100`}
                             type="text" 
                             id='address' 
                             name='address'
-                            value={formData.address.address}
-                            onChange={(e) => {handleChange(e)}}
+                            value={ newAddress?.address}
+                            onChange={(e) => {handleNewChange(e)}}
                             placeholder="Address"
                         />
-                        {errors.address && (
-                        <p className="mt-1 text-sm text-red-500">{errors.address}</p>
+                        {newErrors?.address && (
+                        <p className="mt-1 text-sm text-red-500">{newErrors?.address}</p>
                         )} 
                     </div>
                 
@@ -118,16 +118,16 @@ return (
                     <span className="text font-semibold">Additional info:</span>
                     <div className="flex flex-col w-full">
                         <textarea
-                            className={`w-full pl-4 pr-2 py-1.5 border ${errors.info ? 'border-red-500' : 'border-gray-400'} rounded-lg focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition bg-gray-100`}
+                            className={`w-full pl-4 pr-2 py-1.5 border ${newErrors.info ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar'}  rounded-lg bg-gray-100`}
                             type="text" 
                             id='info' 
                             name='info'
-                            value={formData.address.info}
-                            onChange={(e) => {handleChange(e)}}
+                            value={ newAddress?.info}
+                            onChange={(e) => {handleNewChange(e)}}
                             placeholder="Additional info e.g building"
                         />
-                        {errors.info && (
-                        <p className="mt-1 text-sm text-red-500">{errors.info}</p>
+                        {newErrors.info && (
+                        <p className="mt-1 text-sm text-red-500">{newErrors.info}</p>
                         )} 
                     </div>
                 </div>
@@ -140,18 +140,18 @@ return (
                         </span>
                         <div className="flex flex-col w-full">
                             <input 
-                                className={`w-full pl-4 pr-2 py-1.5 border ${errors?.phoneNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
+                                className={`w-full pl-4 pr-2 py-1.5 border ${newErrors?.phoneNumber ? 'border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 transition' : 'border-gray-400 focus:outline-none focus:ring-1 focus:ring-topbar focus:border-topbar transition'} rounded-lg bg-gray-100`}
                                 type='text'
                                 id='phoneNumber' 
                                 name='phoneNumber'
-                                value={formData?.phoneNumber}
-                                onChange={(e) => {handleMobileChange(e)}}
+                                value={ newAddress?.phoneNumber}
+                                onChange={(e) => {handleNewChange(e)}}
                                 placeholder="0712345678"
                             />
 
 
-                            {errors?.phoneNumber && (
-                            <p className="mt-1 text-sm text-red-500">{errors?.phoneNumber}</p>
+                            {newErrors?.phoneNumber && (
+                            <p className="mt-1 text-sm text-red-500">{newErrors?.phoneNumber}</p>
                             )} 
                         </div>
                     </div>
@@ -173,4 +173,4 @@ return (
 )
 }
 
-export default AddAddress
+export default NewAddressPage
