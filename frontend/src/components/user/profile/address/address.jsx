@@ -35,34 +35,90 @@ const Address = ({userRefetch, user}) => {
 
         const { name, value } = e.target;
 
-        if (name.includes('.')) {
-            const [parent, child] = name.split('.');
-            setFormData(prevData => ({
-                ...formData,
-                [parent]: {
-                    ...formData[parent],
-                    [child]: value
-                }
-            }));
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value,
+        if (name === 'firstName') {
+            setErrors({
+                ...errors,
+                firstName: ``
             });
-        }
 
-        if (name == 'address.region'){
-            console.log("region change: ", value)
-           
-        }
-       
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setErrors({
+                    ...errors,
+                    firstName: `Invalid character`
+                });
+                return;
+            }
 
-        // clear error for this field when user starts typing
-        if (errors[name]) {
-        setErrors({
-            ...errors,
-            [name]: '',
-        });
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setErrors({
+                    ...errors,
+                    firstName: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setformData({
+                ...formData,
+                [name]: value
+            })
+        } else if (name === 'lastName') {
+
+            setErrors({
+                ...errors,
+                lastName: ``
+            });
+
+            // only allow letters
+            if (/[^A-Za-z]/.test(value)) {
+                setErrors({
+                    ...errors,
+                    lastName: `Invalid character`
+                });
+                return;
+            }
+
+            // ensure name is less than 50 characters long
+            if (value.length > 50) {
+                setErrors({
+                    ...errors,
+                    lastName: `Name length cannot exceed 50 characters`
+                });
+                return;
+            }
+
+            setformData({
+                ...formData,
+                [name]: value
+            })
+        } else  if (name === 'phoneNumber') {
+            setMobileErrors({
+                ...errors,
+                phoneNumber: ``
+            });
+
+            //only allow digits
+            if (/\D/.test(value)) {
+                setMobileErrors({
+                    ...errors,
+                    phoneNumber: 'Invalid character'
+                });
+                return;
+            }
+            
+            // check length
+            if (value.length > 10) {
+                setMobileErrors({
+                    ...errors,
+                    phoneNumber: 'Phone number cannot exceed 10 digits'
+                });
+                return;
+            }
+            setformData({
+                ...formData,
+                [name]: value
+            })
         }
     };
 
